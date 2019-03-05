@@ -2,7 +2,7 @@
 namespace System
 open System.Reflection
 
-[<assembly: AssemblyTitleAttribute("PathfinderAttackSimulator")>]
+[<assembly: AssemblyTitleAttribute("PathfinderAttackSimulatorConsole")>]
 [<assembly: AssemblyProductAttribute("PathfinderAttackSimulator")>]
 [<assembly: AssemblyDescriptionAttribute("An automatic calculator for both standard and full round attack actions, based on a library of modifications, weapons and characters.")>]
 [<assembly: AssemblyVersionAttribute("0.0.1")>]
@@ -11,7 +11,7 @@ open System.Reflection
 do ()
 
 module internal AssemblyVersionInformation =
-    let [<Literal>] AssemblyTitle = "PathfinderAttackSimulator"
+    let [<Literal>] AssemblyTitle = "PathfinderAttackSimulatorConsole"
     let [<Literal>] AssemblyProduct = "PathfinderAttackSimulator"
     let [<Literal>] AssemblyDescription = "An automatic calculator for both standard and full round attack actions, based on a library of modifications, weapons and characters."
     let [<Literal>] AssemblyVersion = "0.0.1"
