@@ -1,4 +1,4 @@
-﻿module PathfinderLib
+﻿namespace PathfinderAttackSimulator
 
 open System
 
