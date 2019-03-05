@@ -14,6 +14,9 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PathfinderLib.fs" />
+    <Compile Include="StandardAttackAction.fs" />
+    <Compile Include="FullRoundAttackAction.fs" />
     <Compile Include="Library.fs" />
     <None Include="Scripts\Script.fsx" />
     <None Include="paket.references" />
