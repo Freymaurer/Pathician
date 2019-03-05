@@ -150,10 +150,10 @@ Here are some examples:
 
 ## Installation
 
-1.[Download VisualStudioCode](https://code.visualstudio.com/download)
-2.[Download Git](https://git-scm.com/download/win)
-3.[Download .NET core AND .NET Framework dev packs](https://dotnet.microsoft.com/download)
-4.[Download Fake cli](https://fake.build/fake-gettingstarted.html). tl;dr: open console and type in "dotnet tool install fake-cli -g"
+1. [Download VisualStudioCode](https://code.visualstudio.com/download)
+2. [Download Git](https://git-scm.com/download/win)
+3. [Download .NET core AND .NET Framework dev packs](https://dotnet.microsoft.com/download)
+4. [Download Fake cli](https://fake.build/fake-gettingstarted.html). tl;dr: open console and type in "dotnet tool install fake-cli -g"
 5. [Download Master branch Zip of this repository](https://github.com/Freymaurer/PathfinderAttackSimulator/archive/developer.zip) & unzip
 6. open console and navigate ot the Folder withe the build.cmd inside. 
 		(_console command: cd folderPath_)
