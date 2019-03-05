@@ -656,6 +656,34 @@ module Library =
 
     module Server = 
 
+        open Modifications
+        open Weapons
+        open Characters
+
+        let showAll str =  
+            let rdyStr = createStringForLib str
+            match rdyStr with
+            | rdyStr when rdyStr = "MODIFICATIONS" -> [|
+                                                        Multiattack;SneakAttackOnce 0;TwoWeaponFighting;ImprovedTwoWeaponFighting;Haste;FlurryOfBlows;Shaken;WeaponFocus;EnlargePerson;MutagenStrength;
+                                                        Small;Invisibility;PlanarFocus;SneakAttack 0;Wrath;DivineFavor;FuriousFocus 0;PowerAttack 0;Flanking;Charging;WeaponSpecialization;Fatigued;
+                                                        AidAnother
+                                                      |]
+                                                      |> Array.map (fun x -> x.Name)
+                                                      |> Array.sortBy (fun x -> x)
+            | rdyStr when rdyStr = "WEAPONS" -> [|
+                                                    claw;slamElemental;bite;mwkLongbow;greatswordParrnHuge;talonsTumor;enchantedLongswordElemental;
+                                                    mwkRapier;butchersAxe;mwkSapHuge;mwkSapLarge;greatswordParrn;glaiveGuisarmePlus1Flaming
+                                                |]
+                                                |> Array.map (fun x -> x.Name)
+                                                |> Array.sortBy (fun x -> x)
+            | rdyStr when rdyStr = "CHARACTERS" -> [|
+                                                        myElemental;myTumor;myParrn
+                                                   |]
+                                                   |> Array.map (fun x -> x.CharacterName)
+                                                   |> Array.sortBy (fun x -> x)
+            | _ -> failwith "Unknown Input. Type *Modifications*, *Weapons* or *Characters* (without the *) to see all related objects in the library."
+
+
         let TestWeapon = {
                     Name                = "Test"
                     Damage              = createDamage 1 6 Slashing
@@ -693,32 +721,5 @@ module Library =
                     CasterLevel1 = 0
                     CasterLevel2 = 0
                 }
-
-open Library.Modifications
-open Library.Weapons
-open Library.Characters
-
-let showAll str =  
-    let rdyStr = Library.createStringForLib str
-    match rdyStr with
-    | rdyStr when rdyStr = "MODIFICATIONS" -> [|
-                                                Multiattack;SneakAttackOnce 0;TwoWeaponFighting;ImprovedTwoWeaponFighting;Haste;FlurryOfBlows;Shaken;WeaponFocus;EnlargePerson;MutagenStrength;
-                                                Small;Invisibility;PlanarFocus;SneakAttack 0;Wrath;DivineFavor;FuriousFocus 0;PowerAttack 0;Flanking;Charging;WeaponSpecialization;Fatigued;
-                                                AidAnother
-                                              |]
-                                              |> Array.map (fun x -> x.Name)
-                                              |> Array.sortBy (fun x -> x)
-    | rdyStr when rdyStr = "WEAPONS" -> [|
-                                            claw;slamElemental;bite;mwkLongbow;greatswordParrnHuge;talonsTumor;enchantedLongswordElemental;
-                                            mwkRapier;butchersAxe;mwkSapHuge;mwkSapLarge;greatswordParrn;glaiveGuisarmePlus1Flaming
-                                        |]
-                                        |> Array.map (fun x -> x.Name)
-                                        |> Array.sortBy (fun x -> x)
-    | rdyStr when rdyStr = "CHARACTERS" -> [|
-                                                myElemental;myTumor;myParrn
-                                           |]
-                                           |> Array.map (fun x -> x.CharacterName)
-                                           |> Array.sortBy (fun x -> x)
-    | _ -> failwith "Unknown Input. Type *Modifications*, *Weapons* or *Characters* (without the *) to see all related objects in the library."
-
-    //
+    
+        //
