@@ -115,7 +115,7 @@ open PathfinderAttackSimulator.Library.Weapons
 open PathfinderAttackSimulator.Library.Characters
 open PathfinderAttackSimulator.StandardAttackAction
 
-myStandardAttack myRogue greatswordRogue [|SneakAttack 8; PowerAttack myRouge.BAB; EnlargePerson; MutagenStrength; Heroism|]
+myStandardAttack myRogue greatswordRogue [|SneakAttack 8; PowerAttack myRogue.BAB; EnlargePerson; MutagenStrength; Heroism|]
 
 Output: > Du triffst den Gegner mit 23 (gewuerfelt 8) fuer 33 Slashing Schaden +14 Precision Schaden !
 ```
