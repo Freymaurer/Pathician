@@ -107,7 +107,7 @@ let Haste =
 ## Standard Attack Action
 
 This function returns the output of a standard attack action for one weapon.
-> The following character is a 8th level rouge like character with 22 strength and a mutagen to buff this even more. You might remember that orc in the assasins guild in oblivion. Well more or less like that.
+> The following character is a 8th level rogue like character with 22 strength and a mutagen to buff this even more. You might remember that orc in the assasins guild in oblivion. Well more or less like that.
 ```fsharp
 open PathfinderAttackSimulator.Library
 open PathfinderAttackSimulator.Library.Modifications
@@ -116,6 +116,7 @@ open PathfinderAttackSimulator.Library.Characters
 open PathfinderAttackSimulator.StandardAttackAction
 
 myStandardAttack myRogue greatswordRogue [|SneakAttack 8; PowerAttack myRouge.BAB; EnlargePerson; MutagenStrength; Heroism|]
+
 Output: > Du triffst den Gegner mit 23 (gewuerfelt 8) fuer 33 Slashing Schaden +14 Precision Schaden !
 ```
 So the function needs a character, a weapon and an array ( **[| |]** ) of modifications. At this point i already made some modifications with automatic further calculations. See for example "SneakAttack _rogue level_" or "PowerAttack _character BAB_".
@@ -131,9 +132,10 @@ open PathfinderAttackSimulator.Library
 open PathfinderAttackSimulator.Library.Modifications
 open PathfinderAttackSimulator.Library.Weapons
 open PathfinderAttackSimulator.Library.Characters
-open PathfinderAttackSimulator.StandardAttackAction
+open PathfinderAttackSimulator.FullRoundAttackAction
 
 myFullAttack myRogue [|greatswordRogue,PrimaryMain; Weapons.bite,Secondary|] [|Flanking;SneakAttack 8; MutagenStrength; Haste|]
+
 > Du greifst mit Large +1 Keen Greatsword an und crittest (hoffentlich) den Gegner mit 37 (gewuerfelt 19) und bestaetigst mit 26 (gewuerfelt 8) fuer 27 Slashing Schaden +18 Precision Schaden (crit * 2)!
 > Du greifst mit Large +1 Keen Greatsword an und triffst den Gegner mit 22 (gewuerfelt 4) fuer 22 Slashing Schaden +14 Precision Schaden !
 > Du greifst mit Large +1 Keen Greatsword an und triffst den Gegner mit 25 (gewuerfelt 7) fuer 24 Slashing Schaden +20 Precision Schaden !
