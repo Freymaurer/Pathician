@@ -1,7 +1,7 @@
 (*** hide ***)
 // This block of code is omitted in the generated HTML documentation. Use 
 // it to define helpers that you do not want to show in the documentation.
-#I "../../bin"
+#I "../../src/PathfinderAttackSimulator/bin/Release/netstandard2.0"
 
 (**
 PathfinderAttackSimulator
@@ -20,19 +20,43 @@ Documentation
   <div class="span1"></div>
 </div>
 
-Example
+Example for a automatic calculated full round attack action.
 -------
 
-This example demonstrates using a function defined in this sample library.
+This example demonstrates the full round attack action calculater, which is able to automatically: 
+
+* the number of attacks
+* boni from all kind of modifications
+* crits and confirmation rolls
+* damage rolls
+* which boni stack and which not
+
+to just list a few of the implemented options.
 
 *)
 #r "PathfinderAttackSimulator.dll"
-open PathfinderAttackSimulator
+open PathfinderAttackSimulator.FullRoundAttackAction
+open PathfinderAttackSimulator.Library
+open PathfinderAttackSimulator.Library.Characters
+open PathfinderAttackSimulator.Library.Modifications
+open PathfinderAttackSimulator.Library.Weapons
 
-printfn "hello = %i" <| Library.hello 0
+myFullAttack myParrn    [|greatswordParrnHuge,PrimaryMain;
+                        bite,Secondary|]                                
+                        
+                        [|EnlargePerson;
+                        MutagenStrength;
+                        Haste;
+                        SneakAttack 8;
+                        PowerAttack myParrn.BAB;
+                        FuriousFocus 8|]
 
 (**
-Some more info
+> Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 23 (gewürfelt 6) für 34 Slashing Schaden +9 Precision Schaden !
+> Du greifst mit Huge +1 Keen Greatsword an und crittest (hoffentlich) den Gegner mit 31 (gewürfelt 17) und bestätigst mit 29 (gewürfelt 15) für 33 Slashing Schaden +17 Precision Schaden (crit * 2)!
+> Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 15 (gewürfelt 1) für 31 Slashing Schaden +19 Precision Schaden !
+> Du greifst mit Bite an und crittest (hoffentlich) den Gegner mit 33 (gewürfelt 20) und bestätigst mit 32 (gewürfelt 19) für 10 BludgeoningOrPiercingOrSlashing Schaden +17 Precision Schaden (crit * 2)!
+
 
 Samples & documentation
 -----------------------
