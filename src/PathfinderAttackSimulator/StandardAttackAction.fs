@@ -7,41 +7,39 @@ open PathfinderAttackSimulator.Library.Modifications
 module StandardAttackAction =
     ///Pathfinder Standard Attack Action////
 
-
     ////All dice generators////
+    module AuxFunctions =
+
+        let rollDice count (diceSides:int) =
+            let rnd = System.Random()
+            if diceSides = 0 
+                then [|0|]
+                else Array.init count (fun _ -> rnd.Next (1, diceSides+1))
+        
+        let getRandArrElement =
+          let rnd = Random()
+          fun (arr : int[]) -> arr.[rnd.Next(arr.Length)]
     
-    let rollDice count (diceSides:int) =
-        let rnd = System.Random()
-        if diceSides = 0 
-            then [|0|]
-            else Array.init count (fun _ -> rnd.Next (1, diceSides+1))
-    
-    let getRandArrElement =
-      let rnd = Random()
-      fun (arr : int[]) -> arr.[rnd.Next(arr.Length)]
-    
+    open AuxFunctions
     
     let myStandardAttack (char: CharacterStats) (weapon: Weapon) (modifications: AttackModification []) =
     
         ///
         let getUsedModifierToHit =
             match weapon.Modifier.ToHit with
-            | "Str" -> char.Strength
-            | "Dex" -> char.Dexterity
-            | "Con" -> char.Constitution
-            | "Int" -> char.Intelligence
-            | "Wis" -> char.Wisdom
-            | "Cha" -> char.Charisma
+            | Strength -> char.Strength
+            | Dexterity -> char.Dexterity
+            | Constitution -> char.Constitution
+            | Intelligence -> char.Intelligence
+            | Wisdom -> char.Wisdom
+            | Charisma -> char.Charisma
             | _ -> 0
     
         ///
         let getStatChangesToHit =
             modifications
             |> Array.collect (fun x -> x.StatChanges)
-            |> Array.map (fun statChange -> if statChange.Attribute = weapon.Modifier.ToHit
-                                                        then statChange
-                                                        else createStatChange "0" 0 Flat
-                         )
+            |> Array.filter (fun statChange -> statChange.Attribute = weapon.Modifier.ToHit)
             |> Array.groupBy (fun statChange -> statChange.Bonustype)
             |> Array.map (fun (uselessHeader,x) -> x)
             ///Next step should take the highest stat change to remove non-stacking boni
@@ -56,12 +54,12 @@ module StandardAttackAction =
             modifications 
             |> Array.map (fun x -> x.BonusAttackRoll)
             |> Array.groupBy (fun x -> x.BonusType)
-            |> Array.map (fun (header,bonusArr) -> if header <> Flat 
+            |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
                                                         then bonusArr
                                                             |> Array.sortByDescending (fun x -> x.Value) 
                                                             |> fun x -> Array.head x
                                                             |> fun x -> x.Value
-                                                   elif header = Flat
+                                                   elif header = BonusTypes.Flat
                                                         then bonusArr
                                                             |> Array.map (fun x -> x.Value)
                                                             |> Array.sum
@@ -79,7 +77,7 @@ module StandardAttackAction =
         let calculateRolls =
             getRandArrElement getAttackRolls
             |> fun roll -> roll, Array.map (fun x -> roll = x) weapon.CriticalRange
-            |> fun (x,y) -> x, Array.contains true y
+            |> fun (x,y) -> x, Array.contains true y ///TODO: this can be done shorter
             |> fun (firstRoll,crit) -> firstRoll, if crit = true
                                                         then getRandArrElement getAttackRolls
                                                         else -20
@@ -95,10 +93,7 @@ module StandardAttackAction =
         let getStatChangesToDmg =
             modifications
             |> Array.collect (fun x -> x.StatChanges)
-            |> Array.map (fun statChange -> if statChange.Attribute = weapon.Modifier.ToDmg
-                                                        then statChange
-                                                        else createStatChange "0" 0 Flat
-                         )
+            |> Array.filter (fun statChange -> statChange.Attribute = weapon.Modifier.ToDmg)
             |> Array.groupBy (fun statChange -> statChange.Bonustype)
             |> Array.map (fun (useless,x) -> x)
             |> Array.map (fun x -> Array.sortByDescending (fun statChange -> statChange.AttributeChange) x)
@@ -137,14 +132,14 @@ module StandardAttackAction =
         ///
         let addDamageMod =
             match weapon.Modifier.ToDmg with
-                | "Str" -> char.Strength
-                | "Dex" -> char.Dexterity
-                | "Con" -> char.Constitution
-                | "Int" -> char.Intelligence
-                | "Wis" -> char.Wisdom
-                | "Cha" -> char.Charisma
+                | Strength -> char.Strength
+                | Dexterity -> char.Dexterity
+                | Constitution -> char.Constitution
+                | Intelligence -> char.Intelligence
+                | Wisdom -> char.Wisdom
+                | Charisma -> char.Charisma
                 | _ -> 0
-            |> fun stat -> ((float stat + getStatChangesToDmg) * weapon.Modifier.MultiplicatorOnDamage) |> floor |> int
+            |> fun stat -> ((float stat + getStatChangesToDmg) * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
     
         ///
         let addWeaponDamage = 
@@ -161,7 +156,7 @@ module StandardAttackAction =
             modifications
             |> Array.map (fun x -> x.BonusDamage)
             |> Array.groupBy (fun x -> x.BonusType)
-            |> Array.map (fun (x,bonusArr) -> if x <> Flat 
+            |> Array.map (fun (x,bonusArr) -> if x <> BonusTypes.Flat 
                                                     then bonusArr
                                                             |> Array.sortByDescending (fun x -> x.Value) 
                                                             |> fun x -> Array.head x
@@ -172,7 +167,7 @@ module StandardAttackAction =
                           )
             |> Array.sum
             |> fun bonus -> if (Array.contains (PowerAttack char.BAB) modifications) = true 
-                                && weapon.Modifier.MultiplicatorOnDamage = 1.5
+                                && weapon.Modifier.MultiplicatorOnDamage.Hand = TwoHanded
                                     then float bonus + ((float (PowerAttack char.BAB).BonusDamage.Value) * 0.5) 
                                             |> int
                                     else bonus
