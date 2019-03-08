@@ -89,17 +89,21 @@ Because a weapon is a type it is really easy to handle, as you can just dot into
 </tr>
 </table>
 <table class="pre"><tr><td><pre><code>6</code></pre></td></tr></table>
-<p>Now to explain the different categories:
-<em> Name = the actual correct name of the weapon, currently not relevant for the code
-</em> Damage = the core weapon damage for 2d6 slashing this needs to be "createDamage 2 6 Slashing"
-<em> DamageBonus = enhancement bonus to dmg
-</em> ExtraDamage = Damage that will be calculated and displayed separately, e.g. 1d6 fire from flaming
-<em> BonusAttackRolls = enhancement bonus to attack roll
-</em> CriticalRange = all rolled dice, representing a crit
-<em> CriticalModifier = currently just displayed and not automatically calculated
-</em> Modifier = the modifier used to hit something, to damage and the multiplicator for dmg in this order
-* ManufacturedOrNatural = either manufactured or natural, this is necessary for a correct fullround attack action.
-Always use this in combination with "createStringForLib".</p>
+<p>Now to explain the different categories:</p>
+<ul>
+<li>Name = the actual correct name of the weapon, currently not relevant for the code</li>
+<li>Damage = the core weapon damage for 2d6 slashing this needs to be "createDamage 2 6 Slashing"</li>
+<li>DamageBonus = enhancement bonus to dmg</li>
+<li>ExtraDamage = Damage that will be calculated and displayed separately, e.g. 1d6 fire from flaming</li>
+<li>BonusAttackRolls = enhancement bonus to attack roll</li>
+<li>CriticalRange = all rolled dice, representing a crit</li>
+<li>CriticalModifier = currently just displayed and not automatically calculated</li>
+<li>Modifier = the modifier used to hit something, to damage and the multiplicator for dmg in this order</li>
+<li>
+ManufacturedOrNatural = either manufactured or natural, this is necessary for a correct fullround attack action. 
+Always use this in combination with "createStringForLib".
+</li>
+</ul>
 
 <div class="tip" id="fs1">namespace PathfinderAttackSimulator</div>
 <div class="tip" id="fs2">module Library<br /><br />from PathfinderAttackSimulator</div>

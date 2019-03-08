@@ -80,17 +80,21 @@ Therefore, i create a library of pre-written modifications.</p>
 <p>Haste gives an extra attack, that does not stack with weapon enhancements like Speed and so on, and also an
 flat bonus to all attack rolls, and also some non - attack related boni.</p>
 </blockquote>
-<p>So how does this work:
-<em> Name = the actual correct name of the weapon, currently not relevant for the code
-</em> BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack</p>
+<p>So how does this work:</p>
+<ul>
+<li>Name = the actual correct name of the weapon, currently not relevant for the code</li>
+<li>BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack</li>
+</ul>
 <blockquote>
-<p>Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.
-<em> BonusDamage = bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage)
-</em> ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
-<em> AppliedTo = apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
-</em> StatChanges = e.g. the alchemist's mutagen (createStatChange "Str" 2 Alchemical) the number again, represents the modifier increase.
-* Description = A short Description for additional information. Not used in the script right now.</p>
+<p>Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.</p>
 </blockquote>
+<ul>
+<li>BonusDamage = bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage)</li>
+<li>ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.</li>
+<li>AppliedTo = apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.</li>
+<li>StatChanges = e.g. the alchemist's mutagen (createStatChange "Str" 2 Alchemical) the number again, represents the modifier increase.</li>
+<li>Description = A short Description for additional information. Not used in the script right now.</li>
+</ul>
 <p>Some further Examples:</p>
 <h3><a name="Alchemist-s-Strength-Mutagen" class="anchor" href="#Alchemist-s-Strength-Mutagen">Alchemist's Strength Mutagen</a></h3>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
