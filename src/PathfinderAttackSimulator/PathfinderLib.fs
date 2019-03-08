@@ -5,7 +5,7 @@ open System
 module Library =
 
     type DamageTypes =
-        | Feuer
+        | Fire
         | Slashing
         | Bludgeoning
         | Piercing
@@ -198,7 +198,7 @@ module Library =
                 Name                = "Glaive-Guisarme +1 flaming"
                 Damage              = createDamage 1 10 Slashing
                 DamageBonus         = 1
-                ExtraDamage         = createDamage 1 6 Feuer
+                ExtraDamage         = createDamage 1 6 Fire
                 BonusAttackRolls    = 1
                 CriticalRange       = [|20|]
                 CriticalModifier    = 3
@@ -528,7 +528,7 @@ module Library =
                 BonusAttacks = createBonusAttacks 0 Flat All
                 BonusAttackRoll = createBonus 0 Flat
                 BonusDamage = createBonus 0 Flat
-                ExtraDamage = createDamage 1 6 Feuer
+                ExtraDamage = createDamage 1 6 Fire
                 AppliedTo = [|All|], -20
                 StatChanges = [|createStatChange "0" 0 Flat|]
                 Description = ""

@@ -8,7 +8,7 @@ module StandardAttackAction =
     ///Pathfinder Standard Attack Action////
 
 
-    ////Alle Würfel Generatoren////
+    ////All dice generators////
     
     let rollDice count (diceSides:int) =
         let rnd = System.Random()
@@ -44,8 +44,8 @@ module StandardAttackAction =
                          )
             |> Array.groupBy (fun statChange -> statChange.Bonustype)
             |> Array.map (fun (uselessHeader,x) -> x)
-            ///nächster Schritt soll höchsten Statchange nehmen um nicht stackende boni auszusortieren. 
-            ///Aber was wenn ein negativer und ein positiver des selben Typs exisiteren?
+            ///Next step should take the highest stat change to remove non-stacking boni
+            ///But what if a negative and a positive bonus of the same type exist?
             |> Array.map (fun x -> Array.sortByDescending (fun statChange -> statChange.AttributeChange) x)
             |> Array.map (fun x -> Array.head x)
             |> Array.map (fun statChange -> statChange.AttributeChange)
@@ -183,11 +183,11 @@ module StandardAttackAction =
         
         ///
         if (calculateRolls |> fun (x,y,z,u) -> u) = -20 && getExtraDamage = [||]
-            then printfn "Du triffst den Gegner mit %i (gewürfelt %i) für %i %A Schaden!" (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType
+            then printfn "You hit the enemy with a %i (rolled %i) for %i %A damage!" (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType
         elif (calculateRolls |> fun (x,y,z,u) -> u) <> -20 && getExtraDamage = [||] 
-            then printfn "Du crittest (hoffentlich) den Gegner mit %i (gewürfelt %i) und bestätigst mit %i (gewürfelt %i) für %i %A Schaden (crit * %i)!" (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType weapon.CriticalModifier
+            then printfn "You (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A Damage (crit * %i)!" (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType weapon.CriticalModifier
         elif (calculateRolls |> fun (x,y,z,u) -> u) = -20 && getExtraDamage <> [||]
-            then printfn "Du triffst den Gegner mit %i (gewürfelt %i) für %i %A Schaden %s !" (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType extraDamageToString
+            then printfn "You hit the enemy with a %i (rolled %i) for %i %A damage %s !" (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType extraDamageToString
         elif (calculateRolls |> fun (x,y,z,u) -> u) <> -20 && getExtraDamage <> [||] 
-            then printfn ("Du crittest (hoffentlich) den Gegner mit %i (gewürfelt %i) und bestätigst mit %i (gewürfelt %i) für %i %A Schaden %s (crit * %i)!") (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
+            then printfn ("You (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage %s (crit * %i)!") (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
     
