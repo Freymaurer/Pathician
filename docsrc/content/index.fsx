@@ -52,10 +52,13 @@ myFullAttack myParrn    [|greatswordParrnHuge,PrimaryMain;
                         FuriousFocus 8|]
 
 (**
-> Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 23 (gewürfelt 6) für 34 Slashing Schaden +9 Precision Schaden !
-> Du greifst mit Huge +1 Keen Greatsword an und crittest (hoffentlich) den Gegner mit 31 (gewürfelt 17) und bestätigst mit 29 (gewürfelt 15) für 33 Slashing Schaden +17 Precision Schaden (crit * 2)!
-> Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 15 (gewürfelt 1) für 31 Slashing Schaden +19 Precision Schaden !
-> Du greifst mit Bite an und crittest (hoffentlich) den Gegner mit 33 (gewürfelt 20) und bestätigst mit 32 (gewürfelt 19) für 10 BludgeoningOrPiercingOrSlashing Schaden +17 Precision Schaden (crit * 2)!
+> Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 23 (gewuerfelt 6) fuer 34 Slashing Schaden +9 Precision Schaden !
+>
+> Du greifst mit Huge +1 Keen Greatsword an und crittest (hoffentlich) den Gegner mit 31 (gewuerfelt 17) und bestaetigst mit 29 (gewuerfelt 15) fuer 33 Slashing Schaden +17 Precision Schaden (crit * 2)!
+>
+> Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 15 (gewuerfelt 1) fuer 31 Slashing Schaden +19 Precision Schaden !
+>
+> Du greifst mit Bite an und crittest (hoffentlich) den Gegner mit 33 (gewuerfelt 20) und bestaetigst mit 32 (gewuerfelt 19) fuer 10 BludgeoningOrPiercingOrSlashing Schaden +17 Precision Schaden (crit * 2)!
 
 
 Samples & documentation
