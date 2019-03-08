@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Introducing your project
+    <title>Creating a Weapon
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="An automatic calculator for both standard and full round attack actions, based on a library of modifications, weapons and characters."/>
@@ -35,22 +35,59 @@
       <div class="row">
         <div class="span9" id="main">
           
-<h1><a name="Introducing-your-project" class="anchor" href="#Introducing-your-project">Introducing your project</a></h1>
-<p>Say more</p>
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
-<span class="l">2: </span>
-<span class="l">3: </span>
-<span class="l">4: </span>
+<h1><a name="Creating-a-Weapon" class="anchor" href="#Creating-a-Weapon">Creating a Weapon</a></h1>
+<h2><a name="Example-on-how-a-Character-should-be-created" class="anchor" href="#Example-on-how-a-Character-should-be-created">Example on how a Character should be created.</a></h2>
+<p>A character needs certain informations for a correct calculation.
+Right now this is not hand-held at all, but might get better in a future version.</p>
+<p>This is most likely the easiest of the information types and really self-explanatory.
+The first example is a fighter lvl 6 that wants to use bow and melee weapons.</p>
+<h3><a name="2-keen-flaming-greatsword" class="anchor" href="#2-keen-flaming-greatsword">+2 keen flaming greatsword</a></h3>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pp">#r</span> <span class="s">&quot;PathfinderAttackSimulator.dll&quot;</span>
-<span class="k">open</span> <span class="id">PathfinderAttackSimulator</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Library</span>
 
-<span class="id">Library</span><span class="pn">.</span><span class="id">hello</span> <span class="n">0</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">myCharacter</span> <span class="o">=</span>  <span class="pn">{</span>
+        <span class="id">CharacterName</span> <span class="o">=</span> <span class="s">&quot;Best Character Name Ever&quot;</span>
+        <span class="id">BAB</span> <span class="o">=</span> <span class="n">6</span>
+        <span class="id">Strength</span> <span class="o">=</span> <span class="n">7</span>
+        <span class="id">Dexterity</span> <span class="o">=</span> <span class="n">3</span>
+        <span class="id">Constitution</span> <span class="o">=</span> <span class="n">2</span>
+        <span class="id">Intelligence</span> <span class="o">=</span> <span class="o">-</span><span class="n">3</span>
+        <span class="id">Wisdom</span> <span class="o">=</span> <span class="n">0</span>
+        <span class="id">Charisma</span> <span class="o">=</span> <span class="o">-</span><span class="n">3</span>
+        <span class="id">CasterLevel1</span> <span class="o">=</span> <span class="n">0</span>
+        <span class="id">CasterLevel2</span> <span class="o">=</span> <span class="n">0</span>
+    <span class="pn">}</span>
 </code></pre></td>
 </tr>
 </table>
-<p>Some more info</p>
+<blockquote>
+<p>Without any doubt we have a nice and optimized fighter with "de inteligenz to crash samfing".</p>
+</blockquote>
+<ul>
+<li>Abilities: = The numbers given for the abilities are the modifier and not the score numbers (obviously).</li>
+<li>BAB = base attack bonus</li>
+<li>CasteLevel = can be used for e.g. Magus Spellstrike with Shocking grasp</li>
+</ul>
 
+<div class="tip" id="fs1">namespace PathfinderAttackSimulator</div>
+<div class="tip" id="fs2">module Library<br /><br />from PathfinderAttackSimulator</div>
+<div class="tip" id="fs3">val myCharacter : CharacterStats</div>
 
         </div>
         <div class="span3">
