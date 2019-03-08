@@ -473,13 +473,13 @@ module FullRoundAttackAction =
                 |> fun x -> if x <= 0 then 1 else x
     
             if (calculateRolls |> fun (x,y,z,u) -> u) = -20 && getExtraDamage = [||]
-                then printfn "Du greifst mit %s an und triffst den Gegner mit %i (gewürfelt %i) für %i %A Schaden!" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType
+                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage!" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType
             elif (calculateRolls |> fun (x,y,z,u) -> u) <> -20 && getExtraDamage = [||] 
-                then printfn "Du greifst mit %s an und crittest (hoffentlich) den Gegner mit %i (gewürfelt %i) und bestätigst mit %i (gewürfelt %i) für %i %A Schaden (crit * %i)!" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType weapon.CriticalModifier
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (crit * %i)!" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType weapon.CriticalModifier
             elif (calculateRolls |> fun (x,y,z,u) -> u) = -20 && getExtraDamage <> [||]
-                then printfn "Du greifst mit %s an und triffst den Gegner mit %i (gewürfelt %i) für %i %A Schaden %s !" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType extraDamageToString
+                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage %s !" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType extraDamageToString
             elif (calculateRolls |> fun (x,y,z,u) -> u) <> -20 && getExtraDamage <> [||] 
-                then printfn "Du greifst mit %s an und crittest (hoffentlich) den Gegner mit %i (gewürfelt %i) und bestätigst mit %i (gewürfelt %i) für %i %A Schaden %s (crit * %i)!" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage %s (crit * %i)!" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
      
         addAllWeaponTypeSpecificModifications
         |> Array.map (fun (w,wType,modi,modArr) -> getOneAttack w wType modi modArr)
