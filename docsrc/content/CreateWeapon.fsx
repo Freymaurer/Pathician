@@ -48,6 +48,7 @@ let showDamageDie = keenflaming2greatsword.Damage.Die
 
 (**
 Now to explain the different categories:
+
 * Name = the actual correct name of the weapon, currently not relevant for the code
 * Damage = the core weapon damage for 2d6 slashing this needs to be "createDamage 2 6 Slashing"
 * DamageBonus = enhancement bonus to dmg

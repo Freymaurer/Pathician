@@ -4,7 +4,7 @@
 #I "../../src/PathfinderAttackSimulator/bin/Release/netstandard2.0"
 
 (**
-Creating a Weapon
+Creating a Character
 ======================
 
 Example on how a Character should be created.
@@ -16,7 +16,7 @@ Right now this is not hand-held at all, but might get better in a future version
 This is most likely the easiest of the information types and really self-explanatory.
 The first example is a fighter lvl 6 that wants to use bow and melee weapons.
 
-### +2 keen flaming greatsword
+### The Fighter
 *)
 #r "PathfinderAttackSimulator.dll"
 open PathfinderAttackSimulator.Library

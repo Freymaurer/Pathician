@@ -42,9 +42,12 @@ So a short introduction to the spell for all who might not know it (so like comp
 > flat bonus to all attack rolls, and also some non - attack related boni.
 
 So how does this work:
+
 * Name = the actual correct name of the weapon, currently not relevant for the code
 * BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack
+
 > Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.
+
 * BonusDamage = bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage)
 * ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
 * AppliedTo = apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
