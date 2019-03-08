@@ -29,8 +29,8 @@ let keenflaming2greatsword = {
         BonusAttackRolls    = 2
         CriticalRange       = [|17 .. 20|] 
         CriticalModifier    = 2
-        Modifier            = createUsedModifier "Str" "Str" 1.5
-        ManufacturedOrNatural = createStringForLib "Manufactured" 
+        Modifier            = createUsedModifier Strength Strength TwoHanded 1.5
+        ManufacturedOrNatural = Manufactured
         }
 
 (**
@@ -56,8 +56,8 @@ Now to explain the different categories:
 * BonusAttackRolls = enhancement bonus to attack roll
 * CriticalRange = all rolled dice, representing a crit
 * CriticalModifier = currently just displayed and not automatically calculated
-* Modifier = the modifier used to hit something, to damage and the multiplicator for dmg in this order
-* ManufacturedOrNatural = either manufactured or natural, this is necessary for a correct fullround attack action. 
-    Always use this in combination with "createStringForLib".
+* Modifier = the modifier used to hit something, to calculate damage, either OneHanded or TwoHanded and the multiplicator for dmg in this order.
+* ManufacturedOrNatural = either Manufactured or Natural, this is necessary for a correct fullround attack action. 
+
 *)
 
