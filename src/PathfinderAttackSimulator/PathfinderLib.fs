@@ -670,7 +670,7 @@ module Library =
             {
                 Name = "Enlarge Person"
                 BonusAttacks = createBonusAttacks 0 NoBA All
-                BonusAttackRoll = createBonus -1 Flat
+                BonusAttackRoll = createBonus 0 Flat
                 BonusDamage = createBonus 0 Flat
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
