@@ -674,7 +674,7 @@ module Library =
                 BonusDamage = createBonus 0 Flat
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
-                StatChanges = [|(createStatChange Strength 1 Size);(createStatChange Strength -1 Size)|]
+                StatChanges = [|(createStatChange Strength 1 Size);(createStatChange Dexterity -1 Size)|]
                 SizeChanges = createSizechange 1 Polymorph false
                 Description = ""
             }
