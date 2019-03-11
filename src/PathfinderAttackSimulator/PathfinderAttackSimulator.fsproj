@@ -14,10 +14,12 @@
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Remove="Scripts\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="PathfinderLib.fs" />
     <Compile Include="StandardAttackAction.fs" />
     <Compile Include="FullRoundAttackAction.fs" />
-    <None Include="Scripts\Script.fsx" />
     <None Include="paket.references" />
     <None Include="paket.template" />
   </ItemGroup>

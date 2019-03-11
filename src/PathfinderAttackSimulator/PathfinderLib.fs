@@ -4,181 +4,236 @@ open System
 
 module Library =
 
-    type AbilityScore =
-        | Strength
-        | Dexterity
-        | Constitution
-        | Intelligence
-        | Wisdom
-        | Charisma
-        | NoAS
+           
+    module AuxLibFunctions =
 
-    type DamageTypes =
-        | Fire
-        | Slashing
-        | Bludgeoning
-        | Piercing
-        | Cold
-        | Acid
-        | Electricity
-        | Untyped
-        | BludgeoningOrPiercing
-        | BludgeoningOrPiercingOrSlashing
-        | PiercingOrSlashing
-        | Precision
+        type SizeType =
+            | Fine
+            | Diminuitive
+            | Tiny
+            | Small
+            | Medium
+            | Large
+            | Huge
+            | Gargantuan
+            | Colossal
 
-    type BonusTypes =
-        | Insight
-        | Moral
-        | Luck
-        | Alchemical
-        | Profane
-        | Sacred
-        | Circumstance
-        | Flat
-        | Size
-        | TwoWeaponFighting
+        type SizeAttributes = {
+            SizeModifier : int
+            SizeId : int
+            Size : SizeType
+            }
+         
+        let createSizeAttributes modifier id sizeType = {
+            SizeModifier = modifier
+            SizeId = id
+            Size = sizeType
+            }
 
-    type BonusAttacksType =
-        | Haste_Like
-        | TWF_Like
-        | FlurryOfBlows_Like
-        | FlatBA
-        | NoBA
-
-    type WeaponType =
-        | PrimaryMain
-        | Primary
-        | Secondary
-        | All
-
-    type NaturalManufactured =
-        | Natural
-        | Manufactured
-
-    type WeaponHanded =
-        | OneHanded
-        | TwoHanded
-
-    type Damage = {
-        NumberOfDie : int
-        Die : int
-        DamageType : DamageTypes
-        }
-
-    type WeaponDamageMultiplicator = {
-        Hand : WeaponHanded
-        Multiplicator : float     
-        }
-
-    type UsedModifier = {
-        ToHit : AbilityScore
-        ToDmg : AbilityScore
-        MultiplicatorOnDamage : WeaponDamageMultiplicator
-        }
-
-    type BonusAttacks = {
-        NumberOfBonusAttacks : int
-        TypeOfBonusAttacks : BonusAttacksType
-        WeaponTypeWithBonusAttacks : WeaponType
-        }
-
-    type StatChange = {
-        Attribute : AbilityScore
-        AttributeChange : int
-        Bonustype : BonusTypes
-        }
-
-    type Bonus = {
-        Value : int
-        BonusType : BonusTypes
-        }
-
-    /// "0" 0 Flat if no StatChange
-    let createStatChange att attChange bType = {
-        Attribute = att
-        AttributeChange = attChange
-        Bonustype = bType
-        }
-
-    let createWeaponDamageMultiplicator handling multiplicator = {
-        Hand = handling
-        Multiplicator = multiplicator
-        }
-
-    /// 0 Flat if no Bonus
-    let createBonus value bType = {
-        Value = value
-        BonusType = bType
-        }
-
-    /// 0 Flat All if no BonusAttacks. num = number of bonus attacks; bonusAttackType = is meant for calculation of non-stacking effects like magus spell combat and twf
-    ///in that case both are TWF_Like; appliedToWeaponType = the Weapons that get bonus attacks e.g. haste goes to primaryMain, twf goes to primary, multiattack goes to secondary
-    let createBonusAttacks num bonusAttackType appliedToWeaponType= {
-        BonusAttacks.NumberOfBonusAttacks = num
-        BonusAttacks.TypeOfBonusAttacks = bonusAttackType
-        BonusAttacks.WeaponTypeWithBonusAttacks = appliedToWeaponType
-        }
-
-    /// 0 0 Untyped if no Damage. num = number of damage die; die is how many sides the damage die has; dType is e.g. Bludgeoning
-    let createDamage num die dType = {
-        Damage.NumberOfDie = num
-        Damage.Die = die
-        Damage.DamageType = dType
-        }
-
-    /// hitting = Modifier used for hitting; damage = Modifier used for damage calculation; multiplicator = how often is damage modifier added; 1.5 means that power attack is also increased
-    let createUsedModifier hitting damage handling multiplicator = {
-        ToHit = hitting
-        ToDmg = damage
-        MultiplicatorOnDamage = createWeaponDamageMultiplicator handling multiplicator
-        }
-
-    /// Turns all letters in uppercase, which makes matchingfunctions more failproof.
-    let createStringForLib inputString =
-        inputString
-        |> String.map (fun x -> Char.ToUpper x)
-
-    type CharacterStats = 
-        {
-            CharacterName : string
-            BAB : int
-            Strength : int
-            Dexterity : int
-            Constitution: int
-            Intelligence: int
-            Wisdom: int
-            Charisma: int
-            CasterLevel1 : int
-            CasterLevel2 : int
-        }
+        let findSizes = [1,createSizeAttributes 8 1 Fine;
+                        2,createSizeAttributes 4 2 Diminuitive;
+                        3,createSizeAttributes 2 3 Tiny;
+                        4,createSizeAttributes 1 4 Small;
+                        5,createSizeAttributes 0 5 Medium;
+                        6,createSizeAttributes -1 6 Large;
+                        7,createSizeAttributes -2 7 Huge;
+                        8,createSizeAttributes -4 8 Gargantuan;
+                        9,createSizeAttributes -8 9 Colossal
+                        ] |> Map.ofSeq
+        
+        type AbilityScore =
+            | Strength
+            | Dexterity
+            | Constitution
+            | Intelligence
+            | Wisdom
+            | Charisma
+            | NoAS
 
 
-    type Weapon = {
-            Name                    : string
-            Damage                  : Damage
-            DamageBonus             : int
-            ExtraDamage             : Damage
-            BonusAttackRolls        : int
-            CriticalRange           : int []
-            CriticalModifier        : int
-            Modifier                : UsedModifier
-            ManufacturedOrNatural   : NaturalManufactured
-        }
+        type DamageTypes =
+            | Fire
+            | Slashing
+            | Bludgeoning
+            | Piercing
+            | Cold
+            | Acid
+            | Electricity
+            | Untyped
+            | BludgeoningOrPiercing
+            | BludgeoningOrPiercingOrSlashing
+            | PiercingOrSlashing
+            | Precision
 
-    type AttackModification =
-        {
-            Name                : string
-            BonusAttacks        : BonusAttacks
-            BonusAttackRoll     : Bonus
-            BonusDamage         : Bonus
-            ExtraDamage         : Damage
-            AppliedTo           : WeaponType [] * int
-            StatChanges         : StatChange []
-            Description         : string
-        }
+        type BonusTypes =
+            | Insight
+            | Moral
+            | Luck
+            | Alchemical
+            | Profane
+            | Sacred
+            | Circumstance
+            | Flat
+            | Size
+            | TwoWeaponFighting
+            | Polymorph
+
+        type BonusAttacksType =
+            | Haste_Like
+            | TWF_Like
+            | FlurryOfBlows_Like
+            | FlatBA
+            | NoBA
+
+        type WeaponType =
+            | PrimaryMain
+            | Primary
+            | Secondary
+            | All
+
+        type NaturalManufactured =
+            | Natural
+            | Manufactured
+
+        type WeaponHanded =
+            | OneHanded
+            | TwoHanded
+
+        type Damage = {
+            NumberOfDie : int
+            Die : int
+            DamageType : DamageTypes
+            }
+
+        type WeaponDamageMultiplicator = {
+            Hand : WeaponHanded
+            Multiplicator : float     
+            }
+
+        type UsedModifier = {
+            ToHit : AbilityScore
+            ToDmg : AbilityScore
+            MultiplicatorOnDamage : WeaponDamageMultiplicator
+            }
+
+        type BonusAttacks = {
+            NumberOfBonusAttacks : int
+            TypeOfBonusAttacks : BonusAttacksType
+            WeaponTypeWithBonusAttacks : WeaponType
+            }
+
+        type StatChange = {
+            Attribute : AbilityScore
+            AttributeChange : int
+            Bonustype : BonusTypes
+            }
+
+        type Bonus = {
+            Value : int
+            BonusType : BonusTypes
+            }
+
+        type SizeChange = {
+            SizeChangeValue : int
+            SizeChangeBonustype : BonusTypes
+            EffectiveSizeChange : bool
+            }
+
+        /// "0" 0 Flat if no StatChange
+        let createStatChange att attChange bType = {
+            Attribute = att
+            AttributeChange = attChange
+            Bonustype = bType
+            }
+
+        let createWeaponDamageMultiplicator handling multiplicator = {
+            Hand = handling
+            Multiplicator = multiplicator
+            }
+
+        /// 0 Flat if no Bonus
+        let createBonus value bType = {
+            Value = value
+            BonusType = bType
+            }
+
+        /// 0 Flat All if no BonusAttacks. num = number of bonus attacks; bonusAttackType = is meant for calculation of non-stacking effects like magus spell combat and twf
+        ///in that case both are TWF_Like; appliedToWeaponType = the Weapons that get bonus attacks e.g. haste goes to primaryMain, twf goes to primary, multiattack goes to secondary
+        let createBonusAttacks num bonusAttackType appliedToWeaponType= {
+            BonusAttacks.NumberOfBonusAttacks = num
+            BonusAttacks.TypeOfBonusAttacks = bonusAttackType
+            BonusAttacks.WeaponTypeWithBonusAttacks = appliedToWeaponType
+            }
+
+        /// 0 0 Untyped if no Damage. num = number of damage die; die is how many sides the damage die has; dType is e.g. Bludgeoning
+        let createDamage num die dType = {
+            Damage.NumberOfDie = num
+            Damage.Die = die
+            Damage.DamageType = dType
+            }
+
+        /// hitting = Modifier used for hitting; damage = Modifier used for damage calculation; multiplicator = how often is damage modifier added; 1.5 means that power attack is also increased
+        let createUsedModifier hitting damage handling multiplicator = {
+            ToHit = hitting
+            ToDmg = damage
+            MultiplicatorOnDamage = createWeaponDamageMultiplicator handling multiplicator
+            }
+
+        let createSizechange value bonusType yN = {
+            SizeChangeValue = value
+            SizeChangeBonustype = bonusType
+            EffectiveSizeChange = yN
+            }
+
+        /// Turns all letters in uppercase, which makes matchingfunctions more failproof.
+        let createStringForLib inputString =
+            inputString
+            |> String.map (fun x -> Char.ToUpper x)
+
+
+        type CharacterStats = 
+            {
+                CharacterName : string
+                BAB : int
+                Strength : int
+                Dexterity : int
+                Constitution: int
+                Intelligence: int
+                Wisdom: int
+                Charisma: int
+                CasterLevel1 : int
+                CasterLevel2 : int
+            }
+
+
+        type Weapon = {
+                Name                    : string
+                Damage                  : Damage
+                DamageBonus             : int
+                ExtraDamage             : Damage
+                BonusAttackRolls        : int
+                CriticalRange           : int []
+                CriticalModifier        : int
+                Modifier                : UsedModifier
+                ManufacturedOrNatural   : NaturalManufactured
+            }
+
+        type AttackModification =
+            {
+                Name                : string
+                BonusAttacks        : BonusAttacks
+                BonusAttackRoll     : Bonus
+                BonusDamage         : Bonus
+                ExtraDamage         : Damage
+                AppliedTo           : WeaponType [] * int
+                StatChanges         : StatChange []
+                SizeChanges         : SizeChange
+                Description         : string
+            }
 
     module Characters =
+
+        open AuxLibFunctions
 
         ///Stats for Character
         let myParrn =
@@ -225,6 +280,8 @@ module Library =
             }
 
     module Weapons =
+
+        open AuxLibFunctions
 
         let glaiveGuisarmePlus1Flaming = 
             {
@@ -397,6 +454,8 @@ module Library =
 
     module Modifications =
 
+        open AuxLibFunctions
+
         let Multiattack = 
             {
                 Name = "Multiattack"
@@ -406,6 +465,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|Secondary|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -418,6 +478,7 @@ module Library =
                 ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
                 AppliedTo = [|All|], 1        
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
 
@@ -431,6 +492,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|Primary; PrimaryMain|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }    
 
@@ -444,6 +506,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|Primary; PrimaryMain|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
 
@@ -456,6 +519,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
 
@@ -468,6 +532,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
 
@@ -480,6 +545,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -492,6 +558,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -504,6 +571,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -516,6 +584,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|PrimaryMain|], 1
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -528,6 +597,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -540,6 +610,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -552,6 +623,7 @@ module Library =
                 ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -564,6 +636,7 @@ module Library =
                 ExtraDamage = createDamage 1 6 Fire
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -576,18 +649,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
-                Description = ""
-            }
-    
-        let Small =
-            {
-                Name = "Small Size"
-                BonusAttacks = createBonusAttacks 0 NoBA All
-                BonusAttackRoll = createBonus 1 Size
-                BonusDamage = createBonus 0 Flat
-                ExtraDamage = createDamage 0 0 Untyped
-                AppliedTo = [|All|], -20
-                StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -600,6 +662,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -2 Alchemical)|]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
     
@@ -612,6 +675,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [|(createStatChange Strength 1 Size);(createStatChange Strength -1 Size)|]
+                SizeChanges = createSizechange 1 Polymorph false
                 Description = ""
             }
 
@@ -624,6 +688,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
 
@@ -636,6 +701,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
 
@@ -648,6 +714,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
         
@@ -660,6 +727,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
 
@@ -671,6 +739,7 @@ module Library =
                ExtraDamage = createDamage 0 0 Untyped
                AppliedTo = [|All|], -20
                StatChanges = [||]
+               SizeChanges = createSizechange 0 Flat false
                Description = ""
             }
     
@@ -684,6 +753,7 @@ module Library =
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|All|], -20
                 StatChanges = [||]
+                SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
 
@@ -692,13 +762,15 @@ module Library =
         open Modifications
         open Weapons
         open Characters
+        open AuxLibFunctions
+
 
         let showAll str =  
             let rdyStr = createStringForLib str
             match rdyStr with
             | rdyStr when rdyStr = "MODIFICATIONS" -> [|
-                                                        Multiattack;SneakAttackOnce 0;TwoWeaponFighting;ImprovedTwoWeaponFighting;Haste;FlurryOfBlows;Shaken;WeaponFocus;EnlargePerson;MutagenStrength;
-                                                        Small;Invisibility;PlanarFocus;SneakAttack 0;Wrath;DivineFavor;FuriousFocus 0;PowerAttack 0;Flanking;Charging;WeaponSpecialization;Fatigued;
+                                                        Multiattack;SneakAttackOnce 0;Modifications.TwoWeaponFighting;ImprovedTwoWeaponFighting;Haste;FlurryOfBlows;Shaken;WeaponFocus;EnlargePerson;MutagenStrength;
+                                                        Invisibility;PlanarFocus;SneakAttack 0;Wrath;DivineFavor;FuriousFocus 0;PowerAttack 0;Flanking;Charging;WeaponSpecialization;Fatigued;
                                                         AidAnother
                                                       |]
                                                       |> Array.map (fun x -> x.Name)
