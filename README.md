@@ -16,28 +16,23 @@ which can be spells, feats, class abilitys, debuffs and so on.
 ## How To Create Character Information
 
 Example for **Character Information** 
+For a detailed explaination to this topic please see the related documentation [Create Character](https://freymaurer.github.io/PathfinderAttackSimulator/CreateCharacter.html).
 
 ```fsharp
 open PathfinderLib.Library
 
 ///example on character information
-let myCharacter =
-    {
-	///the name of the character (the createStringForLib function makes it all upper case, 
-	///only used for future web application)
-    CharacterName = createStringForLib "characterName"
-	///Base attack bonus
-    BAB = 6
-	///the following terms will determine the corresponding ability score **modifier**(!)
-    Strength = 6
-    Dexterity = 0
-    Constitution = 0
-    Intelligence = 0
-    Wisdom = 0
-    Charisma = 0
-	///this can be used to calculate spellstrike's spelldamage for e.g. magus
-	CasterLevel1 = 0
-    CasterLevel2 = 0
+let myCharacter =  {
+        CharacterName = "Best Character Name Ever"
+        BAB = 6
+        Strength = 7
+        Dexterity = 3
+        Constitution = 2
+        Intelligence = -3
+        Wisdom = 0
+        Charisma = -3
+        CasterLevel1 = 0
+        CasterLevel2 = 0
     }
 ```
 
@@ -47,61 +42,39 @@ Example for **Weapon Information**
 
 ```fsharp
 open PathfinderLib.Library
-
+For a detailed explaination to this topic please see the related documentation [Weapon Creation](https://freymaurer.github.io/PathfinderAttackSimulator/CreateWeapon.html)
 ///example of weapon information
-let greatswordKeenHuge =
-    {
-		///just the name/description
-        Name                = "Huge +1 Keen Flaming Greatsword"
-		///creates dice damage, here: 4d6 slashing
-        Damage              = createDamage 4 6 Slashing
-		///+1 flat damage bonus from enchantment
-        DamageBonus         = 1
-		///creates extra dice damage, like from the flaming ability, 			here: 1d6 Fire Damage. 
-		///This sort of damage will be mentioned separatly in the output
-        ExtraDamage         = createDamage 1 6 Feuer
-		///+1 flat bonus to hot attacks from enchantment
-        BonusAttackRolls    = 1
-		///critical range; can also be written as [|17..20]
-        CriticalRange       = [|17;18;19;20|]
-		///modifier for crit which will be part of the output. Critical damage will not get calculated automatically yet.
+let keenflaming2greatsword = {
+        Name                = "+2 keen flaming greatsword"
+        Damage              = createDamage 2 6 Slashing
+        DamageBonus         = 2
+        ExtraDamage         = createDamage 1 6 Fire
+        BonusAttackRolls    = 2
+        CriticalRange       = [|17 .. 20|] 
         CriticalModifier    = 2
-		///determines the ability score to hit, to damage and the multiplier to damage (in this order)
-		///the multiplier should always only either be 0.5, 1. or 1.5 for a two-handed weapon.
-        Modifier            = createUsedModifier "Str" "Str" 1.5
-		///this is necessary to differenciate between natural and manufactured weapons (either "manufactured" or "natural")
-        ManufacturedOrNatural = createStringForLib "Manufactured"
-    }
+        Modifier            = createUsedModifier Strength Strength TwoHanded 1.5
+        ManufacturedOrNatural = Manufactured
+        }
 ```
 
 ## How To Create Modification Information
 
 Example for **Modification information**
-
+For a detailed explaination to this topic please see the related documentation [Modification Creation](https://freymaurer.github.io/PathfinderAttackSimulator/CreateModification.html)
 ```fsharp
 open PathfinderLib.Library
 
 ///Example modification information
-let Haste =
-    {
-        Name = "Haste"
-		///How many bonus attacks, the type of bonus attack and what weapon should be used for it.
-        BonusAttacks = createBonusAttacks 1 HasteLike PrimaryMain
-		///bonus to attack roll to hit and the bonus type
-        BonusAttackRoll = createBonus 1 Flat
-		///bonus to attack damage and the bonus type
-        BonusDamage = createBonus 0 Flat
-		///extra damage as described under weapon (e.g. Elemental Fist)
-        ExtraDamage = createDamage 0 0 Untyped
-		///To what weapon type this bonus modifier applies (either ALL, PrimaryMain, 
-		///Primary, Secondary) and to how many of these attacks.
-		///type -20 if to all attacks or e.g. 1 for a sneak attack out of invisibility
-        AppliedTo = [|All|], -20
-		///creates ability score changes; e.g. alchemist mutagen: 
-		///"(createStatChange "Str" 2 Alchemical); (createStatChange "Int" -2 Alchemical)"
-        StatChanges = [|createStatChange "0" 0 Flat|]
-		///this will be used in a future web application to show a descriptive tooltip
-        Description = ""
+let Haste = {
+    Name = "Haste"
+    BonusAttacks = createBonusAttacks 1 HasteLike PrimaryMain
+    BonusAttackRoll = createBonus 1 Flat
+    BonusDamage = createBonus 0 Flat
+    ExtraDamage = createDamage 0 0 Untyped
+    AppliedTo = [|All|], -20
+    StatChanges = [||]
+    SizeChanges = createSizechange 0 Flat false
+    Description = "Range: Close (25 ft. + 5 ft./2 levels). One creature/level, no two of which can be more than 30 ft. apart."
     }
 ```
 ## Standard Attack Action
@@ -115,18 +88,17 @@ open PathfinderAttackSimulator.Library.Weapons
 open PathfinderAttackSimulator.Library.Characters
 open PathfinderAttackSimulator.StandardAttackAction
 
-myStandardAttack myRogue greatswordRogue [|SneakAttack 8; PowerAttack myRogue.BAB; EnlargePerson; MutagenStrength; Heroism|]
+myStandardAttack myRogue Medium greatswordRogue [|Flanking; SneakAttack 8; PowerAttack myRogue.BAB; EnlargePerson; MutagenStrength; FuriousFocus myRogue.BAB|]
 
-Output: > Du triffst den Gegner mit 23 (gewuerfelt 8) fuer 33 Slashing Schaden +14 Precision Schaden !
+Output: > You hit the enemy with a 20 (rolled 3) for 31 Slashing damage +16 Precision Schaden !
 ```
-So the function needs a character, a weapon and an array ( **[| |]** ) of modifications. At this point i already made some modifications with automatic further calculations. See for example "SneakAttack _rogue level_" or "PowerAttack _character BAB_".
-If you only use weapons and characters not found in the library then you don'
-t need to open those modules.
+So the function needs a character, the size the creature has without any buffs (e.g. enlarge person), a weapon (the character wields at that size) and an array ( **[| |]** ) of modifications. At this point i already made some modifications with automatic further calculations. See for example "SneakAttack _rogue level_" or "PowerAttack _character BAB_".
+If you only use weapons and characters not found in the library then you don't need to open those modules.
 
 ## Full Round Attack Action
 
-This function returns the output of a full round attack action routine with multiple weapons. It can apply bonus attacks to a specific weapon and also have modifications only apply to one weapon type. This will be further enhance in the future.
-> let's see what our rogue can do in a full round attack action. Only that he somehow got some Haste buffed and now also has an additional bite attack
+This function returns the output of a full round attack action routine with multiple weapons. It can apply bonus attacks to a specific weapon and also have modifications only apply to one weapon type. This will be further enhanced in the future.
+> let's see what our rogue can do in a full round attack action. Only that he somehow got some Haste buffed and now also has an additional bite attack... and somehow dual wields two of his greatsword... .
 ```fsharp
 open PathfinderAttackSimulator.Library
 open PathfinderAttackSimulator.Library.Modifications
@@ -134,14 +106,15 @@ open PathfinderAttackSimulator.Library.Weapons
 open PathfinderAttackSimulator.Library.Characters
 open PathfinderAttackSimulator.FullRoundAttackAction
 
-myFullAttack myRogue [|greatswordRogue,PrimaryMain; Weapons.bite,Secondary|] [|Flanking;SneakAttack 8; MutagenStrength; Haste|]
+myFullAttack myRogue Medium [|greatswordRogue,PrimaryMain; greatswordRogue,Primary; Weapons.bite,Secondary|] [|Flanking; SneakAttack 8; MutagenStrength; Haste; TwoWeaponFighting|]
 
-> Du greifst mit Large +1 Keen Greatsword an und crittest (hoffentlich) den Gegner mit 37 (gewuerfelt 19) und bestaetigst mit 26 (gewuerfelt 8) fuer 27 Slashing Schaden +18 Precision Schaden (crit * 2)!
-> Du greifst mit Large +1 Keen Greatsword an und triffst den Gegner mit 22 (gewuerfelt 4) fuer 22 Slashing Schaden +14 Precision Schaden !
-> Du greifst mit Large +1 Keen Greatsword an und triffst den Gegner mit 25 (gewuerfelt 7) fuer 24 Slashing Schaden +20 Precision Schaden !
-> Du greifst mit Bite an und triffst den Gegner mit 26 (gewuerfelt 9) fuer 8 BludgeoningOrPiercingOrSlashing Schaden +9 Precision Schaden !
+> You attack with a Large +1 Keen Greatsword and (hopefully) critically hit the enemy with a 36 (rolled 20) and confirm your crit with a 26 (rolled 10) for 22 Slashing damage +15 Precision Schaden (crit * 2)!
+> You attack with a Large +1 Keen Greatsword and (hopefully) critically hit the enemy with a 34 (rolled 18) and confirm your crit with a 26 (rolled 10) for 24 Slashing damage +16 Precision Schaden (crit * 2)!
+> You attack with a Large +1 Keen Greatsword and hit the enemy with a 18 (rolled 7) for 16 Slashing damage +19 Precision Schaden !
+> You attack with a Large +1 Keen Greatsword and hit the enemy with a 22 (rolled 6) for 17 Slashing damage +13 Precision Schaden !
+> You attack with a Bite and hit the enemy with a 31 (rolled 19) for 5 BludgeoningOrPiercingOrSlashing damage +11 Precision Schaden !
 ```
-> Oh nice a crit! As you can see a crit is not automatically calculated, to make it easier in case you could'nt confirm it.
+> Oh nice! Some crits! As you can see a crit is not automatically calculated, to make it easier in case you could'nt confirm it.
 
 The function is made in a way to provide maximum flexibility, thats why you need to add the information, as what type of weapon a weapon should be used.
 Here are some examples:

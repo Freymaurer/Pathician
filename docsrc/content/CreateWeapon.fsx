@@ -15,11 +15,11 @@ Right now this is not hand-held at all, but might get better in a future version
 
 Let's start with an easy example a +2 keen flaming greatsword
 
-### +2 keen flaming greatsword
+### +2 Keen Flaming Greatsword
 *)
 
 #r "PathfinderAttackSimulator.dll"
-open PathfinderAttackSimulator.Library
+open PathfinderAttackSimulator.Library.AuxLibFunctions
 
 let keenflaming2greatsword = {
         Name                = "+2 keen flaming greatsword"
@@ -35,14 +35,14 @@ let keenflaming2greatsword = {
 
 (**
 The most difficult part might actually be to think of a nice name for the type-binding, as you can't start with a number.
-Because a weapon is a type it is really easy to handle, as you can just dot into the weapon name if you are unsure if you made some mistake creating the weapon
+Because a weapon is a type it is really easy to handle, as you can just dot into the weapon name if you are unsure if you made some mistake creating the weapon.
 *)
 
-let showName = keenflaming2greatsword.Name
+let showName = sprintf "The name of this weapon is: %A." keenflaming2greatsword.Name
 
 (*** include-value:showName ***)
 
-let showDamageDie = keenflaming2greatsword.Damage.Die
+let showDamageDie = sprintf "This weapon uses %Ad%A for its damage calculation." keenflaming2greatsword.Damage.NumberOfDie keenflaming2greatsword.Damage.Die 
 
 (*** include-value:showDamageDie ***)
 

@@ -163,10 +163,10 @@ module Library =
             MultiplicatorOnDamage = createWeaponDamageMultiplicator handling multiplicator
             }
 
-        let createSizechange value bonusType yN = {
+        let createSizechange value bonusType effectiveSizeChange = {
             SizeChangeValue = value
             SizeChangeBonustype = bonusType
-            EffectiveSizeChange = yN
+            EffectiveSizeChange = effectiveSizeChange
             }
 
         /// Turns all letters in uppercase, which makes matchingfunctions more failproof.
@@ -453,7 +453,7 @@ module Library =
             }
     
         let SneakAttackOnce rogueLevel = {
-            Name = "Sneak Attack auf dem ersten Angriff"
+            Name = "Sneak Attack on first attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createBonus 0 BonusTypes.Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
@@ -461,7 +461,7 @@ module Library =
             AppliedTo = [|All|], 1        
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
-            Description = ""
+            Description = "Sneak Attack on first attack. This can happen due to a stealth attack or an full-round attack action from invisibility"
             }
 
         ///mit allen als Primary gelisteten Waffen; bisher nur mit -2 auf Treffen

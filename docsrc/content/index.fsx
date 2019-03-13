@@ -30,36 +30,43 @@ This example demonstrates the full round attack action calculater, which is able
 * crits and confirmation rolls
 * damage rolls
 * which boni stack and which not
+* calculate the size depending on size modifiers e.g. from enlarger person or improved natural attack
+* resize the used weapons depending on the size change
 
 to just list a few of the implemented options.
+
+> Parrn is one of my characters i currently play. He is a half-giant rogue with 20 strength (_please don't judge_) and likes to hit like a truck with his greatsword.
+> And because he has some familiars that attack with him, using such a script is a nice option for me, because it frees up some mindpower for roleplaying and strategy, without having to worry about
+> missing some modifiers or calculating everything wrong.
 
 *)
 #r "PathfinderAttackSimulator.dll"
 open PathfinderAttackSimulator.FullRoundAttackAction
-open PathfinderAttackSimulator.Library
+open PathfinderAttackSimulator.Library.AuxLibFunctions
 open PathfinderAttackSimulator.Library.Characters
 open PathfinderAttackSimulator.Library.Modifications
 open PathfinderAttackSimulator.Library.Weapons
 
-myFullAttack myParrn    [|greatswordParrnHuge,PrimaryMain;
-                        bite,Secondary|]                                
-                        
-                        [|EnlargePerson;
-                        MutagenStrength;
-                        Haste;
-                        SneakAttack 8;
-                        PowerAttack myParrn.BAB;
-                        FuriousFocus 8|]
-
+myFullAttack myParrn Medium [|greatswordParrn,PrimaryMain; 
+                            greatswordParrn,Primary; 
+                            bite,Secondary|] 
+                            
+                            [|Flanking; 
+                            SneakAttack 8; 
+                            MutagenStrength; 
+                            Haste; 
+                            TwoWeaponFighting|]
 (**
-> Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 23 (gewuerfelt 6) fuer 34 Slashing Schaden +9 Precision Schaden !
+> You attack with a Large +1 Keen Greatsword and (hopefully) critically hit the enemy with a 35 (rolled 19) and confirm your crit with a 20 (rolled 4) for 26 Slashing damage +9 Precision Schaden (crit * 2)!
 >
-> Du greifst mit Huge +1 Keen Greatsword an und crittest (hoffentlich) den Gegner mit 31 (gewuerfelt 17) und bestaetigst mit 29 (gewuerfelt 15) fuer 33 Slashing Schaden +17 Precision Schaden (crit * 2)!
+> You attack with a Large +1 Keen Greatsword and hit the enemy with a 19 (rolled 3) for 25 Slashing damage +12 Precision Schaden !
 >
-> Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 15 (gewuerfelt 1) fuer 31 Slashing Schaden +19 Precision Schaden !
+> You attack with a Large +1 Keen Greatsword and hit the enemy with a 12 (rolled 1) for 29 Slashing damage +8 Precision Schaden !
 >
-> Du greifst mit Bite an und crittest (hoffentlich) den Gegner mit 33 (gewuerfelt 20) und bestaetigst mit 32 (gewuerfelt 19) fuer 10 BludgeoningOrPiercingOrSlashing Schaden +17 Precision Schaden (crit * 2)!
-
+> You attack with a Large +1 Keen Greatsword and hit the enemy with a 30 (rolled 14) for 16 Slashing damage +12 Precision Schaden !
+>
+> You attack with a Bite and hit the enemy with a 30 (rolled 18) for 10 BludgeoningOrPiercingOrSlashing damage +10 Precision Schaden !
+>
 
 Samples & documentation
 -----------------------
