@@ -16,7 +16,7 @@ which can be spells, feats, class abilitys, debuffs and so on.
 ## How To Create Character Information
 
 Example for **Character Information** 
-For a detailed explaination to this topic please see the related documentation [Create Character](https://freymaurer.github.io/PathfinderAttackSimulator/CreateCharacter.html).
+For a detailed explanation to this topic please see the related documentation [Create Character](https://freymaurer.github.io/PathfinderAttackSimulator/CreateCharacter.html).
 
 ```fsharp
 open PathfinderLib.Library
@@ -39,10 +39,10 @@ let myCharacter =  {
 ## How To Create Weapon Information
 
 Example for **Weapon Information**
+For a detailed explanation to this topic please see the related documentation [Weapon Creation](https://freymaurer.github.io/PathfinderAttackSimulator/CreateWeapon.html)
 
 ```fsharp
 open PathfinderLib.Library
-For a detailed explaination to this topic please see the related documentation [Weapon Creation](https://freymaurer.github.io/PathfinderAttackSimulator/CreateWeapon.html)
 ///example of weapon information
 let keenflaming2greatsword = {
         Name                = "+2 keen flaming greatsword"
@@ -60,7 +60,7 @@ let keenflaming2greatsword = {
 ## How To Create Modification Information
 
 Example for **Modification information**
-For a detailed explaination to this topic please see the related documentation [Modification Creation](https://freymaurer.github.io/PathfinderAttackSimulator/CreateModification.html)
+For a detailed explanation to this topic please see the related documentation [Modification Creation](https://freymaurer.github.io/PathfinderAttackSimulator/CreateModification.html)
 ```fsharp
 open PathfinderLib.Library
 
@@ -98,7 +98,7 @@ If you only use weapons and characters not found in the library then you don't n
 ## Full Round Attack Action
 
 This function returns the output of a full round attack action routine with multiple weapons. It can apply bonus attacks to a specific weapon and also have modifications only apply to one weapon type. This will be further enhanced in the future.
-> let's see what our rogue can do in a full round attack action. Only that he somehow got some Haste buffed and now also has an additional bite attack... and somehow dual wields two of his greatsword... .
+> let's see what our rogue can do in a full round attack action. Only that he somehow got some Haste buffed and now also has an additional bite attack... and somehow dual wields two of his greatswords ... .
 ```fsharp
 open PathfinderAttackSimulator.Library
 open PathfinderAttackSimulator.Library.Modifications
