@@ -1,7 +1,7 @@
 (*** hide ***)
 // This block of code is omitted in the generated HTML documentation. Use 
 // it to define helpers that you do not want to show in the documentation.
-#I "../../bin"
+#I "../../src/PathfinderAttackSimulator/bin/Release/netstandard2.0"
 
 (**
 PathfinderAttackSimulator
@@ -20,19 +20,53 @@ Documentation
   <div class="span1"></div>
 </div>
 
-Example
+Example for a automatic calculated full round attack action.
 -------
 
-This example demonstrates using a function defined in this sample library.
+This example demonstrates the full round attack action calculater, which is able to automatically: 
+
+* the number of attacks
+* boni from all kind of modifications
+* crits and confirmation rolls
+* damage rolls
+* which boni stack and which not
+* calculate the size depending on size modifiers e.g. from enlarger person or improved natural attack
+* resize the used weapons depending on the size change
+
+to just list a few of the implemented options.
+
+> Parrn is one of my characters i currently play. He is a half-giant rogue with 20 strength (_please don't judge_) and likes to hit like a truck with his greatsword.
+> And because he has some familiars that attack with him, using such a script is a nice option for me, because it frees up some mindpower for roleplaying and strategy, without having to worry about
+> missing some modifiers or calculating everything wrong.
 
 *)
 #r "PathfinderAttackSimulator.dll"
-open PathfinderAttackSimulator
+open PathfinderAttackSimulator.FullRoundAttackAction
+open PathfinderAttackSimulator.Library.AuxLibFunctions
+open PathfinderAttackSimulator.Library.Characters
+open PathfinderAttackSimulator.Library.Modifications
+open PathfinderAttackSimulator.Library.Weapons
 
-printfn "hello = %i" <| Library.hello 0
-
+myFullAttack myParrn Medium [|greatswordParrn,PrimaryMain; 
+                            greatswordParrn,Primary; 
+                            bite,Secondary|] 
+                            
+                            [|Flanking; 
+                            SneakAttack 8; 
+                            MutagenStrength; 
+                            Haste; 
+                            TwoWeaponFighting|]
 (**
-Some more info
+> You attack with a Large +1 Keen Greatsword and (hopefully) critically hit the enemy with a 35 (rolled 19) and confirm your crit with a 20 (rolled 4) for 26 Slashing damage +9 Precision Schaden (crit * 2)!
+>
+> You attack with a Large +1 Keen Greatsword and hit the enemy with a 19 (rolled 3) for 25 Slashing damage +12 Precision Schaden !
+>
+> You attack with a Large +1 Keen Greatsword and hit the enemy with a 12 (rolled 1) for 29 Slashing damage +8 Precision Schaden !
+>
+> You attack with a Large +1 Keen Greatsword and hit the enemy with a 30 (rolled 14) for 16 Slashing damage +12 Precision Schaden !
+>
+> You attack with a Bite and hit the enemy with a 30 (rolled 18) for 10 BludgeoningOrPiercingOrSlashing damage +10 Precision Schaden !
+>
 
 Samples & documentation
 -----------------------
