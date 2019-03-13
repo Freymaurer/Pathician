@@ -15,12 +15,12 @@ module StandardAttackAction =
         let rollDice count (diceSides:int) =
             let rnd = System.Random()
             if diceSides = 0 
-                then [|0|]
-                else Array.init count (fun _ -> rnd.Next (1, diceSides+1))
+            then [|0|]
+            else Array.init count (fun _ -> rnd.Next (1, diceSides+1))
         
         let getRandArrElement =
-          let rnd = Random()
-          fun (arr : int[]) -> arr.[rnd.Next(arr.Length)]
+            let rnd = Random()
+            fun (arr : int[]) -> arr.[rnd.Next(arr.Length)]
     
     open AuxFunctions
     
@@ -30,48 +30,48 @@ module StandardAttackAction =
 
             let startSize =
                 match size with
-                    | Fine          -> 1
-                    | Diminuitive   -> 2
-                    | Tiny          -> 3
-                    | Small         -> 4
-                    | Medium        -> 5
-                    | Large         -> 6
-                    | Huge          -> 7
-                    | Gargantuan    -> 8
-                    | Colossal      -> 9
+                | Fine          -> 1
+                | Diminuitive   -> 2
+                | Tiny          -> 3
+                | Small         -> 4
+                | Medium        -> 5
+                | Large         -> 6
+                | Huge          -> 7
+                | Gargantuan    -> 8
+                | Colossal      -> 9
             let changeSizeBy =
                 modifications
                 |> Array.filter (fun x -> x.SizeChanges.EffectiveSizeChange = false)
                 |> Array.map (fun x -> x.SizeChanges)
                 |> Array.groupBy (fun x -> x.SizeChangeBonustype)
                 |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
-                                                            then bonusArr
-                                                                |> Array.sortByDescending (fun x -> x.SizeChangeValue) 
-                                                                |> fun x -> Array.head x
-                                                                |> fun x -> x.SizeChangeValue
+                                                       then bonusArr
+                                                            |> Array.sortByDescending (fun x -> x.SizeChangeValue) 
+                                                            |> fun x -> Array.head x
+                                                            |> fun x -> x.SizeChangeValue
                                                        elif header = BonusTypes.Flat
-                                                            then bonusArr
-                                                                |> Array.map (fun x -> x.SizeChangeValue)
-                                                                |> Array.sum
-                                                            else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'" 
+                                                       then bonusArr
+                                                            |> Array.map (fun x -> x.SizeChangeValue)
+                                                            |> Array.sum
+                                                       else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'" 
                              )
                 |> Array.sum
 
             (startSize + changeSizeBy)
             |> fun x -> if x > 9 then 9
                         elif x < 1 then 1
-                            else x
+                        else x
 
         ///
         let getUsedModifierToHit =
             match weapon.Modifier.ToHit with
-            | Strength -> char.Strength
-            | Dexterity -> char.Dexterity
-            | Constitution -> char.Constitution
-            | Intelligence -> char.Intelligence
-            | Wisdom -> char.Wisdom
-            | Charisma -> char.Charisma
-            | _ -> 0
+            | Strength      -> char.Strength
+            | Dexterity     -> char.Dexterity
+            | Constitution  -> char.Constitution
+            | Intelligence  -> char.Intelligence
+            | Wisdom        -> char.Wisdom
+            | Charisma      -> char.Charisma
+            | _             -> 0
     
         ///
         let getStatChangesToHit =
@@ -93,15 +93,15 @@ module StandardAttackAction =
             |> Array.map (fun x -> x.BonusAttackRoll)
             |> Array.groupBy (fun x -> x.BonusType)
             |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
-                                                        then bonusArr
-                                                            |> Array.sortByDescending (fun x -> x.Value) 
-                                                            |> fun x -> Array.head x
-                                                            |> fun x -> x.Value
+                                                   then bonusArr
+                                                        |> Array.sortByDescending (fun x -> x.Value) 
+                                                        |> fun x -> Array.head x
+                                                        |> fun x -> x.Value
                                                    elif header = BonusTypes.Flat
-                                                        then bonusArr
-                                                            |> Array.map (fun x -> x.Value)
-                                                            |> Array.sum
-                                                        else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'"
+                                                   then bonusArr
+                                                        |> Array.map (fun x -> x.Value)
+                                                        |> Array.sum
+                                                   else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'"
                           )
             |> Array.sum
         
@@ -124,11 +124,11 @@ module StandardAttackAction =
             |> fun roll -> roll, Array.map (fun x -> roll = x) weapon.CriticalRange
             |> fun (x,y) -> x, Array.contains true y ///TODO: this can be done shorter
             |> fun (firstRoll,crit) -> firstRoll, if crit = true
-                                                        then getRandArrElement getAttackRolls
-                                                        else -20
+                                                  then getRandArrElement getAttackRolls
+                                                  else -20
             |> fun (firstRoll,crit) -> if crit <> -20 
-                                            then firstRoll + getBonusToAttack, firstRoll, crit + getBonusToAttack, crit
-                                            else firstRoll + getBonusToAttack, firstRoll,-20,-20
+                                       then firstRoll + getBonusToAttack, firstRoll, crit + getBonusToAttack, crit
+                                       else firstRoll + getBonusToAttack, firstRoll,-20,-20
     
         ///
         let getDamageRolls die =
@@ -150,13 +150,13 @@ module StandardAttackAction =
         ///
         let addDamageMod =
             match weapon.Modifier.ToDmg with
-                | Strength -> char.Strength
-                | Dexterity -> char.Dexterity
-                | Constitution -> char.Constitution
-                | Intelligence -> char.Intelligence
-                | Wisdom -> char.Wisdom
-                | Charisma -> char.Charisma
-                | _ -> 0
+                | Strength      -> char.Strength
+                | Dexterity     -> char.Dexterity
+                | Constitution  -> char.Constitution
+                | Intelligence  -> char.Intelligence
+                | Wisdom        -> char.Wisdom
+                | Charisma      -> char.Charisma
+                | _             -> 0
             |> fun stat -> ((float stat + getStatChangesToDmg) * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
     
         let sizeAdjustedWeaponDamage =
@@ -180,22 +180,22 @@ module StandardAttackAction =
                     |> Array.map (fun x -> x.SizeChanges)
                     |> Array.groupBy (fun x -> x.SizeChangeBonustype)
                     |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
-                                                                then bonusArr
-                                                                    |> Array.sortByDescending (fun x -> x.SizeChangeValue) 
-                                                                    |> fun x -> Array.head x
-                                                                    |> fun x -> x.SizeChangeValue
+                                                           then bonusArr
+                                                                |> Array.sortByDescending (fun x -> x.SizeChangeValue) 
+                                                                |> fun x -> Array.head x
+                                                                |> fun x -> x.SizeChangeValue
                                                            elif header = BonusTypes.Flat
-                                                                then bonusArr
-                                                                    |> Array.map (fun x -> x.SizeChangeValue)
-                                                                    |> Array.sum
-                                                                else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'" 
+                                                           then bonusArr
+                                                                |> Array.map (fun x -> x.SizeChangeValue)
+                                                                |> Array.sum
+                                                           else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'" 
                                  )
                     |> Array.sum
 
                 (startSize + changeSizeBy)
                 |> fun x -> if x > 9 then 9
                             elif x < 1 then 1
-                                else x
+                            else x
 
             let diceRow = 
                 [|(1,1);(1,2);(1,3);(1,4);(1,6);(1,8);(1,10);(2,6);(2,8);(3,6);(3,8);
@@ -205,66 +205,66 @@ module StandardAttackAction =
             let getSizeChange reCalcWeapon (startS: int) (modifiedS: int) =
                 let snowFlakeIncrease numberofdice (die: int) =
                     match numberofdice with 
-                        | 1 -> 2,die
-                        | _ -> (numberofdice + int (floor (float numberofdice)*(1./3.))), die
+                    | 1 -> 2,die
+                    | _ -> (numberofdice + int (floor (float numberofdice)*(1./3.))), die
                 let snowFlakeDecrease numberofdice (die: int) =
                     match numberofdice with 
-                        | 2 -> 1,die
-                        | _ -> (numberofdice - int (floor (float numberofdice)*(1./3.))), die
+                    | 2 -> 1,die
+                    | _ -> (numberofdice - int (floor (float numberofdice)*(1./3.))), die
                 let isEven x = (x % 2) = 0         
                 let isOdd x = (x % 2) = 1
                 let sizeDiff = modifiedS - startS
                 let decInc = if sizeDiff < 0 then (-1.)
-                                elif sizeDiff > 0 then (1.)
-                                else 0.
+                             elif sizeDiff > 0 then (1.)
+                             else 0.
                 let adjustedDie = match reCalcWeapon.Damage.Die with
-                                    | 2 -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                    | 3 -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                    | 4 -> match reCalcWeapon.Damage.NumberOfDie with
-                                                    | 1 -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                                    | odd when isOdd reCalcWeapon.Damage.NumberOfDie = true -> int (ceil (float reCalcWeapon.Damage.NumberOfDie/2.)), 6
-                                                    | even when isEven reCalcWeapon.Damage.NumberOfDie = true -> (reCalcWeapon.Damage.NumberOfDie/2), 8
-                                                    | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error4"
-                                    | 6 -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                    | 8 -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                    | 10 -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                    | 12 -> (reCalcWeapon.Damage.NumberOfDie*2), 6
-                                    | 20 -> (reCalcWeapon.Damage.NumberOfDie*2), 10
-                                    | _ -> if reCalcWeapon.Damage.Die % 10 = 0
-                                                then ((reCalcWeapon.Damage.Die / 10) * reCalcWeapon.Damage.NumberOfDie), 10
-                                            elif reCalcWeapon.Damage.Die % 6 = 0
-                                                then ((reCalcWeapon.Damage.Die / 6) * reCalcWeapon.Damage.NumberOfDie), 6
-                                            elif reCalcWeapon.Damage.Die % 4 = 0 
-                                                then ((reCalcWeapon.Damage.Die / 4) * reCalcWeapon.Damage.NumberOfDie), 4
-                                                else reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
+                                  | 2   -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
+                                  | 3   -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
+                                  | 4   -> match reCalcWeapon.Damage.NumberOfDie with
+                                           | 1                                                       -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
+                                           | odd when isOdd reCalcWeapon.Damage.NumberOfDie = true   -> int (ceil (float reCalcWeapon.Damage.NumberOfDie/2.)), 6
+                                           | even when isEven reCalcWeapon.Damage.NumberOfDie = true -> (reCalcWeapon.Damage.NumberOfDie/2), 8
+                                           | _                                                       -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error4"
+                                  | 6   -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
+                                  | 8   -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
+                                  | 10  -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
+                                  | 12  -> (reCalcWeapon.Damage.NumberOfDie*2), 6
+                                  | 20  -> (reCalcWeapon.Damage.NumberOfDie*2), 10
+                                  | _   -> if reCalcWeapon.Damage.Die % 10 = 0
+                                           then ((reCalcWeapon.Damage.Die / 10) * reCalcWeapon.Damage.NumberOfDie), 10
+                                           elif reCalcWeapon.Damage.Die % 6 = 0
+                                           then ((reCalcWeapon.Damage.Die / 6) * reCalcWeapon.Damage.NumberOfDie), 6
+                                           elif reCalcWeapon.Damage.Die % 4 = 0 
+                                           then ((reCalcWeapon.Damage.Die / 4) * reCalcWeapon.Damage.NumberOfDie), 4
+                                           else reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
                 let adjustedDieNum = fst adjustedDie
                 let adjustedDietype = snd adjustedDie
 
                 let rec loopResizeWeapon (n:int) (nDice:int) (die:int) = 
 
                     let stepIncrease = if startS + (int decInc*n) < 5 || (nDice * die) < 6 
-                                        then 1
-                                        else 2
+                                       then 1
+                                       else 2
                     let stepDecrease = if startS + (int decInc*n) < 6 || (nDice * die) < 8 
-                                        then 1
-                                        else 2
+                                       then 1
+                                       else 2
                     let findRowPosition =
                         Array.tryFindIndex (fun (x,y) -> x = nDice && y = die) diceRow
                     if sizeDiff = 0 || n >= abs sizeDiff
                         then nDice, die
                         else findRowPosition
-                                |> fun x -> if (x.IsSome) 
-                                                then match decInc with 
-                                                        | dec when decInc < 0. -> if x.Value < 1 then diceRow.[0] else diceRow.[x.Value - stepDecrease]
-                                                        | inc when decInc > 0. -> if x.Value > (diceRow.Length-3) then (snowFlakeIncrease nDice die) else diceRow.[x.Value + stepIncrease]
-                                                        | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error1"
-                                            elif x.IsSome = false 
-                                                then match decInc with 
-                                                        | dec when decInc < 0. -> snowFlakeDecrease nDice die
-                                                        | inc when decInc > 0. -> snowFlakeIncrease nDice die
-                                                        | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error2"
-                                                else failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error3"
-                                |> fun (nDie,die) -> loopResizeWeapon (n+1) nDie die
+                             |> fun x -> if (x.IsSome) 
+                                         then match decInc with 
+                                              | dec when decInc < 0. -> if x.Value < 1 then diceRow.[0] else diceRow.[x.Value - stepDecrease]
+                                              | inc when decInc > 0. -> if x.Value > (diceRow.Length-3) then (snowFlakeIncrease nDice die) else diceRow.[x.Value + stepIncrease]
+                                              | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error1"
+                                         elif x.IsSome = false 
+                                         then match decInc with 
+                                              | dec when decInc < 0. -> snowFlakeDecrease nDice die
+                                              | inc when decInc > 0. -> snowFlakeIncrease nDice die
+                                              | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error2"
+                                         else failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error3"
+                             |> fun (nDie,die) -> loopResizeWeapon (n+1) nDie die
 
                 loopResizeWeapon 0 adjustedDieNum adjustedDietype
                 |> fun (n,die) -> createDamage n die reCalcWeapon.Damage.DamageType
@@ -276,8 +276,8 @@ module StandardAttackAction =
             let rec getRandRoll listOfRolls =
                 (getRandArrElement (getDamageRolls sizeAdjustedWeaponDamage.Die) )::listOfRolls
                 |> fun rollList -> if rollList.Length >= (sizeAdjustedWeaponDamage.NumberOfDie)
-                                        then rollList
-                                        else getRandRoll rollList
+                                   then rollList
+                                   else getRandRoll rollList
             getRandRoll [] |> List.toArray |> Array.sum
             |> fun damageDice -> damageDice + weapon.DamageBonus
     
@@ -286,13 +286,12 @@ module StandardAttackAction =
             let rec getRandRoll listOfRolls die number =
                 (getRandArrElement (getDamageRolls die))::listOfRolls
                 |> fun rollList -> if rollList.Length >= number
-                                        then rollList
-                                        else getRandRoll rollList die number
+                                   then rollList
+                                   else getRandRoll rollList die number
             [|weapon.ExtraDamage|]
             |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage) )
             |> Array.map (fun extraD -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
-                                                       , 
-                                                       extraD.DamageType
+                                        , extraD.DamageType
                          )
             |> Array.groupBy snd
             |> Array.map snd
@@ -303,13 +302,13 @@ module StandardAttackAction =
                                                                            || x = VitalStrikeImproved 
                                                                            || x = VitalStrikeGreater) modifications)
                                then Array.filter (fun x -> x.ExtraDamage.DamageType = VitalStrikeDamage) modifications
-                                        |> Array.sortByDescending (fun x -> x.ExtraDamage.NumberOfDie)
-                                        |> Array.head
-                                        |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.NumberOfDie do
-                                                            yield getRandRoll [] sizeAdjustedWeaponDamage.Die sizeAdjustedWeaponDamage.NumberOfDie|]
-                                        |> Array.map List.sum
-                                        |> Array.sum
-                                        |> fun x -> Array.append [|x,sizeAdjustedWeaponDamage.DamageType|] extraDmg
+                                    |> Array.sortByDescending (fun x -> x.ExtraDamage.NumberOfDie)
+                                    |> Array.head
+                                    |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.NumberOfDie do
+                                                        yield getRandRoll [] sizeAdjustedWeaponDamage.Die sizeAdjustedWeaponDamage.NumberOfDie|]
+                                    |> Array.map List.sum
+                                    |> Array.sum
+                                    |> fun x -> Array.append [|x,sizeAdjustedWeaponDamage.DamageType|] extraDmg
                                else extraDmg
             |> Array.filter (fun x -> x <> (0,Untyped) && x <> (0,VitalStrikeDamage) )
 
@@ -326,20 +325,20 @@ module StandardAttackAction =
             |> Array.map (fun x -> x.BonusDamage)
             |> Array.groupBy (fun x -> x.BonusType)
             |> Array.map (fun (x,bonusArr) -> if x <> BonusTypes.Flat 
-                                                    then bonusArr
-                                                            |> Array.sortByDescending (fun x -> x.Value) 
-                                                            |> fun x -> Array.head x
-                                                            |> fun x -> x.Value
-                                                    else bonusArr
-                                                            |> Array.map (fun x -> x.Value)
-                                                            |> Array.sum                   
+                                              then bonusArr
+                                                   |> Array.sortByDescending (fun x -> x.Value) 
+                                                   |> fun x -> Array.head x
+                                                   |> fun x -> x.Value
+                                              else bonusArr
+                                                   |> Array.map (fun x -> x.Value)
+                                                   |> Array.sum                   
                           )
             |> Array.sum
             |> fun bonus -> if (Array.contains (PowerAttack char.BAB) modifications) = true 
                                 && weapon.Modifier.MultiplicatorOnDamage.Hand = TwoHanded
-                                    then float bonus + ((float (PowerAttack char.BAB).BonusDamage.Value) * 0.5) 
-                                            |> int
-                                    else bonus
+                            then float bonus + ((float (PowerAttack char.BAB).BonusDamage.Value) * 0.5) 
+                                 |> int
+                            else bonus
         ///
         let getDamage = 
             addDamageMod + addWeaponDamage + addDamageBoni
