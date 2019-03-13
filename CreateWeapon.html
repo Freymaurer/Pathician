@@ -40,7 +40,7 @@
 <p>A weapon needs certain informations for a correct calculation.
 Right now this is not hand-held at all, but might get better in a future version.</p>
 <p>Let's start with an easy example a +2 keen flaming greatsword</p>
-<h3><a name="2-keen-flaming-greatsword" class="anchor" href="#2-keen-flaming-greatsword">+2 keen flaming greatsword</a></h3>
+<h3><a name="2-Keen-Flaming-Greatsword" class="anchor" href="#2-Keen-Flaming-Greatsword">+2 Keen Flaming Greatsword</a></h3>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
 <span class="l"> 3: </span>
@@ -57,38 +57,38 @@ Right now this is not hand-held at all, but might get better in a future version
 <span class="l">14: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pp">#r</span> <span class="s">&quot;PathfinderAttackSimulator.dll&quot;</span>
-<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Library</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">AuxLibFunctions</span>
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">keenflaming2greatsword</span> <span class="o">=</span> <span class="pn">{</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">keenflaming2greatsword</span> <span class="o">=</span> <span class="pn">{</span>
         <span class="id">Name</span>                <span class="o">=</span> <span class="s">&quot;+2 keen flaming greatsword&quot;</span>
-        <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">Damage</span>              <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="fn">createDamage</span> <span class="n">2</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="uc">Slashing</span>
+        <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="id">Damage</span>              <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="fn">createDamage</span> <span class="n">2</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="uc">Slashing</span>
         <span class="id">DamageBonus</span>         <span class="o">=</span> <span class="n">2</span>
-        <span class="id">ExtraDamage</span>         <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="fn">createDamage</span> <span class="n">1</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs7', 8)" onmouseover="showTip(event, 'fs7', 8)" class="uc">Fire</span>
+        <span class="id">ExtraDamage</span>         <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="fn">createDamage</span> <span class="n">1</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="uc">Fire</span>
         <span class="id">BonusAttackRolls</span>    <span class="o">=</span> <span class="n">2</span>
         <span class="id">CriticalRange</span>       <span class="o">=</span> <span class="pn">[|</span><span class="n">17</span> <span class="o">..</span> <span class="n">20</span><span class="pn">|]</span> 
         <span class="id">CriticalModifier</span>    <span class="o">=</span> <span class="n">2</span>
-        <span class="id">Modifier</span>            <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="fn">createUsedModifier</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="uc">TwoHanded</span> <span class="n">1.5</span>
-        <span class="id">ManufacturedOrNatural</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="uc">Manufactured</span>
+        <span class="id">Modifier</span>            <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="fn">createUsedModifier</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="uc">TwoHanded</span> <span class="n">1.5</span>
+        <span class="id">ManufacturedOrNatural</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="uc">Manufactured</span>
         <span class="pn">}</span>
 </code></pre></td>
 </tr>
 </table>
 <p>The most difficult part might actually be to think of a nice name for the type-binding, as you can't start with a number.
-Because a weapon is a type it is really easy to handle, as you can just dot into the weapon name if you are unsure if you made some mistake creating the weapon</p>
+Because a weapon is a type it is really easy to handle, as you can just dot into the weapon name if you are unsure if you made some mistake creating the weapon.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="id">showName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 15)" onmouseover="showTip(event, 'fs3', 15)" class="id">keenflaming2greatsword</span><span class="pn">.</span><span class="id">Name</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="id">showName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 16)" onmouseover="showTip(event, 'fs14', 16)" class="fn">sprintf</span> <span class="s">&quot;The name of this weapon is: </span><span class="pf">%A</span><span class="s">.&quot;</span> <span onmouseout="hideTip(event, 'fs4', 17)" onmouseover="showTip(event, 'fs4', 17)" class="id">keenflaming2greatsword</span><span class="pn">.</span><span class="id">Name</span>
 </code></pre></td>
 </tr>
 </table>
-<table class="pre"><tr><td><pre><code>"+2 keen flaming greatsword"</code></pre></td></tr></table>
+<table class="pre"><tr><td><pre><code>"The name of this weapon is: "+2 keen flaming greatsword"."</code></pre></td></tr></table>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 16)" onmouseover="showTip(event, 'fs13', 16)" class="id">showDamageDie</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs3', 17)" onmouseover="showTip(event, 'fs3', 17)" class="id">keenflaming2greatsword</span><span class="pn">.</span><span class="id">Damage</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="id">Die</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="id">showDamageDie</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="fn">sprintf</span> <span class="s">&quot;This weapon uses </span><span class="pf">%A</span><span class="s">d</span><span class="pf">%A</span><span class="s"> for its damage calculation.&quot;</span> <span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="id">keenflaming2greatsword</span><span class="pn">.</span><span class="id">Damage</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="id">NumberOfDie</span> <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="id">keenflaming2greatsword</span><span class="pn">.</span><span class="id">Damage</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="id">Die</span> 
 </code></pre></td>
 </tr>
 </table>
-<table class="pre"><tr><td><pre><code>6</code></pre></td></tr></table>
+<table class="pre"><tr><td><pre><code>"This weapon uses 2d6 for its damage calculation."</code></pre></td></tr></table>
 <p>Now to explain the different categories:</p>
 <ul>
 <li>Name = the actual correct name of the weapon, currently not relevant for the code</li>
@@ -104,18 +104,20 @@ Because a weapon is a type it is really easy to handle, as you can just dot into
 
 <div class="tip" id="fs1">namespace PathfinderAttackSimulator</div>
 <div class="tip" id="fs2">module Library<br /><br />from PathfinderAttackSimulator</div>
-<div class="tip" id="fs3">val keenflaming2greatsword : Weapon</div>
-<div class="tip" id="fs4">type Damage =<br />&#160;&#160;{NumberOfDie: int;<br />&#160;&#160;&#160;Die: int;<br />&#160;&#160;&#160;DamageType: DamageTypes;}</div>
-<div class="tip" id="fs5">val createDamage : num:int -&gt; die:int -&gt; dType:DamageTypes -&gt; Damage</div>
-<div class="tip" id="fs6">union case DamageTypes.Slashing: DamageTypes</div>
-<div class="tip" id="fs7">union case DamageTypes.Fire: DamageTypes</div>
-<div class="tip" id="fs8">val createUsedModifier : hitting:AbilityScore -&gt; damage:AbilityScore -&gt; handling:WeaponHanded -&gt; multiplicator:float -&gt; UsedModifier</div>
-<div class="tip" id="fs9">union case AbilityScore.Strength: AbilityScore</div>
-<div class="tip" id="fs10">union case WeaponHanded.TwoHanded: WeaponHanded</div>
-<div class="tip" id="fs11">union case NaturalManufactured.Manufactured: NaturalManufactured</div>
-<div class="tip" id="fs12">val showName : string</div>
-<div class="tip" id="fs13">val showDamageDie : int</div>
-<div class="tip" id="fs14"></div>
+<div class="tip" id="fs3">module AuxLibFunctions<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs4">val keenflaming2greatsword : Weapon</div>
+<div class="tip" id="fs5">type Damage =<br />&#160;&#160;{NumberOfDie: int;<br />&#160;&#160;&#160;Die: int;<br />&#160;&#160;&#160;DamageType: DamageTypes;}</div>
+<div class="tip" id="fs6">val createDamage : num:int -&gt; die:int -&gt; dType:DamageTypes -&gt; Damage</div>
+<div class="tip" id="fs7">union case DamageTypes.Slashing: DamageTypes</div>
+<div class="tip" id="fs8">union case DamageTypes.Fire: DamageTypes</div>
+<div class="tip" id="fs9">val createUsedModifier : hitting:AbilityScore -&gt; damage:AbilityScore -&gt; handling:WeaponHanded -&gt; multiplicator:float -&gt; UsedModifier</div>
+<div class="tip" id="fs10">union case AbilityScore.Strength: AbilityScore</div>
+<div class="tip" id="fs11">union case WeaponHanded.TwoHanded: WeaponHanded</div>
+<div class="tip" id="fs12">union case NaturalManufactured.Manufactured: NaturalManufactured</div>
+<div class="tip" id="fs13">val showName : string</div>
+<div class="tip" id="fs14">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T</div>
+<div class="tip" id="fs15">val showDamageDie : string</div>
+<div class="tip" id="fs16"></div>
 
         </div>
         <div class="span3">
@@ -130,7 +132,6 @@ Because a weapon is a type it is really easy to handle, as you can just dot into
             <li><a href="/PathfinderAttackSimulator/release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
-            <li><a href="/PathfinderAttackSimulator/tutorial.html">Sample tutorial</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateCharacter.html">Create Character</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateWeapon.html">Create Weapon</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateModification.html">Create Modification</a></li>

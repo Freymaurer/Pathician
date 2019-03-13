@@ -55,8 +55,15 @@
 <li>crits and confirmation rolls</li>
 <li>damage rolls</li>
 <li>which boni stack and which not</li>
+<li>calculate the size depending on size modifiers e.g. from enlarger person or improved natural attack</li>
+<li>resize the used weapons depending on the size change</li>
 </ul>
 <p>to just list a few of the implemented options.</p>
+<blockquote>
+<p>Parrn is one of my characters i currently play. He is a half-giant rogue with 20 strength (<em>please don't judge</em>) and likes to hit like a truck with his greatsword.
+And because he has some familiars that attack with him, using such a script is a nice option for me, because it frees up some mindpower for roleplaying and strategy, without having to worry about
+missing some modifiers or calculating everything wrong.</p>
+</blockquote>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
 <span class="l"> 3: </span>
@@ -76,28 +83,29 @@
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pp">#r</span> <span class="s">&quot;PathfinderAttackSimulator.dll&quot;</span>
 <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">FullRoundAttackAction</span>
-<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="id">Library</span>
-<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 5)" onmouseover="showTip(event, 'fs1', 5)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 6)" onmouseover="showTip(event, 'fs3', 6)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs4', 7)" onmouseover="showTip(event, 'fs4', 7)" class="id">Characters</span>
-<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 8)" onmouseover="showTip(event, 'fs1', 8)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 9)" onmouseover="showTip(event, 'fs3', 9)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs5', 10)" onmouseover="showTip(event, 'fs5', 10)" class="id">Modifications</span>
-<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 11)" onmouseover="showTip(event, 'fs1', 11)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 12)" onmouseover="showTip(event, 'fs3', 12)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs6', 13)" onmouseover="showTip(event, 'fs6', 13)" class="id">Weapons</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 3)" onmouseover="showTip(event, 'fs1', 3)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 4)" onmouseover="showTip(event, 'fs3', 4)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="id">AuxLibFunctions</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="id">Characters</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 9)" onmouseover="showTip(event, 'fs1', 9)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="id">Modifications</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 12)" onmouseover="showTip(event, 'fs1', 12)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 13)" onmouseover="showTip(event, 'fs3', 13)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="id">Weapons</span>
 
-<span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="fn">myFullAttack</span> <span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="id">myParrn</span>    <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="id">greatswordParrnHuge</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="uc">PrimaryMain</span><span class="pn">;</span>
-                        <span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="id">bite</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="uc">Secondary</span><span class="pn">|]</span>                                
-                        
-                        <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs13', 20)" onmouseover="showTip(event, 'fs13', 20)" class="id">EnlargePerson</span><span class="pn">;</span>
-                        <span onmouseout="hideTip(event, 'fs14', 21)" onmouseover="showTip(event, 'fs14', 21)" class="id">MutagenStrength</span><span class="pn">;</span>
-                        <span onmouseout="hideTip(event, 'fs15', 22)" onmouseover="showTip(event, 'fs15', 22)" class="id">Haste</span><span class="pn">;</span>
-                        <span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="fn">SneakAttack</span> <span class="n">8</span><span class="pn">;</span>
-                        <span onmouseout="hideTip(event, 'fs17', 24)" onmouseover="showTip(event, 'fs17', 24)" class="fn">PowerAttack</span> <span onmouseout="hideTip(event, 'fs8', 25)" onmouseover="showTip(event, 'fs8', 25)" class="id">myParrn</span><span class="pn">.</span><span class="id">BAB</span><span class="pn">;</span>
-                        <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="fn">FuriousFocus</span> <span class="n">8</span><span class="pn">|]</span>
+<span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="fn">myFullAttack</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="id">myParrn</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="uc">Medium</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="id">greatswordParrn</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="uc">PrimaryMain</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="id">greatswordParrn</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="uc">Primary</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="id">bite</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="uc">Secondary</span><span class="pn">|]</span> 
+                            
+                            <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="id">Flanking</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="fn">SneakAttack</span> <span class="n">8</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="id">MutagenStrength</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="id">Haste</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs20', 28)" onmouseover="showTip(event, 'fs20', 28)" class="id">TwoWeaponFighting</span><span class="pn">|]</span>
 </code></pre></td>
 </tr>
 </table>
 <blockquote>
-<p>Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 23 (gewuerfelt 6) fuer 34 Slashing Schaden +9 Precision Schaden !</p>
-<p>Du greifst mit Huge +1 Keen Greatsword an und crittest (hoffentlich) den Gegner mit 31 (gewuerfelt 17) und bestaetigst mit 29 (gewuerfelt 15) fuer 33 Slashing Schaden +17 Precision Schaden (crit * 2)!</p>
-<p>Du greifst mit Huge +1 Keen Greatsword an und triffst den Gegner mit 15 (gewuerfelt 1) fuer 31 Slashing Schaden +19 Precision Schaden !</p>
-<p>Du greifst mit Bite an und crittest (hoffentlich) den Gegner mit 33 (gewuerfelt 20) und bestaetigst mit 32 (gewuerfelt 19) fuer 10 BludgeoningOrPiercingOrSlashing Schaden +17 Precision Schaden (crit * 2)!</p>
+<p>You attack with a Large +1 Keen Greatsword and (hopefully) critically hit the enemy with a 35 (rolled 19) and confirm your crit with a 20 (rolled 4) for 26 Slashing damage +9 Precision Schaden (crit * 2)!</p>
+<p>You attack with a Large +1 Keen Greatsword and hit the enemy with a 19 (rolled 3) for 25 Slashing damage +12 Precision Schaden !</p>
+<p>You attack with a Large +1 Keen Greatsword and hit the enemy with a 12 (rolled 1) for 29 Slashing damage +8 Precision Schaden !</p>
+<p>You attack with a Large +1 Keen Greatsword and hit the enemy with a 30 (rolled 14) for 16 Slashing damage +12 Precision Schaden !</p>
+<p>You attack with a Bite and hit the enemy with a 30 (rolled 18) for 10 BludgeoningOrPiercingOrSlashing damage +10 Precision Schaden !</p>
 </blockquote>
 <h2><a name="Samples-amp-documentation" class="anchor" href="#Samples-amp-documentation">Samples &amp; documentation</a></h2>
 <p>The library comes with comprehensible documentation.
@@ -123,21 +131,23 @@ redistribution for both commercial and non-commercial purposes. For more informa
 <div class="tip" id="fs1">namespace PathfinderAttackSimulator</div>
 <div class="tip" id="fs2">module FullRoundAttackAction<br /><br />from PathfinderAttackSimulator</div>
 <div class="tip" id="fs3">module Library<br /><br />from PathfinderAttackSimulator</div>
-<div class="tip" id="fs4">module Characters<br /><br />from PathfinderAttackSimulator.Library</div>
-<div class="tip" id="fs5">module Modifications<br /><br />from PathfinderAttackSimulator.Library</div>
-<div class="tip" id="fs6">module Weapons<br /><br />from PathfinderAttackSimulator.Library</div>
-<div class="tip" id="fs7">val myFullAttack : char:CharacterStats -&gt; weapons:(Weapon * WeaponType) [] -&gt; modifications:AttackModification [] -&gt; unit []</div>
-<div class="tip" id="fs8">val myParrn : CharacterStats</div>
-<div class="tip" id="fs9">val greatswordParrnHuge : Weapon</div>
-<div class="tip" id="fs10">union case WeaponType.PrimaryMain: WeaponType</div>
-<div class="tip" id="fs11">val bite : Weapon</div>
-<div class="tip" id="fs12">union case WeaponType.Secondary: WeaponType</div>
-<div class="tip" id="fs13">val EnlargePerson : AttackModification</div>
-<div class="tip" id="fs14">val MutagenStrength : AttackModification</div>
-<div class="tip" id="fs15">val Haste : AttackModification</div>
-<div class="tip" id="fs16">val SneakAttack : rogueLevel:int -&gt; AttackModification</div>
-<div class="tip" id="fs17">val PowerAttack : bab:int -&gt; AttackModification</div>
-<div class="tip" id="fs18">val FuriousFocus : bab:int -&gt; AttackModification</div>
+<div class="tip" id="fs4">module AuxLibFunctions<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs5">module Characters<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs6">module Modifications<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs7">module Weapons<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs8">val myFullAttack : char:CharacterStats -&gt; size:SizeType -&gt; weapons:(Weapon * WeaponType) [] -&gt; modifications:AttackModification [] -&gt; unit []</div>
+<div class="tip" id="fs9">val myParrn : CharacterStats</div>
+<div class="tip" id="fs10">union case SizeType.Medium: SizeType</div>
+<div class="tip" id="fs11">val greatswordParrn : Weapon</div>
+<div class="tip" id="fs12">union case WeaponType.PrimaryMain: WeaponType</div>
+<div class="tip" id="fs13">union case WeaponType.Primary: WeaponType</div>
+<div class="tip" id="fs14">val bite : Weapon</div>
+<div class="tip" id="fs15">union case WeaponType.Secondary: WeaponType</div>
+<div class="tip" id="fs16">val Flanking : AttackModification</div>
+<div class="tip" id="fs17">val SneakAttack : rogueLevel:int -&gt; AttackModification</div>
+<div class="tip" id="fs18">val MutagenStrength : AttackModification</div>
+<div class="tip" id="fs19">val Haste : AttackModification</div>
+<div class="tip" id="fs20">val TwoWeaponFighting : AttackModification</div>
 
         </div>
         <div class="span3">
@@ -152,7 +162,6 @@ redistribution for both commercial and non-commercial purposes. For more informa
             <li><a href="/PathfinderAttackSimulator/release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
-            <li><a href="/PathfinderAttackSimulator/tutorial.html">Sample tutorial</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateCharacter.html">Create Character</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateWeapon.html">Create Weapon</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateModification.html">Create Modification</a></li>

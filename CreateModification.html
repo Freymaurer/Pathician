@@ -59,18 +59,18 @@ Therefore, i create a library of pre-written modifications.</p>
 <span class="l">14: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pp">#r</span> <span class="s">&quot;PathfinderAttackSimulator.dll&quot;</span>
-<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Library</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">AuxLibFunctions</span>
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">Haste</span> <span class="o">=</span>
-    <span class="pn">{</span>
-        <span class="id">Name</span> <span class="o">=</span> <span class="s">&quot;Haste&quot;</span>
-        <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">BonusAttacks</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="fn">createBonusAttacks</span> <span class="n">1</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="uc">Haste_Like</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="uc">PrimaryMain</span>
-        <span class="id">BonusAttackRoll</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="fn">createBonus</span> <span class="n">1</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="uc">Flat</span>
-        <span class="id">BonusDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 10)" onmouseover="showTip(event, 'fs8', 10)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="uc">Flat</span>
-        <span class="id">ExtraDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="fn">createDamage</span> <span class="n">0</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="uc">Untyped</span>
-        <span class="id">AppliedTo</span> <span class="o">=</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="uc">All</span><span class="pn">|]</span><span class="pn">,</span> <span class="o">-</span><span class="n">20</span>
-        <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">|]</span>
-        <span class="id">Description</span> <span class="o">=</span> <span class="s">&quot;Range: Close (25 ft. + 5 ft./2 levels). One creature/level, no two of which can be more than 30 ft. apart.&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">Haste</span> <span class="o">=</span> <span class="pn">{</span>
+    <span class="id">Name</span> <span class="o">=</span> <span class="s">&quot;Haste&quot;</span>
+    <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="id">BonusAttacks</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="fn">createBonusAttacks</span> <span class="n">1</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="uc">HasteLike</span> <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="uc">PrimaryMain</span>
+    <span class="id">BonusAttackRoll</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="fn">createBonus</span> <span class="n">1</span> <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="uc">Flat</span>
+    <span class="id">BonusDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 11)" onmouseover="showTip(event, 'fs9', 11)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="uc">Flat</span>
+    <span class="id">ExtraDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="fn">createDamage</span> <span class="n">0</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="uc">Untyped</span>
+    <span class="id">AppliedTo</span> <span class="o">=</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="uc">All</span><span class="pn">|]</span><span class="pn">,</span> <span class="o">-</span><span class="n">20</span>
+    <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">|]</span>
+    <span class="id">SizeChanges</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 16)" onmouseover="showTip(event, 'fs14', 16)" class="fn">createSizechange</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="uc">Flat</span> <span class="k">false</span>
+    <span class="id">Description</span> <span class="o">=</span> <span class="s">&quot;Range: Close (25 ft. + 5 ft./2 levels). One creature/level, no two of which can be more than 30 ft. apart.&quot;</span>
     <span class="pn">}</span>
 </code></pre></td>
 </tr>
@@ -93,10 +93,15 @@ flat bonus to all attack rolls, and also some non - attack related boni.</p>
 <li>ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.</li>
 <li>AppliedTo = apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.</li>
 <li>StatChanges = e.g. the alchemist's mutagen (createStatChange "Str" 2 Alchemical) the number again, represents the modifier increase. Can be left empty if no stat change applies.</li>
+<li>
+SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
+Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Armor).
+</li>
 <li>Description = A short Description for additional information. Not used in the script right now.</li>
 </ul>
 <p>Some further Examples:</p>
 <h3><a name="Alchemist-s-Strength-Mutagen" class="anchor" href="#Alchemist-s-Strength-Mutagen">Alchemist's Strength Mutagen</a></h3>
+<p>This is a nice example to showcase the StatChanges attribute.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
 <span class="l"> 3: </span>
@@ -109,21 +114,22 @@ flat bonus to all attack rolls, and also some non - attack related boni.</p>
 <span class="l">10: </span>
 <span class="l">11: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="id">MutagenStrength</span> <span class="o">=</span>
-    <span class="pn">{</span>
-        <span class="id">Name</span> <span class="o">=</span> <span class="s">&quot;Strength Mutagen&quot;</span>
-        <span onmouseout="hideTip(event, 'fs4', 16)" onmouseover="showTip(event, 'fs4', 16)" class="id">BonusAttacks</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 17)" onmouseover="showTip(event, 'fs5', 17)" class="fn">createBonusAttacks</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs14', 18)" onmouseover="showTip(event, 'fs14', 18)" class="uc">NoBA</span> <span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="uc">All</span>
-        <span class="id">BonusAttackRoll</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 20)" onmouseover="showTip(event, 'fs8', 20)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs9', 21)" onmouseover="showTip(event, 'fs9', 21)" class="uc">Flat</span>
-        <span class="id">BonusDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 22)" onmouseover="showTip(event, 'fs8', 22)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="uc">Flat</span>
-        <span class="id">ExtraDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="fn">createDamage</span> <span class="n">0</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs11', 25)" onmouseover="showTip(event, 'fs11', 25)" class="uc">Untyped</span>
-        <span class="id">AppliedTo</span> <span class="o">=</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs12', 26)" onmouseover="showTip(event, 'fs12', 26)" class="uc">All</span><span class="pn">|]</span><span class="pn">,</span> <span class="o">-</span><span class="n">20</span>
-        <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs15', 27)" onmouseover="showTip(event, 'fs15', 27)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs16', 28)" onmouseover="showTip(event, 'fs16', 28)" class="uc">Strength</span> <span class="n">2</span> <span onmouseout="hideTip(event, 'fs17', 29)" onmouseover="showTip(event, 'fs17', 29)" class="uc">Alchemical</span><span class="pn">)</span><span class="pn">;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs15', 30)" onmouseover="showTip(event, 'fs15', 30)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="uc">Intelligence</span> <span class="o">-</span><span class="n">2</span> <span onmouseout="hideTip(event, 'fs17', 32)" onmouseover="showTip(event, 'fs17', 32)" class="uc">Alchemical</span><span class="pn">)</span><span class="pn">|]</span>
-        <span class="id">Description</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="id">MutagenStrength</span> <span class="o">=</span> <span class="pn">{</span>
+    <span class="id">Name</span> <span class="o">=</span> <span class="s">&quot;Strength Mutagen&quot;</span>
+    <span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="id">BonusAttacks</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 20)" onmouseover="showTip(event, 'fs6', 20)" class="fn">createBonusAttacks</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="uc">NoBA</span> <span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="uc">All</span>
+    <span class="id">BonusAttackRoll</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 23)" onmouseover="showTip(event, 'fs9', 23)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 24)" onmouseover="showTip(event, 'fs10', 24)" class="uc">Flat</span>
+    <span class="id">BonusDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 25)" onmouseover="showTip(event, 'fs9', 25)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 26)" onmouseover="showTip(event, 'fs10', 26)" class="uc">Flat</span>
+    <span class="id">ExtraDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 27)" onmouseover="showTip(event, 'fs11', 27)" class="fn">createDamage</span> <span class="n">0</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="uc">Untyped</span>
+    <span class="id">AppliedTo</span> <span class="o">=</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="uc">All</span><span class="pn">|]</span><span class="pn">,</span> <span class="o">-</span><span class="n">20</span>
+    <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="uc">Strength</span> <span class="n">2</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="uc">Alchemical</span><span class="pn">)</span><span class="pn">;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="uc">Intelligence</span> <span class="o">-</span><span class="n">2</span> <span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="uc">Alchemical</span><span class="pn">)</span><span class="pn">|]</span>
+    <span class="id">SizeChanges</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="fn">createSizechange</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 37)" onmouseover="showTip(event, 'fs10', 37)" class="uc">Flat</span> <span class="k">false</span>
+    <span class="id">Description</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
     <span class="pn">}</span>
 </code></pre></td>
 </tr>
 </table>
 <h3><a name="Enlarge-Person" class="anchor" href="#Enlarge-Person">Enlarge Person</a></h3>
+<p>Pay attention to the StatChanges and the SizeChanges. There is also no -1 at "BonusAttackRoll", because size-boni/mali to hit an attack are calculated automatically.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
 <span class="l"> 3: </span>
@@ -136,21 +142,24 @@ flat bonus to all attack rolls, and also some non - attack related boni.</p>
 <span class="l">10: </span>
 <span class="l">11: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs19', 33)" onmouseover="showTip(event, 'fs19', 33)" class="id">EnlargePerson</span> <span class="o">=</span>
-    <span class="pn">{</span>
-        <span class="id">Name</span> <span class="o">=</span> <span class="s">&quot;Enlarge Person&quot;</span>
-        <span onmouseout="hideTip(event, 'fs4', 34)" onmouseover="showTip(event, 'fs4', 34)" class="id">BonusAttacks</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 35)" onmouseover="showTip(event, 'fs5', 35)" class="fn">createBonusAttacks</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="uc">NoBA</span> <span onmouseout="hideTip(event, 'fs12', 37)" onmouseover="showTip(event, 'fs12', 37)" class="uc">All</span>
-        <span class="id">BonusAttackRoll</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 38)" onmouseover="showTip(event, 'fs8', 38)" class="fn">createBonus</span> <span class="o">-</span><span class="n">1</span> <span onmouseout="hideTip(event, 'fs9', 39)" onmouseover="showTip(event, 'fs9', 39)" class="uc">Flat</span>
-        <span class="id">BonusDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 40)" onmouseover="showTip(event, 'fs8', 40)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs9', 41)" onmouseover="showTip(event, 'fs9', 41)" class="uc">Flat</span>
-        <span class="id">ExtraDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 42)" onmouseover="showTip(event, 'fs10', 42)" class="fn">createDamage</span> <span class="n">0</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs11', 43)" onmouseover="showTip(event, 'fs11', 43)" class="uc">Untyped</span>
-        <span class="id">AppliedTo</span> <span class="o">=</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs12', 44)" onmouseover="showTip(event, 'fs12', 44)" class="uc">All</span><span class="pn">|]</span><span class="pn">,</span> <span class="o">-</span><span class="n">20</span>
-        <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs15', 45)" onmouseover="showTip(event, 'fs15', 45)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs16', 46)" onmouseover="showTip(event, 'fs16', 46)" class="uc">Strength</span> <span class="n">1</span> <span onmouseout="hideTip(event, 'fs20', 47)" onmouseover="showTip(event, 'fs20', 47)" class="uc">Size</span><span class="pn">)</span><span class="pn">;</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs15', 48)" onmouseover="showTip(event, 'fs15', 48)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs16', 49)" onmouseover="showTip(event, 'fs16', 49)" class="uc">Strength</span> <span class="o">-</span><span class="n">1</span> <span onmouseout="hideTip(event, 'fs20', 50)" onmouseover="showTip(event, 'fs20', 50)" class="uc">Size</span><span class="pn">)</span><span class="pn">|]</span>
-        <span class="id">Description</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 38)" onmouseover="showTip(event, 'fs21', 38)" class="id">EnlargePerson</span> <span class="o">=</span> <span class="pn">{</span>
+    <span class="id">Name</span> <span class="o">=</span> <span class="s">&quot;Enlarge Person&quot;</span>
+    <span onmouseout="hideTip(event, 'fs5', 39)" onmouseover="showTip(event, 'fs5', 39)" class="id">BonusAttacks</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 40)" onmouseover="showTip(event, 'fs6', 40)" class="fn">createBonusAttacks</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs16', 41)" onmouseover="showTip(event, 'fs16', 41)" class="uc">NoBA</span> <span onmouseout="hideTip(event, 'fs13', 42)" onmouseover="showTip(event, 'fs13', 42)" class="uc">All</span>
+    <span class="id">BonusAttackRoll</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 43)" onmouseover="showTip(event, 'fs9', 43)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 44)" onmouseover="showTip(event, 'fs10', 44)" class="uc">Flat</span>
+    <span class="id">BonusDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 45)" onmouseover="showTip(event, 'fs9', 45)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 46)" onmouseover="showTip(event, 'fs10', 46)" class="uc">Flat</span>
+    <span class="id">ExtraDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 47)" onmouseover="showTip(event, 'fs11', 47)" class="fn">createDamage</span> <span class="n">0</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs12', 48)" onmouseover="showTip(event, 'fs12', 48)" class="uc">Untyped</span>
+    <span class="id">AppliedTo</span> <span class="o">=</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs13', 49)" onmouseover="showTip(event, 'fs13', 49)" class="uc">All</span><span class="pn">|]</span><span class="pn">,</span> <span class="o">-</span><span class="n">20</span>
+    <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 50)" onmouseover="showTip(event, 'fs17', 50)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs18', 51)" onmouseover="showTip(event, 'fs18', 51)" class="uc">Strength</span> <span class="n">1</span> <span onmouseout="hideTip(event, 'fs22', 52)" onmouseover="showTip(event, 'fs22', 52)" class="uc">Size</span><span class="pn">)</span><span class="pn">;</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 53)" onmouseover="showTip(event, 'fs17', 53)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs23', 54)" onmouseover="showTip(event, 'fs23', 54)" class="uc">Dexterity</span> <span class="o">-</span><span class="n">1</span> <span onmouseout="hideTip(event, 'fs22', 55)" onmouseover="showTip(event, 'fs22', 55)" class="uc">Size</span><span class="pn">)</span><span class="pn">|]</span>
+    <span class="id">SizeChanges</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 56)" onmouseover="showTip(event, 'fs14', 56)" class="fn">createSizechange</span> <span class="n">1</span> <span onmouseout="hideTip(event, 'fs24', 57)" onmouseover="showTip(event, 'fs24', 57)" class="uc">Polymorph</span> <span class="k">false</span>
+    <span class="id">Description</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
     <span class="pn">}</span>
 </code></pre></td>
 </tr>
 </table>
 <h3><a name="Sneak-Attack-from-invisibility" class="anchor" href="#Sneak-Attack-from-invisibility">Sneak Attack (from invisibility)</a></h3>
+<p>Here you can see that you can even make these modifications to small automatic functions. This one calculates the SneakAttack damage for a full rogue progression.
+To do this it needs additional information in form of the rogue level.
+Also this bonus is meant to be applied only once, therefore we have under "AppliedTo" [|All|], 1; because this will we applied to any weapon that is calculated first and then only to the first attack.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
 <span class="l"> 3: </span>
@@ -163,49 +172,52 @@ flat bonus to all attack rolls, and also some non - attack related boni.</p>
 <span class="l">10: </span>
 <span class="l">11: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 51)" onmouseover="showTip(event, 'fs21', 51)" class="fn">SneakAttackOnce</span> <span onmouseout="hideTip(event, 'fs22', 52)" onmouseover="showTip(event, 'fs22', 52)" class="id">rogueLevel</span> <span class="o">=</span>
-    <span class="pn">{</span>
-        <span class="id">Name</span> <span class="o">=</span> <span class="s">&quot;Sneak Attack auf dem ersten Angriff&quot;</span>
-        <span onmouseout="hideTip(event, 'fs4', 53)" onmouseover="showTip(event, 'fs4', 53)" class="id">BonusAttacks</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs5', 54)" onmouseover="showTip(event, 'fs5', 54)" class="fn">createBonusAttacks</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs14', 55)" onmouseover="showTip(event, 'fs14', 55)" class="uc">NoBA</span> <span onmouseout="hideTip(event, 'fs12', 56)" onmouseover="showTip(event, 'fs12', 56)" class="uc">All</span>
-        <span class="id">BonusAttackRoll</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 57)" onmouseover="showTip(event, 'fs8', 57)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs23', 58)" onmouseover="showTip(event, 'fs23', 58)" class="rt">BonusTypes</span><span class="pn">.</span><span class="id">Flat</span>
-        <span class="id">BonusDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs8', 59)" onmouseover="showTip(event, 'fs8', 59)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs23', 60)" onmouseover="showTip(event, 'fs23', 60)" class="rt">BonusTypes</span><span class="pn">.</span><span class="id">Flat</span>
-        <span class="id">ExtraDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs10', 61)" onmouseover="showTip(event, 'fs10', 61)" class="fn">createDamage</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs24', 62)" onmouseover="showTip(event, 'fs24', 62)" class="fn">int</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs25', 63)" onmouseover="showTip(event, 'fs25', 63)" class="fn">ceil</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs26', 64)" onmouseover="showTip(event, 'fs26', 64)" class="fn">float</span> <span onmouseout="hideTip(event, 'fs22', 65)" onmouseover="showTip(event, 'fs22', 65)" class="id">rogueLevel</span><span class="o">/</span><span class="n">2.</span><span class="pn">)</span><span class="pn">)</span><span class="pn">)</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs27', 66)" onmouseover="showTip(event, 'fs27', 66)" class="uc">Precision</span>
-        <span class="id">AppliedTo</span> <span class="o">=</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs12', 67)" onmouseover="showTip(event, 'fs12', 67)" class="uc">All</span><span class="pn">|]</span><span class="pn">,</span> <span class="n">1</span>        
-        <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">|]</span>
-        <span class="id">Description</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs25', 58)" onmouseover="showTip(event, 'fs25', 58)" class="fn">SneakAttackOnce</span> <span onmouseout="hideTip(event, 'fs26', 59)" onmouseover="showTip(event, 'fs26', 59)" class="id">rogueLevel</span> <span class="o">=</span> <span class="pn">{</span>
+    <span class="id">Name</span> <span class="o">=</span> <span class="s">&quot;Sneak Attack on first attack&quot;</span>
+    <span onmouseout="hideTip(event, 'fs5', 60)" onmouseover="showTip(event, 'fs5', 60)" class="id">BonusAttacks</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 61)" onmouseover="showTip(event, 'fs6', 61)" class="fn">createBonusAttacks</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs16', 62)" onmouseover="showTip(event, 'fs16', 62)" class="uc">NoBA</span> <span onmouseout="hideTip(event, 'fs13', 63)" onmouseover="showTip(event, 'fs13', 63)" class="uc">All</span>
+    <span class="id">BonusAttackRoll</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 64)" onmouseover="showTip(event, 'fs9', 64)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 65)" onmouseover="showTip(event, 'fs10', 65)" class="uc">Flat</span>
+    <span class="id">BonusDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 66)" onmouseover="showTip(event, 'fs9', 66)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 67)" onmouseover="showTip(event, 'fs10', 67)" class="uc">Flat</span>
+    <span class="id">ExtraDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 68)" onmouseover="showTip(event, 'fs11', 68)" class="fn">createDamage</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs27', 69)" onmouseover="showTip(event, 'fs27', 69)" class="fn">int</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs28', 70)" onmouseover="showTip(event, 'fs28', 70)" class="fn">ceil</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs29', 71)" onmouseover="showTip(event, 'fs29', 71)" class="fn">float</span> <span onmouseout="hideTip(event, 'fs26', 72)" onmouseover="showTip(event, 'fs26', 72)" class="id">rogueLevel</span><span class="o">/</span><span class="n">2.</span><span class="pn">)</span><span class="pn">)</span><span class="pn">)</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs30', 73)" onmouseover="showTip(event, 'fs30', 73)" class="uc">Precision</span>
+    <span class="id">AppliedTo</span> <span class="o">=</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs13', 74)" onmouseover="showTip(event, 'fs13', 74)" class="uc">All</span><span class="pn">|]</span><span class="pn">,</span> <span class="n">1</span>        
+    <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">|]</span>
+    <span class="id">SizeChanges</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 75)" onmouseover="showTip(event, 'fs14', 75)" class="fn">createSizechange</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 76)" onmouseover="showTip(event, 'fs10', 76)" class="uc">Flat</span> <span class="k">false</span>
+    <span class="id">Description</span> <span class="o">=</span> <span class="s">&quot;Sneak Attack on first attack. This can happen due to a stealth attack or an full-round attack action from invisibility; use this only if you have full rogue sneak attack damage dice progression&quot;</span>
     <span class="pn">}</span>
 </code></pre></td>
 </tr>
 </table>
-<p>As you can see you can also have modifications with further automatic calculations.</p>
+<p>This type of automatic calculation is also already done for things like PowerAttack or FuriousFocus. But it can also be useful for Spells to automatically calculate any given boni from the caster level.</p>
 
 <div class="tip" id="fs1">namespace PathfinderAttackSimulator</div>
 <div class="tip" id="fs2">module Library<br /><br />from PathfinderAttackSimulator</div>
-<div class="tip" id="fs3">val Haste : AttackModification</div>
-<div class="tip" id="fs4">type BonusAttacks =<br />&#160;&#160;{NumberOfBonusAttacks: int;<br />&#160;&#160;&#160;TypeOfBonusAttacks: BonusAttacksType;<br />&#160;&#160;&#160;WeaponTypeWithBonusAttacks: WeaponType;}</div>
-<div class="tip" id="fs5">val createBonusAttacks : num:int -&gt; bonusAttackType:BonusAttacksType -&gt; appliedToWeaponType:WeaponType -&gt; BonusAttacks</div>
-<div class="tip" id="fs6">union case BonusAttacksType.Haste_Like: BonusAttacksType</div>
-<div class="tip" id="fs7">union case WeaponType.PrimaryMain: WeaponType</div>
-<div class="tip" id="fs8">val createBonus : value:int -&gt; bType:BonusTypes -&gt; Bonus</div>
-<div class="tip" id="fs9">union case BonusTypes.Flat: BonusTypes</div>
-<div class="tip" id="fs10">val createDamage : num:int -&gt; die:int -&gt; dType:DamageTypes -&gt; Damage</div>
-<div class="tip" id="fs11">union case DamageTypes.Untyped: DamageTypes</div>
-<div class="tip" id="fs12">union case WeaponType.All: WeaponType</div>
-<div class="tip" id="fs13">val MutagenStrength : AttackModification</div>
-<div class="tip" id="fs14">union case BonusAttacksType.NoBA: BonusAttacksType</div>
-<div class="tip" id="fs15">val createStatChange : att:AbilityScore -&gt; attChange:int -&gt; bType:BonusTypes -&gt; StatChange</div>
-<div class="tip" id="fs16">union case AbilityScore.Strength: AbilityScore</div>
-<div class="tip" id="fs17">union case BonusTypes.Alchemical: BonusTypes</div>
-<div class="tip" id="fs18">union case AbilityScore.Intelligence: AbilityScore</div>
-<div class="tip" id="fs19">val EnlargePerson : AttackModification</div>
-<div class="tip" id="fs20">union case BonusTypes.Size: BonusTypes</div>
-<div class="tip" id="fs21">val SneakAttackOnce : rogueLevel:int -&gt; AttackModification</div>
-<div class="tip" id="fs22">val rogueLevel : int</div>
-<div class="tip" id="fs23">type BonusTypes =<br />&#160;&#160;| Insight<br />&#160;&#160;| Moral<br />&#160;&#160;| Luck<br />&#160;&#160;| Alchemical<br />&#160;&#160;| Profane<br />&#160;&#160;| Sacred<br />&#160;&#160;| Circumstance<br />&#160;&#160;| Flat<br />&#160;&#160;| Size<br />&#160;&#160;| TwoWeaponFighting</div>
-<div class="tip" id="fs24">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />--------------------<br />type int = int32<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int</div>
-<div class="tip" id="fs25">val ceil : value:&#39;T -&gt; &#39;T (requires member Ceiling)</div>
-<div class="tip" id="fs26">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />--------------------<br />type float = System.Double<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float</div>
-<div class="tip" id="fs27">union case DamageTypes.Precision: DamageTypes</div>
+<div class="tip" id="fs3">module AuxLibFunctions<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs4">val Haste : AttackModification</div>
+<div class="tip" id="fs5">type BonusAttacks =<br />&#160;&#160;{NumberOfBonusAttacks: int;<br />&#160;&#160;&#160;TypeOfBonusAttacks: BonusAttacksType;<br />&#160;&#160;&#160;WeaponTypeWithBonusAttacks: WeaponType;}</div>
+<div class="tip" id="fs6">val createBonusAttacks : num:int -&gt; bonusAttackType:BonusAttacksType -&gt; appliedToWeaponType:WeaponType -&gt; BonusAttacks</div>
+<div class="tip" id="fs7">union case BonusAttacksType.HasteLike: BonusAttacksType</div>
+<div class="tip" id="fs8">union case WeaponType.PrimaryMain: WeaponType</div>
+<div class="tip" id="fs9">val createBonus : value:int -&gt; bType:BonusTypes -&gt; Bonus</div>
+<div class="tip" id="fs10">union case BonusTypes.Flat: BonusTypes</div>
+<div class="tip" id="fs11">val createDamage : num:int -&gt; die:int -&gt; dType:DamageTypes -&gt; Damage</div>
+<div class="tip" id="fs12">union case DamageTypes.Untyped: DamageTypes</div>
+<div class="tip" id="fs13">union case WeaponType.All: WeaponType</div>
+<div class="tip" id="fs14">val createSizechange : value:int -&gt; bonusType:BonusTypes -&gt; effectiveSizeChange:bool -&gt; SizeChange</div>
+<div class="tip" id="fs15">val MutagenStrength : AttackModification</div>
+<div class="tip" id="fs16">union case BonusAttacksType.NoBA: BonusAttacksType</div>
+<div class="tip" id="fs17">val createStatChange : att:AbilityScore -&gt; attChange:int -&gt; bType:BonusTypes -&gt; StatChange</div>
+<div class="tip" id="fs18">union case AbilityScore.Strength: AbilityScore</div>
+<div class="tip" id="fs19">union case BonusTypes.Alchemical: BonusTypes</div>
+<div class="tip" id="fs20">union case AbilityScore.Intelligence: AbilityScore</div>
+<div class="tip" id="fs21">val EnlargePerson : AttackModification</div>
+<div class="tip" id="fs22">union case BonusTypes.Size: BonusTypes</div>
+<div class="tip" id="fs23">union case AbilityScore.Dexterity: AbilityScore</div>
+<div class="tip" id="fs24">union case BonusTypes.Polymorph: BonusTypes</div>
+<div class="tip" id="fs25">val SneakAttackOnce : rogueLevel:int -&gt; AttackModification</div>
+<div class="tip" id="fs26">val rogueLevel : int</div>
+<div class="tip" id="fs27">Multiple items<br />val int : value:&#39;T -&gt; int (requires member op_Explicit)<br /><br />--------------------<br />type int = int32<br /><br />--------------------<br />type int&lt;&#39;Measure&gt; = int</div>
+<div class="tip" id="fs28">val ceil : value:&#39;T -&gt; &#39;T (requires member Ceiling)</div>
+<div class="tip" id="fs29">Multiple items<br />val float : value:&#39;T -&gt; float (requires member op_Explicit)<br /><br />--------------------<br />type float = System.Double<br /><br />--------------------<br />type float&lt;&#39;Measure&gt; = float</div>
+<div class="tip" id="fs30">union case DamageTypes.Precision: DamageTypes</div>
 
         </div>
         <div class="span3">
@@ -220,7 +232,6 @@ flat bonus to all attack rolls, and also some non - attack related boni.</p>
             <li><a href="/PathfinderAttackSimulator/release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
-            <li><a href="/PathfinderAttackSimulator/tutorial.html">Sample tutorial</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateCharacter.html">Create Character</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateWeapon.html">Create Weapon</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateModification.html">Create Modification</a></li>

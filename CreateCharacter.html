@@ -59,19 +59,19 @@ The first example is a fighter lvl 6 that wants to use bow and melee weapons.</p
 <span class="l">15: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pp">#r</span> <span class="s">&quot;PathfinderAttackSimulator.dll&quot;</span>
-<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Library</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">AuxLibFunctions</span>
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">myCharacter</span> <span class="o">=</span>  <span class="pn">{</span>
-        <span class="id">CharacterName</span> <span class="o">=</span> <span class="s">&quot;Best Character Name Ever&quot;</span>
-        <span class="id">BAB</span> <span class="o">=</span> <span class="n">6</span>
-        <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">Strength</span> <span class="o">=</span> <span class="n">7</span>
-        <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="id">Dexterity</span> <span class="o">=</span> <span class="n">3</span>
-        <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="id">Constitution</span> <span class="o">=</span> <span class="n">2</span>
-        <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="id">Intelligence</span> <span class="o">=</span> <span class="o">-</span><span class="n">3</span>
-        <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="id">Wisdom</span> <span class="o">=</span> <span class="n">0</span>
-        <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="id">Charisma</span> <span class="o">=</span> <span class="o">-</span><span class="n">3</span>
-        <span class="id">CasterLevel1</span> <span class="o">=</span> <span class="n">0</span>
-        <span class="id">CasterLevel2</span> <span class="o">=</span> <span class="n">0</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">myCharacter</span> <span class="o">=</span>  <span class="pn">{</span>
+    <span class="id">CharacterName</span> <span class="o">=</span> <span class="s">&quot;Best Character Name Ever&quot;</span>
+    <span class="id">BAB</span> <span class="o">=</span> <span class="n">6</span>
+    <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="id">Strength</span> <span class="o">=</span> <span class="n">7</span>
+    <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="id">Dexterity</span> <span class="o">=</span> <span class="n">3</span>
+    <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="id">Constitution</span> <span class="o">=</span> <span class="n">2</span>
+    <span onmouseout="hideTip(event, 'fs8', 8)" onmouseover="showTip(event, 'fs8', 8)" class="id">Intelligence</span> <span class="o">=</span> <span class="o">-</span><span class="n">3</span>
+    <span onmouseout="hideTip(event, 'fs9', 9)" onmouseover="showTip(event, 'fs9', 9)" class="id">Wisdom</span> <span class="o">=</span> <span class="n">0</span>
+    <span onmouseout="hideTip(event, 'fs10', 10)" onmouseover="showTip(event, 'fs10', 10)" class="id">Charisma</span> <span class="o">=</span> <span class="o">-</span><span class="n">3</span>
+    <span class="id">CasterLevel1</span> <span class="o">=</span> <span class="n">0</span>
+    <span class="id">CasterLevel2</span> <span class="o">=</span> <span class="n">0</span>
     <span class="pn">}</span>
 </code></pre></td>
 </tr>
@@ -80,20 +80,21 @@ The first example is a fighter lvl 6 that wants to use bow and melee weapons.</p
 <p>Without any doubt we have a nice and optimized fighter with "de inteligenz to crash samfing".</p>
 </blockquote>
 <ul>
-<li>Abilities: = The numbers given for the abilities are the modifier and not the score numbers (obviously).</li>
+<li>Abilitie Scores: = The numbers given for the abilities are the modifier and not the score numbers (obviously).</li>
 <li>BAB = base attack bonus</li>
 <li>CasteLevel = can be used for e.g. Magus Spellstrike with Shocking grasp</li>
 </ul>
 
 <div class="tip" id="fs1">namespace PathfinderAttackSimulator</div>
 <div class="tip" id="fs2">module Library<br /><br />from PathfinderAttackSimulator</div>
-<div class="tip" id="fs3">val myCharacter : CharacterStats</div>
-<div class="tip" id="fs4">union case AbilityScore.Strength: AbilityScore</div>
-<div class="tip" id="fs5">union case AbilityScore.Dexterity: AbilityScore</div>
-<div class="tip" id="fs6">union case AbilityScore.Constitution: AbilityScore</div>
-<div class="tip" id="fs7">union case AbilityScore.Intelligence: AbilityScore</div>
-<div class="tip" id="fs8">union case AbilityScore.Wisdom: AbilityScore</div>
-<div class="tip" id="fs9">union case AbilityScore.Charisma: AbilityScore</div>
+<div class="tip" id="fs3">module AuxLibFunctions<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs4">val myCharacter : CharacterStats</div>
+<div class="tip" id="fs5">union case AbilityScore.Strength: AbilityScore</div>
+<div class="tip" id="fs6">union case AbilityScore.Dexterity: AbilityScore</div>
+<div class="tip" id="fs7">union case AbilityScore.Constitution: AbilityScore</div>
+<div class="tip" id="fs8">union case AbilityScore.Intelligence: AbilityScore</div>
+<div class="tip" id="fs9">union case AbilityScore.Wisdom: AbilityScore</div>
+<div class="tip" id="fs10">union case AbilityScore.Charisma: AbilityScore</div>
 
         </div>
         <div class="span3">
@@ -108,7 +109,6 @@ The first example is a fighter lvl 6 that wants to use bow and melee weapons.</p
             <li><a href="/PathfinderAttackSimulator/release-notes.html">Release Notes</a></li>
             
             <li class="nav-header">Getting started</li>
-            <li><a href="/PathfinderAttackSimulator/tutorial.html">Sample tutorial</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateCharacter.html">Create Character</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateWeapon.html">Create Weapon</a></li>
             <li><a href="/PathfinderAttackSimulator/CreateModification.html">Create Modification</a></li>
