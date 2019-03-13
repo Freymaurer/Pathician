@@ -50,7 +50,6 @@ module Library =
             | Charisma
             | NoAS
 
-
         type DamageTypes =
             | Fire
             | Slashing
@@ -64,6 +63,7 @@ module Library =
             | BludgeoningOrPiercingOrSlashing
             | PiercingOrSlashing
             | Precision
+            | VitalStrikeDamage
 
         type BonusTypes =
             | Insight
@@ -75,13 +75,14 @@ module Library =
             | Circumstance
             | Flat
             | Size
-            | TwoWeaponFighting
+            | TwoWeaponFightingMalus
             | Polymorph
 
+
         type BonusAttacksType =
-            | Haste_Like
-            | TWF_Like
-            | FlurryOfBlows_Like
+            | HasteLike
+            | TWFLike
+            | FlurryOfBlowsLike
             | FlatBA
             | NoBA
 
@@ -158,7 +159,7 @@ module Library =
             }
 
         /// 0 Flat All if no BonusAttacks. num = number of bonus attacks; bonusAttackType = is meant for calculation of non-stacking effects like magus spell combat and twf
-        ///in that case both are TWF_Like; appliedToWeaponType = the Weapons that get bonus attacks e.g. haste goes to primaryMain, twf goes to primary, multiattack goes to secondary
+        ///in that case both are TWFLike; appliedToWeaponType = the Weapons that get bonus attacks e.g. haste goes to primaryMain, twf goes to primary, multiattack goes to secondary
         let createBonusAttacks num bonusAttackType appliedToWeaponType= {
             BonusAttacks.NumberOfBonusAttacks = num
             BonusAttacks.TypeOfBonusAttacks = bonusAttackType
@@ -486,8 +487,8 @@ module Library =
         let TwoWeaponFighting =
             {
                 Name = "Two-Weapon-Fighting"
-                BonusAttacks = createBonusAttacks 1 TWF_Like Primary
-                BonusAttackRoll = createBonus -2 TwoWeaponFighting
+                BonusAttacks = createBonusAttacks 1 TWFLike Primary
+                BonusAttackRoll = createBonus -2 TwoWeaponFightingMalus
                 BonusDamage = createBonus 0 BonusTypes.Flat
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|Primary; PrimaryMain|], -20
@@ -500,8 +501,8 @@ module Library =
         let ImprovedTwoWeaponFighting =
             {
                 Name = "Improved-Two-Weapon-Fighting"
-                BonusAttacks = createBonusAttacks 2 TWF_Like Primary
-                BonusAttackRoll = createBonus -2 BonusTypes.TwoWeaponFighting
+                BonusAttacks = createBonusAttacks 2 TWFLike Primary
+                BonusAttackRoll = createBonus -2 BonusTypes.TwoWeaponFightingMalus
                 BonusDamage = createBonus 0 BonusTypes.Flat
                 ExtraDamage = createDamage 0 0 Untyped
                 AppliedTo = [|Primary; PrimaryMain|], -20
@@ -513,7 +514,7 @@ module Library =
         let Haste =
             {
                 Name = "Haste"
-                BonusAttacks = createBonusAttacks 1 Haste_Like PrimaryMain
+                BonusAttacks = createBonusAttacks 1 HasteLike PrimaryMain
                 BonusAttackRoll = createBonus 1 BonusTypes.Flat
                 BonusDamage = createBonus 0 BonusTypes.Flat
                 ExtraDamage = createDamage 0 0 Untyped
@@ -742,6 +743,42 @@ module Library =
                SizeChanges = createSizechange 0 Flat false
                Description = ""
             }
+
+        let VitalStrike = {
+               Name = "Vital Strike"
+               BonusAttacks = createBonusAttacks 0 NoBA All
+               BonusAttackRoll = createBonus 0 Flat
+               BonusDamage = createBonus 0 Flat
+               ExtraDamage = createDamage 1 0 VitalStrikeDamage
+               AppliedTo = [|All|], -20
+               StatChanges = [||]
+               SizeChanges = createSizechange 0 Flat false
+               Description = "These extra weapon damage dice are not multiplied on a critical hit, but are added to the total"
+            }
+            
+        let VitalStrikeImproved = {
+               Name = "Improved Vital Strike"
+               BonusAttacks = createBonusAttacks 0 NoBA All
+               BonusAttackRoll = createBonus 0 Flat
+               BonusDamage = createBonus 0 Flat
+               ExtraDamage = createDamage 2 0 VitalStrikeDamage
+               AppliedTo = [|All|], -20
+               StatChanges = [||]
+               SizeChanges = createSizechange 0 Flat false
+               Description = "These extra weapon damage dice are not multiplied on a critical hit, but are added to the total"
+            }
+
+        let VitalStrikeGreater = {
+               Name = "Vital Strike"
+               BonusAttacks = createBonusAttacks 0 NoBA All
+               BonusAttackRoll = createBonus 0 Flat
+               BonusDamage = createBonus 0 Flat
+               ExtraDamage = createDamage 3 0 VitalStrikeDamage
+               AppliedTo = [|All|], -20
+               StatChanges = [||]
+               SizeChanges = createSizechange 0 Flat false
+               Description = "These extra weapon damage dice are not multiplied on a critical hit, but are added to the total"
+            }
     
         /// Never delete this!! This is 100% necessary for FullRoundAttackAction to function, as it works as a filler for the modificationArrays
         let ZeroMod =
@@ -756,7 +793,7 @@ module Library =
                 SizeChanges = createSizechange 0 Flat false
                 Description = ""
             }
-
+        
     module Server = 
 
         open Modifications
@@ -771,7 +808,7 @@ module Library =
             | rdyStr when rdyStr = "MODIFICATIONS" -> [|
                                                         Multiattack;SneakAttackOnce 0;Modifications.TwoWeaponFighting;ImprovedTwoWeaponFighting;Haste;FlurryOfBlows;Shaken;WeaponFocus;EnlargePerson;MutagenStrength;
                                                         Invisibility;PlanarFocus;SneakAttack 0;Wrath;DivineFavor;FuriousFocus 0;PowerAttack 0;Flanking;Charging;WeaponSpecialization;Fatigued;
-                                                        AidAnother
+                                                        AidAnother;VitalStrike;VitalStrikeImproved;VitalStrikeGreater
                                                       |]
                                                       |> Array.map (fun x -> x.Name)
                                                       |> Array.sortBy (fun x -> x)

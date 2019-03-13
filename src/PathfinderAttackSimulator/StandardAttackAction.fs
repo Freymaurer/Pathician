@@ -5,6 +5,7 @@ open PathfinderAttackSimulator.Library
 open PathfinderAttackSimulator.Library.AuxLibFunctions
 open PathfinderAttackSimulator.Library.Modifications
 
+
 module StandardAttackAction =
     ///Pathfinder Standard Attack Action////
 
@@ -145,33 +146,6 @@ module StandardAttackAction =
             |> Array.map (fun statChange -> statChange.AttributeChange)
             |> Array.sum
             |> float
-    
-        ///getRandRoll is not so good; try find something better
-        let getExtraDamage = 
-            let rec getRandRoll listOfRolls die number =
-                (getRandArrElement (getDamageRolls die))::listOfRolls
-                |> fun rollList -> if rollList.Length >= number
-                                        then rollList
-                                        else getRandRoll rollList die number
-            weapon.ExtraDamage
-            |> Array.create 1
-            |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage) )
-            |> Array.map (fun extraD -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
-                                                       , 
-                                                       extraD.DamageType
-                         )
-            |> Array.groupBy snd
-            |> Array.map snd
-            |> Array.map Array.unzip
-            |> Array.map (fun (value,dType) -> Array.sum value, Array.head dType)
-            |> Array.filter (fun x -> x <> (0,Untyped))
-    
-        ///
-        let extraDamageToString = 
-            getExtraDamage
-            |> Array.map (fun (value,types) -> "+" + (string value) + " " + (string types) + " " + "Schaden, ")
-            |> Array.fold (fun strArr x -> strArr + x) "" 
-            |> fun x -> x.TrimEnd [|' ';','|]      
             
         ///
         let addDamageMod =
@@ -307,6 +281,45 @@ module StandardAttackAction =
             getRandRoll [] |> List.toArray |> Array.sum
             |> fun damageDice -> damageDice + weapon.DamageBonus
     
+        ///getRandRoll is not so good; try find something better
+        let getExtraDamage = 
+            let rec getRandRoll listOfRolls die number =
+                (getRandArrElement (getDamageRolls die))::listOfRolls
+                |> fun rollList -> if rollList.Length >= number
+                                        then rollList
+                                        else getRandRoll rollList die number
+            [|weapon.ExtraDamage|]
+            |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage) )
+            |> Array.map (fun extraD -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
+                                                       , 
+                                                       extraD.DamageType
+                         )
+            |> Array.groupBy snd
+            |> Array.map snd
+            |> Array.map Array.unzip
+            |> Array.map (fun (value,dType) -> Array.sum value, Array.head dType)
+            ///Vital Strike hardcode
+            |> fun extraDmg -> if Array.contains true (Array.map (fun x -> x = VitalStrike 
+                                                                           || x = VitalStrikeImproved 
+                                                                           || x = VitalStrikeGreater) modifications)
+                               then Array.filter (fun x -> x.ExtraDamage.DamageType = VitalStrikeDamage) modifications
+                                        |> Array.sortByDescending (fun x -> x.ExtraDamage.NumberOfDie)
+                                        |> Array.head
+                                        |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.NumberOfDie do
+                                                            yield getRandRoll [] sizeAdjustedWeaponDamage.Die sizeAdjustedWeaponDamage.NumberOfDie|]
+                                        |> Array.map List.sum
+                                        |> Array.sum
+                                        |> fun x -> Array.append [|x,sizeAdjustedWeaponDamage.DamageType|] extraDmg
+                               else extraDmg
+            |> Array.filter (fun x -> x <> (0,Untyped) && x <> (0,VitalStrikeDamage) )
+
+        ///
+        let extraDamageToString = 
+            getExtraDamage
+            |> Array.map (fun (value,types) -> "+" + (string value) + " " + (string types) + " " + "Schaden, ")
+            |> Array.fold (fun strArr x -> strArr + x) "" 
+            |> fun x -> x.TrimEnd [|' ';','|]      
+
         ///
         let addDamageBoni =
             modifications
@@ -331,8 +344,8 @@ module StandardAttackAction =
         let getDamage = 
             addDamageMod + addWeaponDamage + addDamageBoni
             |> fun x -> if x <= 0 then 1 else x
-        
-        ///
+
+        /////
         if (calculateRolls |> fun (x,y,z,u) -> u) = -20 && getExtraDamage = [||]
             then printfn "You hit the enemy with a %i (rolled %i) for %i %A damage!" (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType
         elif (calculateRolls |> fun (x,y,z,u) -> u) <> -20 && getExtraDamage = [||] 
@@ -341,4 +354,3 @@ module StandardAttackAction =
             then printfn "You hit the enemy with a %i (rolled %i) for %i %A damage %s !" (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType extraDamageToString
         elif (calculateRolls |> fun (x,y,z,u) -> u) <> -20 && getExtraDamage <> [||] 
             then printfn ("You (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage %s (crit * %i)!") (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
-    
