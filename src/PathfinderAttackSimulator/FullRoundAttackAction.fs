@@ -29,13 +29,13 @@ module FullRoundAttackAction =
             |> Array.filter (fun bAttacks -> bAttacks.WeaponTypeWithBonusAttacks = PrimaryMain)
             |> Array.groupBy (fun x -> x.TypeOfBonusAttacks)
             |> Array.map (fun (bTypes,bAttacks) -> if bTypes <> FlatBA
-                                                    then bAttacks
-                                                            |> Array.sortByDescending (fun x -> x.NumberOfBonusAttacks) 
-                                                            |> fun x -> Array.head x
-                                                            |> fun x -> x.NumberOfBonusAttacks
-                                                    else bAttacks
-                                                            |> Array.map (fun x -> x.NumberOfBonusAttacks)
-                                                            |> Array.sum
+                                                   then bAttacks
+                                                        |> Array.sortByDescending (fun x -> x.NumberOfBonusAttacks) 
+                                                        |> fun x -> Array.head x
+                                                        |> fun x -> x.NumberOfBonusAttacks
+                                                   else bAttacks
+                                                        |> Array.map (fun x -> x.NumberOfBonusAttacks)
+                                                        |> Array.sum
                          )
             |> Array.sum
             |> fun x -> if x = 0 then [||] else Array.create (x+1) 0
@@ -47,13 +47,13 @@ module FullRoundAttackAction =
             |> Array.filter (fun bAttacks -> bAttacks.WeaponTypeWithBonusAttacks = Primary)
             |> Array.groupBy (fun x -> x.TypeOfBonusAttacks)
             |> Array.map (fun (bTypes,bAttacks) -> if bTypes <> FlatBA 
-                                                    then bAttacks
-                                                            |> Array.sortByDescending (fun x -> x.NumberOfBonusAttacks) 
-                                                            |> fun x -> Array.head x
-                                                            |> fun x -> x.NumberOfBonusAttacks
-                                                    else bAttacks
-                                                            |> Array.map (fun x -> x.NumberOfBonusAttacks)
-                                                            |> Array.sum 
+                                                   then bAttacks
+                                                        |> Array.sortByDescending (fun x -> x.NumberOfBonusAttacks) 
+                                                        |> fun x -> Array.head x
+                                                        |> fun x -> x.NumberOfBonusAttacks
+                                                   else bAttacks
+                                                        |> Array.map (fun x -> x.NumberOfBonusAttacks)
+                                                        |> Array.sum 
                          )
             |> Array.sum
             |> fun x -> if x = 0 then [||] else [|1 .. 1 .. x|]
@@ -64,61 +64,58 @@ module FullRoundAttackAction =
             weapons
             |> Array.groupBy (fun (weap,wType) -> wType)
             |> Array.map (fun (wType,tuple) -> if wType = Primary || wType = PrimaryMain
-                                                    then Array.map ( fun (weap,wType) -> (weap,wType, 0) ) tuple
+                                               then Array.map ( fun (weap,wType) -> (weap,wType, 0) ) tuple
                                                elif wType = Secondary
-                                                    then Array.map ( fun (weap,wType) -> (weap,wType, -5) ) tuple
-                                                    else failwith "Unknown WeaponType-pattern; pls contact Kevin"
+                                               then Array.map ( fun (weap,wType) -> (weap,wType, -5) ) tuple
+                                               else failwith "Unknown WeaponType-pattern; pls contact Kevin"
                           )
             |> Array.concat
             |> Array.map (fun (w, wType, modifier) -> if wType = PrimaryMain
-                                                            then calculateBabExtraAttacks |> Array.map (fun x -> w,wType, modifier-x)
-                                                            else [|w,wType,modifier|]
+                                                      then calculateBabExtraAttacks |> Array.map (fun x -> w,wType, modifier-x)
+                                                      else [|w,wType,modifier|]
                          )
             |> Array.concat
-            |> fun arr -> if (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons
-                                                         )
+            |> fun arr -> if (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons)
                              ) = true
-                            then if getBonusAttacksForPrimaryMain <> [||]
-                                    then ( Array.map (fun (w, wType, modifier) -> if wType = PrimaryMain && modifier = 0
-                                                                                    then getBonusAttacksForPrimaryMain |> Array.map (fun x -> w,wType, modifier)
-                                                                                    else [|w,wType,modifier|]
-                                                     ) arr 
-                                         )|> Array.concat
-                                 elif getBonusAttacksForPrimaryMain = [||] 
-                                    then arr
-                                    else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact Kevin"
-                          elif (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons
-                                                           )
+                          then if getBonusAttacksForPrimaryMain <> [||]
+                               then ( Array.map (fun (w, wType, modifier) -> if wType = PrimaryMain && modifier = 0
+                                                                             then getBonusAttacksForPrimaryMain |> Array.map (fun x -> w,wType, modifier)
+                                                                             else [|w,wType,modifier|]
+                                                ) arr 
+                                    )|> Array.concat
+                               elif getBonusAttacksForPrimaryMain = [||] 
+                               then arr
+                               else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact Kevin"
+                          elif (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons)
                                ) = false &&
-                               (Array.contains Natural (Array.map (fun ((w: Weapon),wType) -> w.ManufacturedOrNatural) weapons
-                                                         )
+                               (Array.contains Natural (Array.map (fun ((w: Weapon),wType) -> w.ManufacturedOrNatural) weapons)
                                ) = true
-                                then if getBonusAttacksForPrimaryMain <> [||]
+                          then if getBonusAttacksForPrimaryMain <> [||]
                                         /// filter for primary weapon
-                                        then (arr |> Array.head
-                                                  |> fun (w, wType, modifier) -> if wType = Primary && modifier = 0 && w.ManufacturedOrNatural = Natural
-                                                                                              then getBonusAttacksForPrimaryMain.[0 .. getBonusAttacksForPrimaryMain.Length-2]
-                                                                                                    |> Array.map (fun x -> w,wType, modifier)
-                                                                                              else [|w,wType,modifier|]
-                                             )|> fun x -> Array.append x arr                                       
-                                     elif getBonusAttacksForPrimaryMain = [||] 
-                                        then arr
-                                     else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact Kevin"
-                                else failwith "Unknown Problem related to not having the right WeaponTypes"
+                               then (arr |> Array.head
+                                            |> fun (w, wType, modifier) -> if wType = Primary && modifier = 0 && w.ManufacturedOrNatural = Natural
+                                                                           then getBonusAttacksForPrimaryMain.[0 .. getBonusAttacksForPrimaryMain.Length-2]
+                                                                                 |> Array.map (fun x -> w,wType, modifier)
+                                                                           else [|w,wType,modifier|]
+                                       )|> fun x -> Array.append x arr                                       
+                               elif getBonusAttacksForPrimaryMain = [||] 
+                                  then arr
+                               else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact Kevin"
+                          else failwith "Unknown Problem related to not having the right WeaponTypes"
             |> fun arr -> if getAttacksForPrimary <> [||]
-                            then (Array.map (fun (w, wType, modifier) -> if wType = Primary 
-                                                                                then getAttacksForPrimary |> Array.map (fun x -> w,wType, modifier-x)
-                                                                                else [|w,wType,modifier|]
+                          then (Array.map (fun (w, wType, modifier) -> if wType = Primary 
+                                                                         then getAttacksForPrimary |> Array.map (fun x -> w,wType, modifier-x)
+                                                                         else [|w,wType,modifier|]
                                             ) arr 
                                  )|> Array.concat
                           //// hier weitermachen
                           elif getAttacksForPrimary = [||]  
                                && (Array.contains Natural (Array.map (fun (x,y) -> x.ManufacturedOrNatural) weapons)) = false
-                            then arr |> Array.filter (fun (w,wType,modifier) -> wType <> Primary)
+                          then arr |> Array.filter (fun (w,wType,modifier) -> wType <> Primary)
                           elif getAttacksForPrimary = [||]
                                && (Array.contains Natural (Array.map (fun (x,y) -> x.ManufacturedOrNatural) weapons)) = true
-                            then arr
-                            else failwith "Unknown Problem related to Primary Weapons (two-Weapon-Fighting); pls contact Kevin)"
+                          then arr
+                          else failwith "Unknown Problem related to Primary Weapons (two-Weapon-Fighting); pls contact Kevin)"
             |> Array.sortByDescending (fun (w,wType,modi) -> modi )
     
         ///Get all AttackModifications constant for All weapons
@@ -132,20 +129,20 @@ module FullRoundAttackAction =
             |> Array.filter (fun x -> Array.contains All (fst x.AppliedTo) && snd x.AppliedTo <> -20)
             |> Array.map (fun x -> x, snd x.AppliedTo)
             |> Array.map (fun (arr,int) -> if int > getAttackArray.Length
-                                                then (Array.create getAttackArray.Length arr),getAttackArray.Length
+                                           then (Array.create getAttackArray.Length arr),getAttackArray.Length
                                            elif int <= getAttackArray.Length
-                                                then (Array.create int arr),int
-                                                else failwith "Unknown Problem related to Limited Attack Modifiers added to All Attacks; pls contact Kevin" 
+                                           then (Array.create int arr),int
+                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to All Attacks; pls contact Kevin" 
                          )
             |> fun arr -> if arr <> [||]
-                                then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getAttackArray.Length-int) ZeroMod 
-                                                                                               )
-                                                ) arr
-                                     ) |> fun x -> x
+                          then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getAttackArray.Length-int) ZeroMod 
+                                                                                         )
+                                          ) arr
+                               )
                           elif arr = [||]
-                                then [|Array.create getAttackArray.Length ZeroMod|]
-                                else failwith "Unknown Problem related to limited attack modifiers for all weapons; pls contact Kevin)"
-            |> fun x -> x
+                          then [|Array.create getAttackArray.Length ZeroMod|]
+                          else failwith "Unknown Problem related to limited attack modifiers for all weapons; pls contact Kevin)"
+
         ///adds all modifications from "getAttackModificationsForAll" and "getAttackModificationsForAllLimited"
         let addAllAttackModificationsForAll =
             getAttackModificationsForAllLimited
@@ -155,7 +152,7 @@ module FullRoundAttackAction =
             |> Array.map (fun (header,tuple) -> tuple)
             |> Array.map (fun x -> Array.map (fun x -> snd x) x)
             |> Array.map (fun arr -> Array.append getAttackModificationsForAll arr)
-            |> fun x -> x 
+
         ///adds all modifications for All weapons to the several weapon attacks from "getAttackArray"
         let addAllUnspecifcModificationsToAttackArray =
             addAllAttackModificationsForAll
@@ -175,19 +172,19 @@ module FullRoundAttackAction =
             |> Array.filter (fun x -> Array.contains Secondary (fst x.AppliedTo) && snd x.AppliedTo <> -20)
             |> Array.map ( fun x -> x, snd x.AppliedTo)
             |> Array.map (fun (arr,int) -> if int > getNumberOfSecondaryAttacks 
-                                                then (Array.create getNumberOfSecondaryAttacks arr),getNumberOfSecondaryAttacks
+                                           then (Array.create getNumberOfSecondaryAttacks arr),getNumberOfSecondaryAttacks
                                            elif int <= getNumberOfSecondaryAttacks
-                                                then (Array.create int arr),int
-                                                else failwith "Unknown Problem related to Limited Attack Modifiers added to Secondary Attacks; pls contact Kevin" 
+                                           then (Array.create int arr),int
+                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to Secondary Attacks; pls contact Kevin" 
                          )
             |> fun arr -> if arr <> [||]
-                                then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfSecondaryAttacks-int) ZeroMod 
-                                                                                               )
-                                                ) arr
-                                     ) 
+                          then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfSecondaryAttacks-int) ZeroMod 
+                                                                                         )
+                                          ) arr
+                               ) 
                           elif arr = [||]
-                                then [|Array.create getNumberOfSecondaryAttacks ZeroMod|]
-                                else failwith "Unknown Problem related to limited attack modifiers for Secondary weapons; pls contact Kevin"
+                          then [|Array.create getNumberOfSecondaryAttacks ZeroMod|]
+                          else failwith "Unknown Problem related to limited attack modifiers for Secondary weapons; pls contact Kevin"
         let addAllSecondaryAttackModifications =
             getSecondaryAttackModificationsLimited
             |> Array.map (fun x -> Array.mapi (fun i x ->i, x )x )
@@ -210,19 +207,19 @@ module FullRoundAttackAction =
             |> Array.filter (fun x -> Array.contains Primary (fst x.AppliedTo) && snd x.AppliedTo <> -20)
             |> Array.map (fun x -> x, snd x.AppliedTo)
             |> Array.map (fun (arr,int) -> if int > getNumberOfPrimaryAttacks 
-                                                then (Array.create getNumberOfPrimaryAttacks arr),getNumberOfPrimaryAttacks
+                                           then (Array.create getNumberOfPrimaryAttacks arr),getNumberOfPrimaryAttacks
                                            elif int <= getNumberOfPrimaryAttacks
-                                                then (Array.create int arr),int
-                                                else failwith "Unknown Problem related to Limited Attack Modifiers added to Primary Attacks; pls contact Kevin" 
+                                           then (Array.create int arr),int
+                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to Primary Attacks; pls contact Kevin" 
                          )
             |> fun arr -> if arr <> [||]
-                                then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfPrimaryAttacks-int) ZeroMod 
-                                                                                               )
-                                                ) arr
-                                     ) |> fun x -> x
+                          then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfPrimaryAttacks-int) ZeroMod 
+                                                                                         )
+                                          ) arr
+                               ) |> fun x -> x
                           elif arr = [||]
-                                then [|Array.create getNumberOfPrimaryAttacks ZeroMod|]
-                                else failwith "Unknown Problem related to limited attack modifiers for Primary weapons; pls contact Kevin"
+                          then [|Array.create getNumberOfPrimaryAttacks ZeroMod|]
+                          else failwith "Unknown Problem related to limited attack modifiers for Primary weapons; pls contact Kevin"
         let addAllPrimaryAttackModifications =
             getPrimaryAttackModificationsLimited
             |> Array.map (fun x -> Array.mapi (fun i x ->i, x )x )
@@ -245,19 +242,19 @@ module FullRoundAttackAction =
             |> Array.filter (fun x -> Array.contains PrimaryMain (fst x.AppliedTo) && snd x.AppliedTo <> -20)
             |> Array.map (fun x -> x, snd x.AppliedTo)
             |> Array.map (fun (arr,int) -> if int > getNumberOfPrimaryMainAttacks 
-                                                then (Array.create getNumberOfPrimaryMainAttacks arr),getNumberOfPrimaryMainAttacks
+                                           then (Array.create getNumberOfPrimaryMainAttacks arr),getNumberOfPrimaryMainAttacks
                                            elif int <= getNumberOfPrimaryMainAttacks
-                                                then (Array.create int arr),int
-                                                else failwith "Unknown Problem related to Limited Attack Modifiers added to PrimaryMain Attacks; pls contact Kevin" 
+                                           then (Array.create int arr),int
+                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to PrimaryMain Attacks; pls contact Kevin" 
                          )
             |> fun arr -> if arr <> [||]
-                                then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfPrimaryMainAttacks-int) ZeroMod 
-                                                                                               )
-                                                ) arr
-                                     ) |> fun x -> x
+                          then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfPrimaryMainAttacks-int) ZeroMod 
+                                                                                         )
+                                          ) arr
+                               ) |> fun x -> x
                           elif arr = [||]
-                                then [|Array.create getNumberOfPrimaryMainAttacks ZeroMod|]
-                                else failwith "Unknown Problem related to limited attack modifiers for PrimaryMain weapons; pls contact Kevin"
+                          then [|Array.create getNumberOfPrimaryMainAttacks ZeroMod|]
+                          else failwith "Unknown Problem related to limited attack modifiers for PrimaryMain weapons; pls contact Kevin"
         let addAllPrimaryMainAttackModifications =
             getPrimaryMainAttackModificationsLimited
             |> Array.map (fun x -> Array.mapi (fun i x ->i, x )x )
@@ -271,21 +268,21 @@ module FullRoundAttackAction =
             addAllUnspecifcModificationsToAttackArray
             |> Array.groupBy (fun (w,wType,modi,modArr) -> wType)
             |> Array.map (fun (wType,arr) -> match wType with
-                                             | PrimaryMain -> arr 
-                                                                |> Array.zip addAllPrimaryMainAttackModifications
-                                                                |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
-                                             | Primary -> arr 
-                                                                |> Array.zip addAllPrimaryAttackModifications
-                                                                |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
-                                             | Secondary -> arr 
-                                                                |> Array.zip addAllSecondaryAttackModifications
-                                                                |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
+                                             | PrimaryMain  -> arr 
+                                                               |> Array.zip addAllPrimaryMainAttackModifications
+                                                               |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
+                                             | Primary      -> arr 
+                                                               |> Array.zip addAllPrimaryAttackModifications
+                                                               |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
+                                             | Secondary    -> arr 
+                                                               |> Array.zip addAllSecondaryAttackModifications
+                                                               |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
                                              | _ -> failwith "Unknown Problem related to adding weaponType specific modifiers; pls contact Kevin"
                          )
             |> Array.concat
     
         ///get One Attack per Attack Array
-        let getOneAttack (weapon: Weapon) (wType: WeaponType) (modifier: int) (modifications: AttackModification []) =
+        let getOneAttack (weapon: Weapon) (wType: WeaponType) (iterativeModifier: int) (modifications: AttackModification []) =
     
             ///
             let calculatedSize =
@@ -376,7 +373,7 @@ module FullRoundAttackAction =
 
             ///
             let getBonusToAttack =
-                char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + getStatChangesToHit + addBoniToAttack + addSizeBonus
+                char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + getStatChangesToHit + addBoniToAttack + addSizeBonus + iterativeModifier
     
             ///
             let getAttackRolls =
