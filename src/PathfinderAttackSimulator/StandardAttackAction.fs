@@ -288,15 +288,12 @@ module StandardAttackAction =
                 |> fun rollList -> if rollList.Length >= number
                                    then rollList
                                    else getRandRoll rollList die number
-            [|weapon.ExtraDamage|]
-            |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage) )
-            |> Array.map (fun extraD -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
-                                        , extraD.DamageType
+            [|weapon.ExtraDamage,weapon.Name|]
+            |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage,x.Name) )
+            |> Array.map (fun (extraD,str) -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
+                                              , extraD.DamageType, str
                          )
-            |> Array.groupBy snd
-            |> Array.map snd
-            |> Array.map Array.unzip
-            |> Array.map (fun (value,dType) -> Array.sum value, Array.head dType)
+            |> fun x -> x
             ///Vital Strike hardcode
             |> fun extraDmg -> if Array.contains true (Array.map (fun x -> x = VitalStrike 
                                                                            || x = VitalStrikeImproved 
@@ -305,19 +302,20 @@ module StandardAttackAction =
                                     |> Array.sortByDescending (fun x -> x.ExtraDamage.NumberOfDie)
                                     |> Array.head
                                     |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.NumberOfDie do
-                                                        yield getRandRoll [] sizeAdjustedWeaponDamage.Die sizeAdjustedWeaponDamage.NumberOfDie|]
-                                    |> Array.map List.sum
-                                    |> Array.sum
-                                    |> fun x -> Array.append [|x,sizeAdjustedWeaponDamage.DamageType|] extraDmg
+                                                        yield getRandRoll [] sizeAdjustedWeaponDamage.Die sizeAdjustedWeaponDamage.NumberOfDie|], vitalS.Name
+                                    |> fun (intList,str) -> Array.map List.sum intList, str
+                                    |> fun x -> x
+                                    |> fun (intList,str) -> Array.sum intList, str
+                                    |> fun (bonus,str) -> Array.append [|bonus,sizeAdjustedWeaponDamage.DamageType,str|] extraDmg
                                else extraDmg
-            |> Array.filter (fun x -> x <> (0,Untyped) && x <> (0,VitalStrikeDamage) )
+            |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0,Untyped) && (bonus,dType) <> (0,VitalStrikeDamage) )
 
         ///
         let extraDamageToString = 
             getExtraDamage
-            |> Array.map (fun (value,types) -> "+" + (string value) + " " + (string types) + " " + "Schaden, ")
+            |> Array.map (fun (value,dType,name) -> "+" + (string value) + " " + (string dType) + " " + "Schaden" + " (" + name + ")" + ", ")
             |> Array.fold (fun strArr x -> strArr + x) "" 
-            |> fun x -> x.TrimEnd [|' ';','|]      
+            |> fun x -> x.TrimEnd [|' ';','|]         
 
         ///
         let addDamageBoni =
