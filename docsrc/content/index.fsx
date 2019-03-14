@@ -20,6 +20,16 @@ Documentation
   <div class="span1"></div>
 </div>
 
+Pathfinder is, and that is a great part of why i like it so much, very free in character design and allows for a variety of different options.
+But with great freedom in character design comes grreat complexity and especially a attack calculation can get quite complex.
+Of course you can calculate all different options beforehand and write them down separatly ... but then the bard starts with his Inspire Courage,
+the cleric adds Blessing of Fervor, arcane casters start throwing around Haste and Enlarge Person and .. yes you can prepare for that and write also this down
+(although it is already getting out of hand) but then comes a nasty poison or conditions and calculating attack rolls really are a mess and take a lot of time to calculate.
+That is why i wrote this this Attack Action Simulator to ease down all of this complexity and free up some brainpower for the story, strategy and roleplaying.
+
+This is my first coding project, so there will be lots of style errors and inefficient functions. If you notice something like this, please feel free to open an issue and i will gladly fix it.
+The function itself should work without errors, but if you encounter any please (again) open an issue and let me know.
+
 Example for a automatic calculated full round attack action.
 -------
 

@@ -54,6 +54,7 @@ module Library =
             | Size
             | TwoWeaponFightingMalus
             | Polymorph
+            | Competence
 
 
         type BonusAttacksType =
@@ -742,6 +743,44 @@ module Library =
             Description = "These extra weapon damage dice are not multiplied on a critical hit, but are added to the total"
             }
     
+        let ShockingGraspEmpowered casterLevel metalTF = {
+            Name = "Intensified Empowered Shocking Grasp"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus (if metalTF = true then 3 else 0) Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage ((if casterLevel > 10 then 10 else casterLevel) 
+                                       |> fun x -> x + int (float x * 0.5) ) 6 Electricity
+            AppliedTo = [|All|], 1
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Shocking Grasp deals 1d6 / level electricity damage up to a maximum of 10d6 for this intensified version. Empowered increases the number of all rolled dice by 50%"
+            }
+
+        let InspireCourage = {
+            Name = "Inspire Courage"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 4 Competence
+            BonusDamage = createBonus 4 Competence
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "For a set level, because of several IC increasing items"
+            }
+
+        let BlessingOfFervorAttackBonus = {
+            Name = "Blessing of Fervor"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 2 Flat
+            BonusDamage = createBonus 2 Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Blessing of Fervor with the +2 attack bonus as choice"
+            }
+        
+
         /// Never delete this!! This is 100% necessary for FullRoundAttackAction to function, as it works as a filler for the modificationArrays
         let ZeroMod = {
             Name = ""
@@ -754,7 +793,7 @@ module Library =
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
-        
+      
     module Server = 
 
         open Modifications
