@@ -15,7 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=11" >
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link type="text/css" rel="stylesheet" href="/PathfinderAttackSimulator/content/style.css" /> <!--/PathfinderAttackSimulator-->
-    <link type="text/css" rel="stylesheet" href="/PathfinderAttackSimulator/style/CSBstyles.css" /> <!--/PathfinderAttackSimulator-->
+    <link type="text/css" rel="stylesheet" href="/PathfinderAttackSimulator/styles/CSBstyles.css" /> <!--/PathfinderAttackSimulator-->
     <script type="text/javascript" src="/PathfinderAttackSimulator/content/tips.js"></script> <!--/PathfinderAttackSimulator-->
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -47,6 +47,14 @@
   </div>
   <div class="span1"></div>
 </div>
+<p>Pathfinder is, and that is a great part of why i like it so much, very free in character design and allows for a variety of different options.
+But with great freedom in character design comes grreat complexity and especially a attack calculation can get quite complex.
+Of course you can calculate all different options beforehand and write them down separatly ... but then the bard starts with his Inspire Courage,
+the cleric adds Blessing of Fervor, arcane casters start throwing around Haste and Enlarge Person and .. yes you can prepare for that and write also this down
+(although it is already getting out of hand) but then comes a nasty poison or conditions and calculating attack rolls really are a mess and take a lot of time to calculate.
+That is why i wrote this this Attack Action Simulator to ease down all of this complexity and free up some brainpower for the story, strategy and roleplaying.</p>
+<p>This is my first coding project, so there will be lots of style errors and inefficient functions. If you notice something like this, please feel free to open an issue and i will gladly fix it.
+The function itself should work without errors, but if you encounter any please (again) open an issue and let me know.</p>
 <h2><a name="Example-for-a-automatic-calculated-full-round-attack-action" class="anchor" href="#Example-for-a-automatic-calculated-full-round-attack-action">Example for a automatic calculated full round attack action.</a></h2>
 <p>This example demonstrates the full round attack action calculater, which is able to automatically:</p>
 <ul>
@@ -153,21 +161,21 @@ redistribution for both commercial and non-commercial purposes. For more informa
         <div class="span3">
           <img src="/PathfinderAttackSimulator/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
           <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
-            <li class="nav-header">PathfinderAttackSimulator</li>
-            <li><a href="/PathfinderAttackSimulator/index.html">Home page</a></li>
-            <li class="divider"></li>
-            <li><a href="http://nuget.org/packages/PathfinderAttackSimulator">Get Library via NuGet</a></li>
-            <li><a href="https://github.com/Freymaurer/PathfinderAttackSimulator">Source Code on GitHub</a></li>
-            <li><a href="/PathfinderAttackSimulator/license.html">License</a></li>
-            <li><a href="/PathfinderAttackSimulator/release-notes.html">Release Notes</a></li>
-            
-            <li class="nav-header">Getting started</li>
-            <li><a href="/PathfinderAttackSimulator/CreateCharacter.html">Create Character</a></li>
-            <li><a href="/PathfinderAttackSimulator/CreateWeapon.html">Create Weapon</a></li>
-            <li><a href="/PathfinderAttackSimulator/CreateModification.html">Create Modification</a></li>
+              <li class="nav-header">PathfinderAttackSimulator</li>
+              <li><a href="/PathfinderAttackSimulator/index.html">Home page</a></li>
+              <li class="divider"></li>
+              <li><a href="http://nuget.org/packages/PathfinderAttackSimulator">Get Library via NuGet</a></li>
+              <li><a href="https://github.com/Freymaurer/PathfinderAttackSimulator">Source Code on GitHub</a></li>
+              <li><a href="/PathfinderAttackSimulator/license.html">License</a></li>
+              <li><a href="/PathfinderAttackSimulator/release-notes.html">Release Notes</a></li>
 
-            <li class="nav-header">Documentation</li>
-            <li><a href="/PathfinderAttackSimulator/reference/index.html">API Reference</a></li>
+              <li class="nav-header">Getting started</li>
+              <li><a href="/PathfinderAttackSimulator/CreateCharacter.html">Create Character</a></li>
+              <li><a href="/PathfinderAttackSimulator/CreateWeapon.html">Create Weapon</a></li>
+              <li><a href="/PathfinderAttackSimulator/CreateModification.html">Create Modification</a></li>
+              <li><a href="/PathfinderAttackSimulator/AutomaticAttackCalculation.html">Automatic Attack Calculation</a></li>
+              <li class="nav-header">Documentation</li>
+              <li><a href="/PathfinderAttackSimulator/reference/index.html">API Reference</a></li>
           </ul>
         </div>
       </div>
