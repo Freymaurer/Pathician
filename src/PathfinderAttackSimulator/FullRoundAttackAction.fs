@@ -17,6 +17,7 @@ module FullRoundAttackAction =
         let calculateBabExtraAttacks =
             floor ( (float char.BAB - 1.)/5. )
             |> int
+            |> fun x -> if x <= 0 then 0 else x
             |> fun x -> [|1 .. 1 .. (x+1)|]
             |> Array.map (fun x -> int ( (float x-1.) * 5.) )
     
