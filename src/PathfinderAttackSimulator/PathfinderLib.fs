@@ -56,7 +56,6 @@ module Library =
             | Polymorph
             | Competence
 
-
         type BonusAttacksType =
             | HasteLike
             | TWFLike
@@ -124,7 +123,7 @@ module Library =
             EffectiveSizeChange : bool
             }
 
-        /// "0" 0 Flat if no StatChange
+        /// NoAS 0 Flat if no StatChange, or leave array empty
         let createStatChange att attChange bType = {
             Attribute = att
             AttributeChange = attChange
@@ -142,8 +141,8 @@ module Library =
             BonusType = bType
             }
 
-        /// 0 Flat All if no BonusAttacks. num = number of bonus attacks; bonusAttackType = is meant for calculation of non-stacking effects like magus spell combat and twf
-        ///in that case both are TWFLike; appliedToWeaponType = the Weapons that get bonus attacks e.g. haste goes to primaryMain, twf goes to primary, multiattack goes to secondary
+        /// 0 NoBA All if no BonusAttacks. num = number of bonus attacks; bonusAttackType = is meant for calculation of non-stacking effects like magus spell combat and twf
+        /// in that case both are TWFLike; appliedToWeaponType = the Weapons that get bonus attacks e.g. haste goes to primaryMain, twf goes to primary, multiattack goes to secondary
         let createBonusAttacks num bonusAttackType appliedToWeaponType= {
             BonusAttacks.NumberOfBonusAttacks = num
             BonusAttacks.TypeOfBonusAttacks = bonusAttackType
@@ -207,7 +206,6 @@ module Library =
             CasterLevel2 : int
             }
 
-
         type Weapon = {
             Name                    : string
             Damage                  : Damage
@@ -218,6 +216,7 @@ module Library =
             CriticalModifier        : int
             Modifier                : UsedModifier
             ManufacturedOrNatural   : NaturalManufactured
+            Description             : string
             }
 
         type AttackModification = {
@@ -291,6 +290,7 @@ module Library =
             CriticalModifier    = 3
             Modifier            = createUsedModifier Strength Strength TwoHanded 1.5
             ManufacturedOrNatural = Manufactured
+            Description         = ""
             }
 
         let greatswordParrn = {
@@ -303,6 +303,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Strength Strength TwoHanded 1.5
             ManufacturedOrNatural = Manufactured
+            Description         = ""
             }
 
         let mwkSapLarge = {
@@ -315,6 +316,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Strength Strength OneHanded 1.
             ManufacturedOrNatural = Manufactured
+            Description         = ""
             }
 
         let mwkSapHuge = {
@@ -327,6 +329,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Strength Strength OneHanded 1.
             ManufacturedOrNatural = Manufactured
+            Description         = ""
             }
 
         let butchersAxe = {
@@ -339,6 +342,7 @@ module Library =
             CriticalModifier    = 3
             Modifier            = createUsedModifier Strength Strength TwoHanded 1.5
             ManufacturedOrNatural = Manufactured
+            Description         = ""
             }
 
         let mwkRapier = {
@@ -351,6 +355,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Dexterity Strength OneHanded 1.
             ManufacturedOrNatural = Manufactured
+            Description         = ""
             }
 
         let enchantedLongswordElemental = {
@@ -363,6 +368,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Strength Strength OneHanded 1.
             ManufacturedOrNatural = Manufactured
+            Description         = ""
             }
 
         let talonsTumor = {
@@ -375,6 +381,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Dexterity Strength OneHanded 1.
             ManufacturedOrNatural = Natural
+            Description         = ""
             }
 
         let greatswordParrnHuge = {
@@ -387,6 +394,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Strength Strength TwoHanded 1.5
             ManufacturedOrNatural = Manufactured
+            Description         = ""
             }
 
         let mwkLongbow = {
@@ -399,6 +407,7 @@ module Library =
             CriticalModifier    = 3
             Modifier            = createUsedModifier Dexterity NoAS OneHanded 1.
             ManufacturedOrNatural = Manufactured
+            Description         = ""
             }
 
         let bite = {
@@ -411,6 +420,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Strength Strength OneHanded 1.
             ManufacturedOrNatural = Natural
+            Description         = ""
             }
 
         let slamElemental = {
@@ -423,6 +433,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Strength Strength OneHanded 1.
             ManufacturedOrNatural = Natural
+            Description         = ""
             }
 
         let claw = {
@@ -435,6 +446,7 @@ module Library =
             CriticalModifier    = 2
             Modifier            = createUsedModifier Strength Strength OneHanded 1.
             ManufacturedOrNatural = Natural
+            Description         = ""
             }
 
     module Modifications =
@@ -836,6 +848,7 @@ module Library =
                 CriticalModifier    = 2
                 Modifier            = createUsedModifier Strength Strength OneHanded 1.
                 ManufacturedOrNatural = Manufactured
+                Description         = ""
                 }
     
         let TestCharacter = { 

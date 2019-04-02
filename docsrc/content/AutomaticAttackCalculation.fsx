@@ -47,6 +47,7 @@ let Scimitar = {
         CriticalModifier    = 2
         Modifier            = createUsedModifier Dexterity Strength OneHanded 1.
         ManufacturedOrNatural = Manufactured
+        Description         = "Normal Scimitar"
         }
 
 (** 
@@ -149,6 +150,7 @@ let ShinyBlingBlingScimitar = {
     CriticalModifier    = 2
     Modifier            = createUsedModifier Dexterity Strength OneHanded 1.
     ManufacturedOrNatural = Manufactured
+    Description         = "Really, really shiny."
     }
 
 (**
@@ -157,7 +159,7 @@ We Somehow also got some nice Tentacles because why not.
 *)
 
 let Tentacle = {
-    Name                = "Huge Tentacle (we prop. became the herold of an ancient god or something)"
+    Name                = "Huge Tentacle"
     Damage              = createDamage 3 8 Bludgeoning
     DamageBonus         = 0
     ExtraDamage         = createDamage 1 6 Cold
@@ -166,6 +168,7 @@ let Tentacle = {
     CriticalModifier    = 3
     Modifier            = createUsedModifier Dexterity Strength OneHanded 1.
     ManufacturedOrNatural = Natural
+    Description         = "We propably became the herold of an ancient god or something"
     }
 
 myFullAttack myMagus2 Medium [| ShinyBlingBlingScimitar,PrimaryMain;

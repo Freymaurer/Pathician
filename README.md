@@ -125,15 +125,18 @@ Here are some examples:
 
 ## Installation
 
+It is possible, that this won't work for Windows 10 Enterprise
+
 1. [Download VisualStudioCode](https://code.visualstudio.com/download)
 2. [Download Git](https://git-scm.com/download/win)
-3. [Download .NET core AND .NET Framework dev packs](https://dotnet.microsoft.com/download)
-4. [Download Fake cli](https://fake.build/fake-gettingstarted.html). tl;dr: open console and type in "dotnet tool install fake-cli -g"
-5. [Download Master branch Zip of this repository](https://github.com/Freymaurer/PathfinderAttackSimulator/archive/developer.zip) & unzip
-6. open console and navigate ot the Folder withe the build.cmd inside. 
-		(_console command: cd folderPath_)
-7. console command: fake build
-8. install Ionide in visual studio code:
+3. [Download .NET Core SDK AND .NET Framework Dev Pack](https://dotnet.microsoft.com/download)
+4. Restart your computer
+5. [Download Fake cli](https://fake.build/fake-gettingstarted.html). tl;dr: open console and type in "dotnet tool install fake-cli -g"
+6. [Download Master branch Zip of this repository](https://github.com/Freymaurer/PathfinderAttackSimulator/archive/developer.zip) & unzip. Importan to not safe it on the Desktop!
+7. open console and navigate to the Folder _(Copy path to this folder)_ with the build.cmd inside. 
+		_(console command: cd __PathToYourFolder__)_
+8. console command: fake build
+9. install Ionide in visual studio code:
 	(_open visual studio code -> Extensions -> type in Ionide-fsharp -> install_)
-9. restart and open new .fsx file (File->New File -> Save As -> Name.fsx)
-10. reference the PathfinderAttackSimulator.dll (#r @"HERECOMESYOURPATH\PathfinderAttackSimulator\src\PathfinderAttackSimulator\bin\Release\netstandard2.0\PathfinderAttackSimulator.dll")erAttackSimulator\bin\Release\netstandard2.0\PathfinderAttackSimulator.dll")
+10. restart and open new .fsx file (File->New File -> Save As -> Name.fsx)
+11. reference the PathfinderAttackSimulator.dll (#r @"HERECOMESYOURPATH\PathfinderAttackSimulator\src\PathfinderAttackSimulator\bin\Release\netstandard2.0\PathfinderAttackSimulator.dll")
