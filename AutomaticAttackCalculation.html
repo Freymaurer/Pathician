@@ -90,6 +90,7 @@ For this i will build a lvl 7 elf magus, who will use dexterity to hit the enemy
 <span class="l"> 9: </span>
 <span class="l">10: </span>
 <span class="l">11: </span>
+<span class="l">12: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs11', 11)" onmouseover="showTip(event, 'fs11', 11)" class="id">Scimitar</span> <span class="o">=</span> <span class="pn">{</span>
         <span class="id">Name</span>                <span class="o">=</span> <span class="s">&quot;Scimitar&quot;</span>
@@ -101,6 +102,7 @@ For this i will build a lvl 7 elf magus, who will use dexterity to hit the enemy
         <span class="id">CriticalModifier</span>    <span class="o">=</span> <span class="n">2</span>
         <span class="id">Modifier</span>            <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 17)" onmouseover="showTip(event, 'fs16', 17)" class="fn">createUsedModifier</span> <span onmouseout="hideTip(event, 'fs6', 18)" onmouseover="showTip(event, 'fs6', 18)" class="uc">Dexterity</span> <span onmouseout="hideTip(event, 'fs5', 19)" onmouseover="showTip(event, 'fs5', 19)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs17', 20)" onmouseover="showTip(event, 'fs17', 20)" class="uc">OneHanded</span> <span class="n">1.</span>
         <span class="id">ManufacturedOrNatural</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 21)" onmouseover="showTip(event, 'fs18', 21)" class="uc">Manufactured</span>
+        <span class="id">Description</span>         <span class="o">=</span> <span class="s">&quot;Normal Scimitar&quot;</span>
         <span class="pn">}</span>
 </code></pre></td>
 </tr>
@@ -218,6 +220,7 @@ Here are some example for this:</p>
 <span class="l">22: </span>
 <span class="l">23: </span>
 <span class="l">24: </span>
+<span class="l">25: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs42', 80)" onmouseover="showTip(event, 'fs42', 80)" class="id">myMagus2</span> <span class="o">=</span>  <span class="pn">{</span>
     <span class="id">CharacterName</span> <span class="o">=</span> <span class="s">&quot;Best Character Name Ever^2&quot;</span>
@@ -242,6 +245,7 @@ Here are some example for this:</p>
     <span class="id">CriticalModifier</span>    <span class="o">=</span> <span class="n">2</span>
     <span class="id">Modifier</span>            <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 93)" onmouseover="showTip(event, 'fs16', 93)" class="fn">createUsedModifier</span> <span onmouseout="hideTip(event, 'fs6', 94)" onmouseover="showTip(event, 'fs6', 94)" class="uc">Dexterity</span> <span onmouseout="hideTip(event, 'fs5', 95)" onmouseover="showTip(event, 'fs5', 95)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs17', 96)" onmouseover="showTip(event, 'fs17', 96)" class="uc">OneHanded</span> <span class="n">1.</span>
     <span class="id">ManufacturedOrNatural</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs18', 97)" onmouseover="showTip(event, 'fs18', 97)" class="uc">Manufactured</span>
+    <span class="id">Description</span>         <span class="o">=</span> <span class="s">&quot;Really, really shiny.&quot;</span>
     <span class="pn">}</span>
 </code></pre></td>
 </tr>
@@ -271,9 +275,10 @@ We Somehow also got some nice Tentacles because why not.</p>
 <span class="l">21: </span>
 <span class="l">22: </span>
 <span class="l">23: </span>
+<span class="l">24: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs44', 98)" onmouseover="showTip(event, 'fs44', 98)" class="id">Tentacle</span> <span class="o">=</span> <span class="pn">{</span>
-    <span class="id">Name</span>                <span class="o">=</span> <span class="s">&quot;Huge Tentacle (we prop. became the herold of an ancient god or something)&quot;</span>
+    <span class="id">Name</span>                <span class="o">=</span> <span class="s">&quot;Huge Tentacle&quot;</span>
     <span onmouseout="hideTip(event, 'fs12', 99)" onmouseover="showTip(event, 'fs12', 99)" class="id">Damage</span>              <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 100)" onmouseover="showTip(event, 'fs13', 100)" class="fn">createDamage</span> <span class="n">3</span> <span class="n">8</span> <span onmouseout="hideTip(event, 'fs45', 101)" onmouseover="showTip(event, 'fs45', 101)" class="uc">Bludgeoning</span>
     <span class="id">DamageBonus</span>         <span class="o">=</span> <span class="n">0</span>
     <span class="id">ExtraDamage</span>         <span class="o">=</span> <span onmouseout="hideTip(event, 'fs13', 102)" onmouseover="showTip(event, 'fs13', 102)" class="fn">createDamage</span> <span class="n">1</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs46', 103)" onmouseover="showTip(event, 'fs46', 103)" class="uc">Cold</span>
@@ -282,6 +287,7 @@ We Somehow also got some nice Tentacles because why not.</p>
     <span class="id">CriticalModifier</span>    <span class="o">=</span> <span class="n">3</span>
     <span class="id">Modifier</span>            <span class="o">=</span> <span onmouseout="hideTip(event, 'fs16', 104)" onmouseover="showTip(event, 'fs16', 104)" class="fn">createUsedModifier</span> <span onmouseout="hideTip(event, 'fs6', 105)" onmouseover="showTip(event, 'fs6', 105)" class="uc">Dexterity</span> <span onmouseout="hideTip(event, 'fs5', 106)" onmouseover="showTip(event, 'fs5', 106)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs17', 107)" onmouseover="showTip(event, 'fs17', 107)" class="uc">OneHanded</span> <span class="n">1.</span>
     <span class="id">ManufacturedOrNatural</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs47', 108)" onmouseover="showTip(event, 'fs47', 108)" class="uc">Natural</span>
+    <span class="id">Description</span>         <span class="o">=</span> <span class="s">&quot;We propably became the herold of an ancient god or something&quot;</span>
     <span class="pn">}</span>
 
 <span onmouseout="hideTip(event, 'fs40', 109)" onmouseover="showTip(event, 'fs40', 109)" class="fn">myFullAttack</span> <span onmouseout="hideTip(event, 'fs42', 110)" onmouseover="showTip(event, 'fs42', 110)" class="id">myMagus2</span> <span onmouseout="hideTip(event, 'fs36', 111)" onmouseover="showTip(event, 'fs36', 111)" class="uc">Medium</span> <span class="pn">[|</span> <span onmouseout="hideTip(event, 'fs43', 112)" onmouseover="showTip(event, 'fs43', 112)" class="id">ShinyBlingBlingScimitar</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs41', 113)" onmouseover="showTip(event, 'fs41', 113)" class="uc">PrimaryMain</span><span class="pn">;</span>
