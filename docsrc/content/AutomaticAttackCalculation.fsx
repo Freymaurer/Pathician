@@ -47,6 +47,7 @@ let Scimitar = {
         CriticalModifier    = 2
         Modifier            = createUsedModifier Dexterity Strength OneHanded 1.
         ManufacturedOrNatural = Manufactured
+        Description         = "Normal Scimitar"
         }
 
 (** 
@@ -149,6 +150,7 @@ let ShinyBlingBlingScimitar = {
     CriticalModifier    = 2
     Modifier            = createUsedModifier Dexterity Strength OneHanded 1.
     ManufacturedOrNatural = Manufactured
+    Description         = "Really, really shiny."
     }
 
 (**
@@ -157,7 +159,7 @@ We Somehow also got some nice Tentacles because why not.
 *)
 
 let Tentacle = {
-    Name                = "Huge Tentacle (we prop. became the herold of an ancient god or something)"
+    Name                = "Huge Tentacle"
     Damage              = createDamage 3 8 Bludgeoning
     DamageBonus         = 0
     ExtraDamage         = createDamage 1 6 Cold
@@ -166,6 +168,7 @@ let Tentacle = {
     CriticalModifier    = 3
     Modifier            = createUsedModifier Dexterity Strength OneHanded 1.
     ManufacturedOrNatural = Natural
+    Description         = "We propably became the herold of an ancient god or something"
     }
 
 myFullAttack myMagus2 Medium [| ShinyBlingBlingScimitar,PrimaryMain;
@@ -189,13 +192,10 @@ myFullAttack myMagus2 Medium [| ShinyBlingBlingScimitar,PrimaryMain;
 >
 > You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and (hopefully) critically hit the enemy with a 35 (rolled 19) and confirm your crit with a 21 (rolled 5) for 25 Slashing damage +1 Untyped Schaden (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) (crit * 2)!
 >
-> You attack with a Huge Tentacle (we prop. became the herold of an ancient god or something) and hit the enemy with a 31 (rolled 16) for 39 Bludgeoning damage +5 Cold Schaden (Huge Tentacle (we prop. became the herold of an ancient god or something)) !
+> You attack with a Huge Tentacle and hit the enemy with a 31 (rolled 16) for 39 Bludgeoning damage +5 Cold Schaden (Huge Tentacle (we prop. became the herold of an ancient god or something)) !
 >
-> You attack with a Huge Tentacle (we prop. became the herold of an ancient god or something) and hit the enemy with a 31 (rolled 16) for 24 Bludgeoning damage +3 Cold Schaden (Huge Tentacle (we prop. became the herold of an ancient god or something)) !
+> You attack with a Huge Tentacle and hit the enemy with a 31 (rolled 16) for 24 Bludgeoning damage +3 Cold Schaden (Huge Tentacle (we prop. became the herold of an ancient god or something)) !
 >
-
-Okay, the first thing you might notice is the fact that is wasn't a good idea to let the name of the weapon be part of the output. At least, as long as the name also is the description.
-If you read this now this is propably already changed (wups.).
 
 But! You can also see, that at this point calculations are work, and this function can really help and do lots of the work alone!
 If there are feature requests or bugs please let me know and open an issue on the repository 

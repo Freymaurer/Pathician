@@ -596,7 +596,7 @@ module FullRoundAttackAction =
                 ///
             let extraDamageToString = 
                 getExtraDamage
-                |> Array.map (fun (value,dType,name) -> "+" + (string value) + " " + (string dType) + " " + "Schaden" + " (" + name + ")" + ", ")
+                |> Array.map (fun (value,dType,name) -> "+" + (string value) + " " + (string dType) + " " + "damage" + " (" + name + ")" + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
                 |> fun x -> x.TrimEnd [|' ';','|]       
                 

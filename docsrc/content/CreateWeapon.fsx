@@ -31,6 +31,7 @@ let keenflaming2greatsword = {
         CriticalModifier    = 2
         Modifier            = createUsedModifier Strength Strength TwoHanded 1.5
         ManufacturedOrNatural = Manufactured
+        Description         = ""
         }
 
 (**
