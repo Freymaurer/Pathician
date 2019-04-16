@@ -473,7 +473,7 @@ module FullRoundAttackAction =
                                                                then bonusArr
                                                                     |> Array.map (fun x -> x.SizeChangeValue)
                                                                     |> Array.sum
-                                                               else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'" 
+                                                               else failwith "Unrecognized Pattern of sizeChangeBoni." 
                                      )
                         |> Array.sum
 
