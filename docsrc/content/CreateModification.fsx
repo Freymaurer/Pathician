@@ -14,7 +14,7 @@ A modification needs certain informations for a correct calculation.
 Right now this is not hand-held at all, but might get better in a future version.
 
 This is by far the most complex variant of information-type.
-Therefore, i create a library of pre-written modifications.
+Therefore, i create a library of modifications. For a full list of all prebuild modifications please see [here](https://freymaurer.github.io/PathfinderAttackSimulator/reference/pathfinderattacksimulator-library-modifications.html)
 
 Let's see how this works for the famous Haste spell
 
@@ -51,7 +51,7 @@ So how does this work:
 * BonusDamage = bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage)
 * ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
 * AppliedTo = apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
-* StatChanges = e.g. the alchemist's mutagen (createStatChange "Str" 2 Alchemical) the number again, represents the modifier increase. Can be left empty if no stat change applies.
+* StatChanges = e.g. the alchemist's mutagen (createStatChange Strength 2 Alchemical) the number again, represents the modifier increase. Can be left empty if no stat change applies.
 * SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
 Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Armor).
 * Description = A short Description for additional information. Not used in the script right now.

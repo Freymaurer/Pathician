@@ -51,7 +51,8 @@ let Scimitar = {
         }
 
 (** 
-Now we want to calculate the Standard Attack Action with some modifications from the library and also a new one: The modification for an intensified, empowered Shocking Grasp.
+Now we want to calculate the Standard Attack Action with some modifications from the library (for a full list see For a full list of all prebuild modifications please see [here](https://freymaurer.github.io/PathfinderAttackSimulator/reference/pathfinderattacksimulator-library-modifications.html))
+and also a new one: The modification for an intensified, empowered Shocking Grasp.
 So how do we create this modification, which is a quite complex modification if we want it to be flexibel.
 *)
 
