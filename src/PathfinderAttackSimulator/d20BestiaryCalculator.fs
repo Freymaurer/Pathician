@@ -50,21 +50,22 @@ module D20pfsrdCalculator =
             let getAttackRolls =
                     rollDice 10000 20
             getRndArrElement getAttackRolls,getRndArrElement getAttackRolls
-    
+        //
+        let startSize =
+            match monsterStats.Size with
+            | Fine          -> 1
+            | Diminuitive   -> 2
+            | Tiny          -> 3
+            | Small         -> 4
+            | Medium        -> 5
+            | Large         -> 6
+            | Huge          -> 7
+            | Gargantuan    -> 8
+            | Colossal      -> 9
+
         //
         let calculatedSize =
     
-            let startSize =
-                match monsterStats.Size with
-                | Fine          -> 1
-                | Diminuitive   -> 2
-                | Tiny          -> 3
-                | Small         -> 4
-                | Medium        -> 5
-                | Large         -> 6
-                | Huge          -> 7
-                | Gargantuan    -> 8
-                | Colossal      -> 9
             let changeSizeBy =
                 modifications
                 |> Array.filter (fun x -> x.SizeChanges.EffectiveSizeChange = false)
@@ -93,10 +94,17 @@ module D20pfsrdCalculator =
             wantedAttack
             |> fun x -> Array.max x.AttackBonus
 
+        //
         let attackBoniSize =
-            calculatedSize
-            |> fun x -> Map.find x findSizes
-            |> fun x -> x.SizeModifier
+            let sizeModifierNew =
+                calculatedSize
+                |> fun x -> Map.find x findSizes
+                |> fun x -> x.SizeModifier
+            let sizeModifierOld =
+                startSize
+                |> fun x -> Map.find x findSizes
+                |> fun x -> x.SizeModifier
+            sizeModifierNew - sizeModifierOld
 
         let attackBoniModifications = 
             modifications 
@@ -153,18 +161,6 @@ module D20pfsrdCalculator =
         /////End attack boni/Start damage boni/////
     
         let sizeAdjustedWeaponDamage =
-            
-            let startSize =
-                match monsterStats.Size with
-                | Fine          -> 1
-                | Diminuitive   -> 2
-                | Tiny          -> 3
-                | Small         -> 4
-                | Medium        -> 5
-                | Large         -> 6
-                | Huge          -> 7
-                | Gargantuan    -> 8
-                | Colossal      -> 9
     
             let effectiveSize =
     
@@ -384,11 +380,13 @@ module D20pfsrdCalculator =
             let attackMaximumLength appliedTo = if appliedTo < attackArr.Length then appliedTo else attackArr.Length
             modifications
             |> Array.filter (fun x -> snd x.AppliedTo <> -20)
-            |> Array.collect (fun x -> Array.create (snd x.AppliedTo) x 
-                                       |> fun x -> Array.append x (Array.create (attackArr.Length - x.Length) Modifications.ZeroMod)
-                                       |> Array.mapi (fun i x -> i,x)
-    
-                             )
+            |> fun arr -> if Array.isEmpty arr
+                          then Array.create attackArr.Length Modifications.ZeroMod
+                               |> Array.mapi (fun i x -> i,x)
+                          else Array.collect (fun x -> (Array.create (snd x.AppliedTo) x) 
+                                                       |> fun x -> Array.append x (Array.create (attackArr.Length - x.Length) Modifications.ZeroMod)
+                                                       |> Array.mapi (fun i x -> i,x)
+                                              ) arr
             |> Array.groupBy (fun (x,y) -> x)
             |> Array.map (fun (x,y) -> (Array.map snd y))
             |> fun x -> x
@@ -404,21 +402,23 @@ module D20pfsrdCalculator =
                 let getAttackRolls =
                         rollDice 10000 20
                 getRndArrElement getAttackRolls,getRndArrElement getAttackRolls
-    
+
+            //
+            let startSize =
+                match monsterStats.Size with
+                | Fine          -> 1
+                | Diminuitive   -> 2
+                | Tiny          -> 3
+                | Small         -> 4
+                | Medium        -> 5
+                | Large         -> 6
+                | Huge          -> 7
+                | Gargantuan    -> 8
+                | Colossal      -> 9
+
             //
             let calculatedSize =
     
-                let startSize =
-                    match monsterStats.Size with
-                    | Fine          -> 1
-                    | Diminuitive   -> 2
-                    | Tiny          -> 3
-                    | Small         -> 4
-                    | Medium        -> 5
-                    | Large         -> 6
-                    | Huge          -> 7
-                    | Gargantuan    -> 8
-                    | Colossal      -> 9
                 let changeSizeBy =
                     modificationArr
                     |> Array.filter (fun x -> x.SizeChanges.EffectiveSizeChange = false)
@@ -441,11 +441,18 @@ module D20pfsrdCalculator =
                 |> fun x -> if x > 9 then 9
                             elif x < 1 then 1
                             else x
+
             ///
             let attackBoniSize =
-                calculatedSize
-                |> fun x -> Map.find x findSizes
-                |> fun x -> x.SizeModifier
+                let sizeModifierNew =
+                    calculatedSize
+                    |> fun x -> Map.find x findSizes
+                    |> fun x -> x.SizeModifier
+                let sizeModifierOld =
+                    startSize
+                    |> fun x -> Map.find x findSizes
+                    |> fun x -> x.SizeModifier
+                sizeModifierNew - sizeModifierOld
     
             //Start adding up attack boni
             let AttackBoniModifications = 
@@ -473,19 +480,7 @@ module D20pfsrdCalculator =
             /////End attack boni/Start damage boni/////
     
             let sizeAdjustedWeaponDamage =
-                
-                let startSize =
-                    match monsterStats.Size with
-                    | Fine          -> 1
-                    | Diminuitive   -> 2
-                    | Tiny          -> 3
-                    | Small         -> 4
-                    | Medium        -> 5
-                    | Large         -> 6
-                    | Huge          -> 7
-                    | Gargantuan    -> 8
-                    | Colossal      -> 9
-    
+               
                 let effectiveSize =
     
                     let changeSizeBy =
