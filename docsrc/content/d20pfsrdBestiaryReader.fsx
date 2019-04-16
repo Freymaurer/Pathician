@@ -49,7 +49,13 @@ This is fast and easily calculated, without the gm juggling several dozen links/
 Altough it is obviously not perfect, as you can see in the last calculated attack, in which a " Space ft." sneaked into the weapon name, hinting at a important detail reliant on an x-amount of feet.
 After looking it up on the bestiary entry we can see that this was part of "tail slap +30 (2d8+18) Space 20 ft.", meaning... well i am actually not sure about this one.
 This could either be 20 ft reach or that this attack hits everyone in a 20 ft space. Anyhow let's move to some better examples.
-
+*)
+(**
+You can also let the enemy just do one standard attack with the function below. That version will also try and erase possible mali due to Rapid Shot or Two-Weapon Fighting, which will not apply to standard action attacks.
+*)
+calculateStandardAttack ancientLunarDragon Melee 1 [||]
+// > You attack with a bite and hit with a 46 (rolled 14) for 33 damage !
+(**
 ### Example Blade Lord
 
 For the related link please click [here](https://www.d20pfsrd.com/bestiary/npc-s/npcs-cr-19/blade-lord-elf-rogue-20/)
@@ -99,7 +105,7 @@ And the tool has problems with Power Attack, as this feat gives different boni d
 Try and circumvent the missing stat change modifications with the BonusAttackDamage modification:
 *)
 
-let testBoni1 = BonusAttackDamage 2 5
+let testBoni1 = Modifications.BonusAttackDamage 2 5
 
 (**
 This would create a modification with +2 to attack rolls and +5 to damage rolls. You can also write this, without any namebinding, directly into the ModificationArray.
@@ -112,3 +118,29 @@ Click [here](https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremi
 *)
 
 let krytonEremiteOverlord = getMonsterInformation "https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord"
+
+calculateFullAttack krytonEremiteOverlord Melee 1 [|Modifications.EnlargePerson; Modifications.InspireCourage 15; Modifications.Shaken|]
+
+(**
+> You attack with a bite and hit with a 56 (rolled 19) for 19 damage plus pain!
+> 
+> You attack with a claws and hit with a 50 (rolled 13) for 18 damage plus pain!
+> 
+> You attack with a claws and hit with a 54 (rolled 17) for 22 damage plus pain!
+> 
+> You attack with a thorn vines touch and hit with a 37 (rolled 5) for 0 damage plus pain plus grab, constrict and energy drain!
+> 
+> You attack with a thorn vines touch and hit with a 40 (rolled 8) for 0 damage plus pain plus grab, constrict and energy drain!
+> 
+> You attack with a thorn vines touch and hit with a 51 (rolled 19) for 0 damage plus pain plus grab, constrict and energy drain!
+> 
+> You attack with a thorn vines touch and hit with a 49 (rolled 17) for 0 damage plus pain plus grab, constrict and energy drain!
+> 
+> You attack with a thorn vines touch and hit with a 42 (rolled 10) for 0 damage plus pain plus grab, constrict and energy drain!
+> 
+> You attack with a thorn vines touch and hit with a 43 (rolled 11) for 0 damage plus pain plus grab, constrict and energy drain!
+>
+
+So the enemy got enlarged (automatically resizes used weapons) and got a lvl 15 bard-like character at his side. 
+Naturally, despite his buffs, he is still shaken, as he knows he does not stand a chance against a well organized party ;).
+*)
