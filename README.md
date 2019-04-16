@@ -51,4 +51,5 @@ It is possible, that this won't work for Windows 10 Enterprise
 9. Console command: fake build
 10. Install Ionide in visual studio code:
 	(_open visual studio code -> Extensions -> type in Ionide-fsharp -> install_)
+11. Thats finally it, you can now go the PathfinderAttackSimulator folder and open the PathfinderCalculator.fsx adn start using it.
 

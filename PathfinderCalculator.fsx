@@ -79,3 +79,4 @@ let test = myFullAttack characterTemplate Medium [|weaponTemplate,PrimaryMain;we
 
 // if you have questions about how to use anything here, even if the question is really simple, pls message me as i plan to make a FAQ.
 // PS: everything written behind "//" is not recogniced as code and is not executed, use it to write notes or whatever you want.
+// PPS: you can try and hover over different parts of these functions for more informartion, albeit a bit difficult to read.
