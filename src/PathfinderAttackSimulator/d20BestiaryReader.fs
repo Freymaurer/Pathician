@@ -137,8 +137,10 @@ module D20pfsrdReader =
         //pattern matching for the damage given in brackets
         let damage = 
             let patternMatch = regexGetDamage.Matches(str)
-            (patternMatch.Item (patternMatch.Count-1)).Value
-            |> fun x -> x.Trim([|'(';')'|])
+            if patternMatch.Count > 0 
+            then (patternMatch.Item (patternMatch.Count-1)).Value
+                 |> fun x -> x.Trim([|'(';')'|])
+            else ""
 
         //same pattern matching as befor, but this time the dmg is replaced with "", so we only get the rest
         let attack = regexGetDamage.Replace(str,"") 
