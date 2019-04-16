@@ -277,7 +277,6 @@ module D20pfsrdInput =
             let getAttacks (meleeOrRanged:AttackVariant) = 
                 let attackInfo = (regexFindMeleeStats meleeOrRanged).Match monsterInformation        //.Match returns always only the first hit
                                  |> fun x -> regexFindHTMLTags.Replace(x.Value,"")
-                                 |> fun x -> x.Replace('–','-')
              
                 attackInfo
                 |> fun x -> x.Replace((sprintf "%A" meleeOrRanged),"")

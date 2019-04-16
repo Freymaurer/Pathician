@@ -31,15 +31,15 @@ It is possible, that this won't work for Windows 10 Enterprise
 3. [Click here](https://dotnet.microsoft.com/download) to download .NET Core SDK AND .NET Framework Dev Pack
 4. [Click here](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2017) to download Build Tools for Visual Studio 2019 //HERE STILL MISSING INDIVIDUAL COMPONENTS
 5. Restart your computer
-6. Install fake cli. Open [command prompt](https://en.wikipedia.org/wiki/Command-line_interface) by searching in the windows search bar for "cmd" and type in the new window "dotnet tool install fake-cli -g" (without the quotation marks)
+6. Install fake cli. Open [command prompt](https://en.wikipedia.org/wiki/Command-line_interface)(console) by searching in the windows search bar for "cmd" and type in the new window "dotnet tool install fake-cli -g" (without the quotation marks)
 7. [Click here](https://github.com/Freymaurer/PathfinderAttackSimulator/archive/developer.zip) or scroll up to download either master or developer branch of this repository.
 	Master branch should be a fully functionable variant, while the developer branch often has more features which are not fully tested yet.
 	At this point i recommend downloading the developer branch, as it will be updated the most.
-	Unzip the file ina any folder, except the Desktop!
-8. open command prompt and navigate to the Folder _(Copy path to this folder)_ with the build.cmd inside. 
+	Unzip the file in any folder, except the Desktop!
+8. Open command prompt(console) and navigate to the Folder _(Copy path to this folder)_ with the build.cmd inside. 
 		_(console command: cd __PathToYourFolder__)_
-9. console command: fake build
-10. install Ionide in visual studio code:
+9. Console command: fake build
+10. Install Ionide in visual studio code:
 	(_open visual studio code -> Extensions -> type in Ionide-fsharp -> install_)
-11. restart and open new .fsx file (File->New File -> Save As -> Name.fsx)
-12. reference the PathfinderAttackSimulator.dll (#r @"HERECOMESYOURPATH\PathfinderAttackSimulator\src\PathfinderAttackSimulator\bin\Release\netstandard2.0\PathfinderAttackSimulator.dll")
+11. Restart and open new .fsx file (File->New File -> Save As -> Name.fsx)
+12. Reference the PathfinderAttackSimulator.dll (#r @"HERECOMESYOURPATH\PathfinderAttackSimulator\src\PathfinderAttackSimulator\bin\Release\netstandard2.0\PathfinderAttackSimulator.dll")
