@@ -64,6 +64,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{7C6D08
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PathfinderAttackSimulatorConsole", "src\PathfinderAttackSimulatorConsole\PathfinderAttackSimulatorConsole.fsproj", "{B7339FEC-0891-4DF8-8BB5-0B806A64F32F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AAFAFA4B-BA90-4CF6-94BC-6D16255D1921}"
+	ProjectSection(SolutionItems) = preProject
+		PathfinderCalculator.fsx = PathfinderCalculator.fsx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
