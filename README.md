@@ -29,7 +29,17 @@ It is possible, that this won't work for Windows 10 Enterprise
 1. [Click here](https://code.visualstudio.com/download) to download VisualStudioCode
 2. [Click here](https://git-scm.com/download/win) to download Git
 3. [Click here](https://dotnet.microsoft.com/download) to download .NET Core SDK AND .NET Framework Dev Pack
-4. [Click here](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2017) to download Build Tools for Visual Studio 2019 //HERE STILL MISSING INDIVIDUAL COMPONENTS
+4. [Click here](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2017) to download Build Tools for Visual Studio 2019 
+	While installing check the boxes for:
+	Under "Workload":
+	- .NET Core build tools
+	Under "Individual components":
+	- NuGet targets and build tasks
+	- NuGet package manager
+	- .NET Framework 4.7 SDK
+	- .NET Framework 4.7 targeting pack
+	- F# compiler
+	...then install
 5. Restart your computer
 6. Install fake cli. Open [command prompt](https://en.wikipedia.org/wiki/Command-line_interface)(console) by searching in the windows search bar for "cmd" and type in the new window "dotnet tool install fake-cli -g" (without the quotation marks)
 7. [Click here](https://github.com/Freymaurer/PathfinderAttackSimulator/archive/developer.zip) or scroll up to download either master or developer branch of this repository.
@@ -41,5 +51,4 @@ It is possible, that this won't work for Windows 10 Enterprise
 9. Console command: fake build
 10. Install Ionide in visual studio code:
 	(_open visual studio code -> Extensions -> type in Ionide-fsharp -> install_)
-11. Restart and open new .fsx file (File->New File -> Save As -> Name.fsx)
-12. Reference the PathfinderAttackSimulator.dll (#r @"HERECOMESYOURPATH\PathfinderAttackSimulator\src\PathfinderAttackSimulator\bin\Release\netstandard2.0\PathfinderAttackSimulator.dll")
+
