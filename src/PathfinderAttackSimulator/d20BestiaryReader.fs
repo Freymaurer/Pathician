@@ -141,7 +141,7 @@ module D20pfsrdReader =
             then (patternMatch.Item (patternMatch.Count-1)).Value
                  |> fun x -> x.Trim([|'(';')'|])
             else ""
-
+    
         //same pattern matching as befor, but this time the dmg is replaced with "", so we only get the rest
         let attack = regexGetDamage.Replace(str,"") 
                      |> fun x -> x.Trim()
@@ -150,7 +150,7 @@ module D20pfsrdReader =
         // weapon name is build by any substring not containing a number. Which also leads to "touch" also being part of the name, altough its meant to describe a touch attack.
         // number of attacks with that weapon is calculated taking multiples of the same weapon into account
         let (name,attackArr) =
-
+    
             let splitAttackArr = attack.Split(' ')
             let checkMultipleAttacks =
                 if String.IsNullOrEmpty attack = true
@@ -184,12 +184,12 @@ module D20pfsrdReader =
                             else [|0|]
             
             weaponName, iterativeAttacks
-
+    
         // the following function resolves the damage extraction, more or less an huge stream of regex pattern matchings to get the needed values into the correct place.
         // this needs to be based on a string array, as there could be no damage for attacks only inflicting status effects. so an string array of length = 1 signals such a case and gives back only the whole
         // attack description.
         let weaponDmg =
-
+    
             let removePlusBoni = regexMatchPlusOnwards.Replace(damage,"")
             let getPlusBoni = regexMatchPlusOnwards.Match(damage).Value
                               |> fun x -> x.Trim()
@@ -290,14 +290,16 @@ module D20pfsrdReader =
         let attacksRanged = getAttacks Ranged
                             |> Array.map (fun x -> Ranged, x)
         let attacks = Array.append attacksMelee attacksRanged
-
+    
+        let testMatchToInt (var:Text.RegularExpressions.Match) = 
+            if var.Success = true then (int var.Value) else 0
         // final part writes all information into the URLMonsterAttacks type
         [|for i = 0 to (attacks.Length-1) do
             yield createURLMonsterAttacks (fst attacks.[i])
                                           (snd attacks.[i]) 
                                           (regexBAB.Match(monsterInformationWithoutHTML).Value |> int)
-                                          ((regexMatchScore "Str").Match(monsterInformationWithoutHTML).Value |> int) 
-                                          ((regexMatchScore "Dex").Match(monsterInformationWithoutHTML).Value |> int)
+                                          (testMatchToInt ((regexMatchScore "Str").Match(monsterInformationWithoutHTML))) 
+                                          (testMatchToInt ((regexMatchScore "Dex").Match(monsterInformationWithoutHTML)))
                                           (regexGetSpecialFeats.Matches(monsterInformationWithoutHTML)
                                            |>  fun x -> [|for i = 0 to (x.Count-1) do 
                                                             yield (x.Item i).Value|]
