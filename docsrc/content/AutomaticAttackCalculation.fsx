@@ -182,7 +182,7 @@ myFullAttack myMagus2 Medium [| ShinyBlingBlingScimitar,PrimaryMain;
                                 PowerAttack myMagus2.BAB; 
                                 FuriousFocus myMagus2.BAB;
                                 BlessingOfFervorAttackBonus;
-                                InspireCourage|]
+                                InspireCourage 15|]
 
 (** 
 > You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and hit the enemy with a 35 (rolled 2) for 26 Slashing damage +30 Electricity Schaden (Intensified Empowered Shocking Grasp), +2 Untyped Schaden (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) !
