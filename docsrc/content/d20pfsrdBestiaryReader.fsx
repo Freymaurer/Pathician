@@ -75,7 +75,40 @@ calculateFullAttack bladeLord Melee 1 [||]
 
 If we now change the given "1" in the function above to "2" we get his second attack scheme ("or +2 brilliant energy longsword +21/+16/+11 (1d8+5/19–20)")
 and so on.
-...But wait... isn't this a bit _weak_ for a CR 19 npc? Well, then let us add his lvl 20 sneak attack ability
+...But wait... isn't this a bit _weak_ for a CR 19 npc? Well, then let us add his lvl 20 sneak attack ability to the AttackModificationArray
 *)
 
 calculateFullAttack bladeLord Melee 1 [|Modifications.SneakAttack 20|]
+(**
+> You attack with a brilliant energy longsword and (hopefully) critically hit the enemy with a 39 (rolled 20) and confirm your crit with a 32 (rolled 13) for 6 damage +35 Precision damage (crit * 2) !
+> 
+> You attack with a brilliant energy longsword and hit the enemy with a 32 (rolled 18) for 10 damage +31 Precision damage !
+> 
+> You attack with a brilliant energy longsword and hit the enemy with a 25 (rolled 16) for 6 damage +33 Precision damage !
+> 
+> You attack with a frost short sword and (hopefully) critically hit the enemy with a 40 (rolled 20) and confirm your crit with a 21 (rolled 1) for 7 damage +38 Precision damage, +5 cold damage (crit * 2) !
+> 
+> You attack with a frost short sword and hit the enemy with a 21 (rolled 6) for 9 damage +28 Precision damage, +6 cold damage !
+> 
+> You attack with a frost short sword and hit the enemy with a 12 (rolled 2) for 10 damage +37 Precision damage, +5 cold damage !
+>
+
+Ah, way better, this can be done with nearly any modification. At this moment this tool cannot calculate stat-changing modifications (alchemist mutagen), as it is difficult to determine which stat is used for dmg/attack.
+And the tool has problems with Power Attack, as this feat gives different boni depending on how the weapon is wielded.
+
+Try and circumvent the missing stat change modifications with the BonusAttackDamage modification:
+*)
+
+let testBoni1 = BonusAttackDamage 2 5
+
+(**
+This would create a modification with +2 to attack rolls and +5 to damage rolls. You can also write this, without any namebinding, directly into the ModificationArray.
+
+In the end one more example of a more complex variant.
+
+### Kryton Eremite Overlord
+
+Click [here](https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord) for the link.
+*)
+
+let krytonEremiteOverlord = getMonsterInformation "https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord"
