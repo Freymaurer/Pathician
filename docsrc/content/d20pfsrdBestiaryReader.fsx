@@ -19,16 +19,18 @@ information from it. This is based on certain writing patterns, so a 3rd party e
 As a example we will use the [Ancient Lunar Dragon](https://www.d20pfsrd.com/bestiary/monster-listings/dragons/dragon-outer/outer-dragon-lunar/lunar-dragon-ancient/).
 *)
 #r "PathfinderAttackSimulator.dll"
-open PathfinderAttackSimulator.D20pfsrdInput.MonsterInfo
+open PathfinderAttackSimulator
+open D20pfsrdReader
 
 let ancientLunarDragon = getMonsterInformation "https://www.d20pfsrd.com/bestiary/monster-listings/dragons/dragon-outer/outer-dragon-lunar/lunar-dragon-ancient/"
 (**
 This function extracts the necessary information from the bestiary entry. We can now give this information to the calculator function.
 *)
-open PathfinderAttackSimulator.D20pfsrdInput.AuxFunctions
-open PathfinderAttackSimulator.D20pfsrdInput.URLCalculator
+open D20pfsrdReader.AuxFunctions
+open D20pfsrdCalculator
+open PathfinderAttackSimulator.Library
 
-calculateURLAttack ancientLunarDragon Melee 1
+calculateFullAttack ancientLunarDragon Melee 1 [||]
 (**
 > You attack with a bite and hit with a 36 (rolled 4) for 34 damage !
 >
@@ -55,7 +57,7 @@ For the related link please click [here](https://www.d20pfsrd.com/bestiary/npc-s
 
 let bladeLord = getMonsterInformation "https://www.d20pfsrd.com/bestiary/npc-s/npcs-cr-19/blade-lord-elf-rogue-20/"
 
-calculateURLAttack bladeLord Melee 1
+calculateFullAttack bladeLord Melee 1 [||]
 
 (**
 > You attack with a brilliant energy longsword and hit with a 25 (rolled 6) for 7 damage !
@@ -73,4 +75,7 @@ calculateURLAttack bladeLord Melee 1
 
 If we now change the given "1" in the function above to "2" we get his second attack scheme ("or +2 brilliant energy longsword +21/+16/+11 (1d8+5/19–20)")
 and so on.
+...But wait... isn't this a bit _weak_ for a CR 19 npc? Well, then let us add his lvl 20 sneak attack ability
 *)
+
+calculateFullAttack bladeLord Melee 1 [|Modifications.SneakAttack 20|]
