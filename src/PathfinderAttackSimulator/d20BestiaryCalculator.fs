@@ -9,7 +9,7 @@ module D20pfsrdCalculator =
     open D20pfsrdReader.AuxFunctions
 
     let private testForNaturalAttack (str:string) =
-        let regexNaturalAttack = System.Text.RegularExpressions.Regex("(claw|vine|tentacle|bite|gore|hoof|wing|pincers|tail\sslap|slam|sting|talon)")
+        let regexNaturalAttack = System.Text.RegularExpressions.Regex("(claw|vine|tentacle|bite|gore|hoof|wing|pincers|tail\sslap|slam|sting|talon|tongue)")
         regexNaturalAttack.IsMatch(str)
 
     /// This function returns the calculated attack rolls of a d20pfsrd bestiary entry.
@@ -601,7 +601,8 @@ module D20pfsrdCalculator =
     
             let totalDamage =
                 damageRolls + sizeAdjustedWeaponDamage.BonusDamage + modificationDamageBoni
-                |> fun x -> if x <= 0 then 1 else x
+                //the next line sets a minimum dmg of 1 for all attacks. the additional "(urlAttack.WeaponDamage.NumberOfDie <> 0)" circumvents a 1 dmg attack, if the attack is not meant to deal any attack.
+                |> fun x -> if (x <= 0) && (urlAttack.WeaponDamage.NumberOfDie <> 0) then 1 else x
     
             let extraDamage =
                 let getDamageRolls numberOfDie die=
