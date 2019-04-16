@@ -4,7 +4,7 @@ open System
 
 module Library =
 
-           
+    /// This module contains all necessary types and create functions to operate the StandardAttack and Full-RoundAttack module
     module AuxLibFunctions =
 
         type SizeType =
@@ -76,6 +76,7 @@ module Library =
         type WeaponHanded =
             | OneHanded
             | TwoHanded
+            | OffHand
 
         type SizeAttributes = {
             SizeModifier : int
@@ -231,13 +232,14 @@ module Library =
             Description         : string
             }
 
+    /// library for all prebuild characters; this is mostly for personal use or functions as an example
     module Characters =
 
         open AuxLibFunctions
 
         ///Stats for Character
         let myParrn = {
-            CharacterName = createStringForLib "Parrn"
+            CharacterName = "Parrn"
             BAB = 6
             Strength = 6
             Dexterity = 0
@@ -251,7 +253,7 @@ module Library =
 
 
         let myTumor = {
-            CharacterName = createStringForLib "Stephano"
+            CharacterName = "Stephano"
             BAB = 6
             Strength = -2
             Dexterity = 1
@@ -264,7 +266,7 @@ module Library =
             }
 
         let myElemental = {
-            CharacterName = createStringForLib "Michelangelo"
+            CharacterName = "Michelangelo"
             BAB = 6
             Strength = 1
             Dexterity = 2
@@ -276,6 +278,7 @@ module Library =
             CasterLevel2 = 0
             }
 
+    /// library for all pre-written weapons; this is mostly for personal use or meant as an example
     module Weapons =
 
         open AuxLibFunctions
@@ -449,9 +452,173 @@ module Library =
             Description         = ""
             }
 
+    /// Library for all pre-written modifications
     module Modifications =
 
         open AuxLibFunctions
+
+        let AidAnother = {
+            Name = "Aid Another"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 2 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], 1
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let BlessingOfFervorAttackBonus = {
+            Name = "Blessing of Fervor"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 2 Flat
+            BonusDamage = createBonus 2 Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Blessing of Fervor with the +2 attack bonus as choice"
+            }
+        
+        /// use this modification to add fast and easy flat boni to attack rolls or to damage.
+        let BonusAttackDamage attack damage= {
+            Name = "Blessing of Fervor"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus attack Flat
+            BonusDamage = createBonus damage Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Use this modification to add fast and easy flat boni to attack rolls or to damage"
+            }
+
+        let Charging = {
+            Name = "Charge-Attack"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 2 BonusTypes.Flat
+            BonusDamage = createBonus 0 BonusTypes.Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let DivineFavor = {
+            Name = "Divine Favor"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 1 Luck
+            BonusDamage = createBonus 1 Luck
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let EnlargePerson = {
+            Name = "Enlarge Person"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 0 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [|(createStatChange Strength 1 Size);(createStatChange Dexterity -1 Size)|]
+            SizeChanges = createSizechange 1 Polymorph false
+            Description = ""
+            }
+
+        let Fatigued = {
+            Name = "Fatigued"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 0 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let Flanking = {
+            Name = "Flanking"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 2 BonusTypes.Flat
+            BonusDamage = createBonus 0 BonusTypes.Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let FlurryOfBlows = {
+            Name = "Flurry Of Blows"
+            BonusAttacks = createBonusAttacks 1 NoBA PrimaryMain
+            BonusAttackRoll = createBonus 0 BonusTypes.Flat
+            BonusDamage = createBonus 0 BonusTypes.Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let FuriousFocus bab = {
+            Name = "Furious Focus"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus (int(floor (float bab/4. + 1.))) BonusTypes.Flat
+            BonusDamage = createBonus 0 BonusTypes.Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|PrimaryMain|], 1
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let Haste = {
+            Name = "Haste"
+            BonusAttacks = createBonusAttacks 1 HasteLike PrimaryMain
+            BonusAttackRoll = createBonus 1 BonusTypes.Flat
+            BonusDamage = createBonus 0 BonusTypes.Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let InspireCourage bardLevel = 
+            let (bonusValue:int) = match bardLevel with
+                                   | x when bardLevel >= 17 -> 4
+                                   | x when bardLevel >= 11 -> 3
+                                   | x when bardLevel >= 5 -> 2
+                                   | _ -> 1
+            {
+            Name = "Inspire Courage"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus bonusValue Competence
+            BonusDamage = createBonus bonusValue Competence
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "For a set level, because of several IC increasing items"
+            }
+
+        let Invisibility = {
+            Name = "Invisibility"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 2 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
 
         let Multiattack =  {
             Name = "Multiattack"
@@ -464,9 +631,112 @@ module Library =
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
+
+        let MutagenStrength = {
+            Name = "Strength Mutagen"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 0 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -2 Alchemical)|]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let PlanarFocusFire (lvl:int) = 
+            let NumberOfExtraDie = int (lvl/4) + 1 
+            {
+            Name = "Planar Focus"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 0 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage NumberOfExtraDie 6 Fire
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let PowerAttack bab = {
+            Name = "Power Attack"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus (int( - (floor (float bab/4. + 1.)) )) BonusTypes.Flat
+            BonusDamage = createBonus (int( (floor (float bab/4.) * 2.) + 2. )) BonusTypes.Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+        
+        let PowerAttackURL (handed:WeaponHanded) bab= {
+            Name = "Power Attack"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus (int( - (floor (float bab/4. + 1.)) )) Flat
+            BonusDamage = (floor (float bab/4.) * 2.) + 2. 
+                          |> fun x -> match handed with
+                                      | TwoHanded -> createBonus (int (x * 1.5)) Flat
+                                      | OneHanded -> createBonus (int x) Flat
+                                      | OffHand -> createBonus (int (x * 0.5)) Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Use this only for the calculateURLAttack function"
+            }        
     
+        let Shaken = {
+            Name = "Shaken"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus -2 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        let ShockingGrasp casterLevel metalTF = {
+            Name = "Intensified Empowered Shocking Grasp"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus (if metalTF = true then 3 else 0) Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage (if casterLevel > 5 then 5 else casterLevel) 6 Electricity
+            AppliedTo = [|All|], 1
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Shocking Grasp deals 1d6 / level electricity damage up to a maximum of 5d6."
+            }
+
+        let ShockingGraspEmpowered casterLevel metalTF = {
+            Name = "Intensified Empowered Shocking Grasp"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus (if metalTF = true then 3 else 0) Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage ((if casterLevel > 10 then 10 else casterLevel) 
+                                       |> fun x -> x + int (float x * 0.5) ) 6 Electricity
+            AppliedTo = [|All|], 1
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Shocking Grasp deals 1d6 / level electricity damage up to a maximum of 10d6 for this intensified version. Empowered increases the number of all rolled dice by 50%"
+            }
+
+        let SneakAttack (rogueLevel:int) = {
+            Name = "Sneak Attack"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 0 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
         let SneakAttackOnce rogueLevel = {
-            Name = "Sneak Attack on first attack"
+            Name = "Sneak Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createBonus 0 BonusTypes.Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
@@ -491,229 +761,13 @@ module Library =
             }    
 
         /// mit allen als Primary gelisteten Waffen; bisher nur mit -2 auf Treffen
-        let ImprovedTwoWeaponFighting = {
-            Name = "Improved-Two-Weapon-Fighting"
+        let TwoWeaponFightingImproved = {
+            Name = "Improved Two-Weapon-Fighting"
             BonusAttacks = createBonusAttacks 2 TWFLike Primary
             BonusAttackRoll = createBonus -2 BonusTypes.TwoWeaponFightingMalus
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|Primary; PrimaryMain|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-
-        let Haste = {
-            Name = "Haste"
-            BonusAttacks = createBonusAttacks 1 HasteLike PrimaryMain
-            BonusAttackRoll = createBonus 1 BonusTypes.Flat
-            BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-
-        let FlurryOfBlows = {
-            Name = "Flurry Of Blows"
-            BonusAttacks = createBonusAttacks 1 NoBA PrimaryMain
-            BonusAttackRoll = createBonus 0 BonusTypes.Flat
-            BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-
-        let Charging = {
-            Name = "Charge-Attack"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 BonusTypes.Flat
-            BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let Flanking = {
-            Name = "Flanking"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 BonusTypes.Flat
-            BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let PowerAttack bab = {
-            Name = "Power Attack"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (int( - (floor (float bab/4. + 1.)) )) BonusTypes.Flat
-            BonusDamage = createBonus (int( (floor (float bab/4.) * 2.) + 2. )) BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let FuriousFocus bab = {
-            Name = "Furious Focus"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (int(floor (float bab/4. + 1.))) BonusTypes.Flat
-            BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|PrimaryMain|], 1
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let DivineFavor = {
-            Name = "Divine Favor"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 1 Luck
-            BonusDamage = createBonus 1 Luck
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let Wrath = {
-            Name = "Wrath"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 1 Moral
-            BonusDamage = createBonus 1 Moral
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let SneakAttack (rogueLevel:int) = {
-            Name = "Sneak Attack"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let PlanarFocus = {
-            Name = "Planar Focus"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 1 6 Fire
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let Invisibility = {
-            Name = "Invisibility"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let MutagenStrength = {
-            Name = "Strength Mutagen"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -2 Alchemical)|]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-    
-        let EnlargePerson = {
-            Name = "Enlarge Person"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [|(createStatChange Strength 1 Size);(createStatChange Dexterity -1 Size)|]
-            SizeChanges = createSizechange 1 Polymorph false
-            Description = ""
-            }
-
-        let WeaponFocus = {
-            Name = "Weapon Focus"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 1 Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-
-        let Shaken = {
-            Name = "Shaken"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus -2 Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-
-        let WeaponSpecialization ={
-            Name = "WeaponSpecialization"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
-            BonusDamage = createBonus 2 Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-        
-        let Fatigued = {
-            Name = "Fatigued"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = ""
-            }
-
-        let AidAnother = {
-            Name = "Aid Another"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
-            AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
             Description = ""
@@ -754,46 +808,45 @@ module Library =
             SizeChanges = createSizechange 0 Flat false
             Description = "These extra weapon damage dice are not multiplied on a critical hit, but are added to the total"
             }
-    
-        let ShockingGraspEmpowered casterLevel metalTF = {
-            Name = "Intensified Empowered Shocking Grasp"
-            BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (if metalTF = true then 3 else 0) Flat
-            BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage ((if casterLevel > 10 then 10 else casterLevel) 
-                                       |> fun x -> x + int (float x * 0.5) ) 6 Electricity
-            AppliedTo = [|All|], 1
-            StatChanges = [||]
-            SizeChanges = createSizechange 0 Flat false
-            Description = "Shocking Grasp deals 1d6 / level electricity damage up to a maximum of 10d6 for this intensified version. Empowered increases the number of all rolled dice by 50%"
-            }
 
-        let InspireCourage = {
-            Name = "Inspire Courage"
+        let WeaponFocus = {
+            Name = "Weapon Focus"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 4 Competence
-            BonusDamage = createBonus 4 Competence
+            BonusAttackRoll = createBonus 1 Flat
+            BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
-            Description = "For a set level, because of several IC increasing items"
+            Description = ""
             }
 
-        let BlessingOfFervorAttackBonus = {
-            Name = "Blessing of Fervor"
+        let WeaponSpecialization ={
+            Name = "WeaponSpecialization"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 Flat
+            BonusAttackRoll = createBonus 0 Flat
             BonusDamage = createBonus 2 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
-            Description = "Blessing of Fervor with the +2 attack bonus as choice"
+            Description = ""
             }
-        
 
-        /// Never delete this!! This is 100% necessary for FullRoundAttackAction to function, as it works as a filler for the modificationArrays
+        let Wrath = {
+            Name = "Wrath"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus 1 Moral
+            BonusDamage = createBonus 1 Moral
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = ""
+            }
+
+        /// Never delete this!! This is 100% necessary for FullRoundAttackAction to function, as it works as a filler for the modificationArrays.
+        /// It also functions as a example for a completly empty modification, as this could be added multiple times without changing anything.
         let ZeroMod = {
             Name = ""
             BonusAttacks = createBonusAttacks 0 NoBA All
@@ -813,14 +866,15 @@ module Library =
         open Characters
         open AuxLibFunctions
 
-
+        ///not updated
         let showAll str =  
             let rdyStr = createStringForLib str
             match rdyStr with
             | rdyStr when rdyStr = "MODIFICATIONS" -> [|
-                                                        Multiattack;SneakAttackOnce 0;Modifications.TwoWeaponFighting;ImprovedTwoWeaponFighting;Haste;FlurryOfBlows;Shaken;WeaponFocus;EnlargePerson;MutagenStrength;
-                                                        Invisibility;PlanarFocus;SneakAttack 0;Wrath;DivineFavor;FuriousFocus 0;PowerAttack 0;Flanking;Charging;WeaponSpecialization;Fatigued;
-                                                        AidAnother;VitalStrike;VitalStrikeImproved;VitalStrikeGreater
+                                                        Multiattack;SneakAttackOnce 0;TwoWeaponFighting;TwoWeaponFightingImproved;Haste;FlurryOfBlows;Shaken;WeaponFocus;EnlargePerson;MutagenStrength;
+                                                        Invisibility;PlanarFocusFire 0;SneakAttack 0;Wrath;DivineFavor;FuriousFocus 0;PowerAttack 0;Flanking;Charging;WeaponSpecialization;Fatigued;
+                                                        AidAnother;VitalStrike;VitalStrikeImproved;VitalStrikeGreater;InspireCourage 0; ShockingGrasp 0 true; ShockingGraspEmpowered 0 true; PowerAttackURL OffHand 0;
+                                                        BlessingOfFervorAttackBonus; BonusAttackDamage 0 0;
                                                       |]
                                                       |> Array.map (fun x -> x.Name)
                                                       |> Array.sortBy (fun x -> x)

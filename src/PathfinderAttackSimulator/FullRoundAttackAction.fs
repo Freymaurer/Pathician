@@ -68,7 +68,7 @@ module FullRoundAttackAction =
                                                then Array.map ( fun (weap,wType) -> (weap,wType, 0) ) tuple
                                                elif wType = Secondary
                                                then Array.map ( fun (weap,wType) -> (weap,wType, -5) ) tuple
-                                               else failwith "Unknown WeaponType-pattern; pls contact Kevin"
+                                               else failwith "Unknown WeaponType-pattern; pls contact support."
                           )
             |> Array.concat
             |> Array.map (fun (w, wType, modifier) -> if wType = PrimaryMain
@@ -86,7 +86,7 @@ module FullRoundAttackAction =
                                     )|> Array.concat
                                elif getBonusAttacksForPrimaryMain = [||] 
                                then arr
-                               else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact Kevin"
+                               else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."
                           elif (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons)
                                ) = false &&
                                (Array.contains Natural (Array.map (fun ((w: Weapon),wType) -> w.ManufacturedOrNatural) weapons)
@@ -101,7 +101,7 @@ module FullRoundAttackAction =
                                        )|> fun x -> Array.append x arr                                       
                                elif getBonusAttacksForPrimaryMain = [||] 
                                   then arr
-                               else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact Kevin"
+                               else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."
                           else failwith "Unknown Problem related to not having the right WeaponTypes"
             |> fun arr -> if getAttacksForPrimary <> [||]
                           then (Array.map (fun (w, wType, modifier) -> if wType = Primary 
@@ -116,7 +116,7 @@ module FullRoundAttackAction =
                           elif getAttacksForPrimary = [||]
                                && (Array.contains Natural (Array.map (fun (x,y) -> x.ManufacturedOrNatural) weapons)) = true
                           then arr
-                          else failwith "Unknown Problem related to Primary Weapons (two-Weapon-Fighting); pls contact Kevin)"
+                          else failwith "Unknown Problem related to Primary Weapons (two-Weapon-Fighting); pls contact support.)"
             |> Array.sortByDescending (fun (w,wType,modi) -> modi )
     
         ///Get all AttackModifications constant for All weapons
@@ -133,7 +133,7 @@ module FullRoundAttackAction =
                                            then (Array.create getAttackArray.Length arr),getAttackArray.Length
                                            elif int <= getAttackArray.Length
                                            then (Array.create int arr),int
-                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to All Attacks; pls contact Kevin" 
+                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to All Attacks; pls contact support" 
                          )
             |> fun arr -> if arr <> [||]
                           then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getAttackArray.Length-int) ZeroMod 
@@ -142,7 +142,7 @@ module FullRoundAttackAction =
                                )
                           elif arr = [||]
                           then [|Array.create getAttackArray.Length ZeroMod|]
-                          else failwith "Unknown Problem related to limited attack modifiers for all weapons; pls contact Kevin)"
+                          else failwith "Unknown Problem related to limited attack modifiers for all weapons; pls contact support)"
 
         ///adds all modifications from "getAttackModificationsForAll" and "getAttackModificationsForAllLimited"
         let addAllAttackModificationsForAll =
@@ -176,7 +176,7 @@ module FullRoundAttackAction =
                                            then (Array.create getNumberOfSecondaryAttacks arr),getNumberOfSecondaryAttacks
                                            elif int <= getNumberOfSecondaryAttacks
                                            then (Array.create int arr),int
-                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to Secondary Attacks; pls contact Kevin" 
+                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to Secondary Attacks; pls contact support" 
                          )
             |> fun arr -> if arr <> [||]
                           then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfSecondaryAttacks-int) ZeroMod 
@@ -185,7 +185,7 @@ module FullRoundAttackAction =
                                ) 
                           elif arr = [||]
                           then [|Array.create getNumberOfSecondaryAttacks ZeroMod|]
-                          else failwith "Unknown Problem related to limited attack modifiers for Secondary weapons; pls contact Kevin"
+                          else failwith "Unknown Problem related to limited attack modifiers for Secondary weapons; pls contact support"
         let addAllSecondaryAttackModifications =
             getSecondaryAttackModificationsLimited
             |> Array.map (fun x -> Array.mapi (fun i x ->i, x )x )
@@ -211,7 +211,7 @@ module FullRoundAttackAction =
                                            then (Array.create getNumberOfPrimaryAttacks arr),getNumberOfPrimaryAttacks
                                            elif int <= getNumberOfPrimaryAttacks
                                            then (Array.create int arr),int
-                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to Primary Attacks; pls contact Kevin" 
+                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to Primary Attacks; pls contact support" 
                          )
             |> fun arr -> if arr <> [||]
                           then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfPrimaryAttacks-int) ZeroMod 
@@ -220,7 +220,7 @@ module FullRoundAttackAction =
                                ) |> fun x -> x
                           elif arr = [||]
                           then [|Array.create getNumberOfPrimaryAttacks ZeroMod|]
-                          else failwith "Unknown Problem related to limited attack modifiers for Primary weapons; pls contact Kevin"
+                          else failwith "Unknown Problem related to limited attack modifiers for Primary weapons; pls contact support"
         let addAllPrimaryAttackModifications =
             getPrimaryAttackModificationsLimited
             |> Array.map (fun x -> Array.mapi (fun i x ->i, x )x )
@@ -246,7 +246,7 @@ module FullRoundAttackAction =
                                            then (Array.create getNumberOfPrimaryMainAttacks arr),getNumberOfPrimaryMainAttacks
                                            elif int <= getNumberOfPrimaryMainAttacks
                                            then (Array.create int arr),int
-                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to PrimaryMain Attacks; pls contact Kevin" 
+                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to PrimaryMain Attacks; pls contact support" 
                          )
             |> fun arr -> if arr <> [||]
                           then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfPrimaryMainAttacks-int) ZeroMod 
@@ -255,7 +255,7 @@ module FullRoundAttackAction =
                                ) |> fun x -> x
                           elif arr = [||]
                           then [|Array.create getNumberOfPrimaryMainAttacks ZeroMod|]
-                          else failwith "Unknown Problem related to limited attack modifiers for PrimaryMain weapons; pls contact Kevin"
+                          else failwith "Unknown Problem related to limited attack modifiers for PrimaryMain weapons; pls contact support"
         let addAllPrimaryMainAttackModifications =
             getPrimaryMainAttackModificationsLimited
             |> Array.map (fun x -> Array.mapi (fun i x ->i, x )x )
@@ -278,7 +278,7 @@ module FullRoundAttackAction =
                                              | Secondary    -> arr 
                                                                |> Array.zip addAllSecondaryAttackModifications
                                                                |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
-                                             | _ -> failwith "Unknown Problem related to adding weaponType specific modifiers; pls contact Kevin"
+                                             | _ -> failwith "Unknown Problem related to adding weaponType specific modifiers; pls contact support"
                          )
             |> Array.concat
     
@@ -473,7 +473,7 @@ module FullRoundAttackAction =
                                                                then bonusArr
                                                                     |> Array.map (fun x -> x.SizeChangeValue)
                                                                     |> Array.sum
-                                                               else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'" 
+                                                               else failwith "Unrecognized Pattern of sizeChangeBoni." 
                                      )
                         |> Array.sum
 

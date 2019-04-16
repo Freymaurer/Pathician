@@ -21,6 +21,7 @@
     <Compile Include="StandardAttackAction.fs" />
     <Compile Include="FullRoundAttackAction.fs" />
     <Compile Include="d20BestiaryReader.fs" />
+    <Compile Include="d20BestiaryCalculator.fs" />
     <None Include="paket.references" />
     <None Include="paket.template" />
   </ItemGroup>

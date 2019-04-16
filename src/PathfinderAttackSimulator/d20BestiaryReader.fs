@@ -4,7 +4,7 @@ open System
 open System.Net
 open Library.AuxLibFunctions
 
-module D20pfsrdInput =
+module D20pfsrdReader =
     
     module AuxFunctions = 
 
@@ -91,320 +91,224 @@ module D20pfsrdInput =
         // build a function with the callback "baked in"
         let fetchUrl2 = fetchUrl myCallback 
 
+    open AuxFunctions
 
-    module MonsterInfo =
-
-        open AuxFunctions
-
-        // after extracting the html styled string from the d20pfsrd bestiary the most complex part is the extraction of the attack information.
-        // this is done in the following function.
-        let private createAttackFromString (str:string) =
+    // after extracting the html styled string from the d20pfsrd bestiary the most complex part is the extraction of the attack information.
+    // this is done in the following function.
+    let private createAttackFromString (str:string) =
+        
+        //all necessary regex pattern matchings to get the information
+        let regexIterativeAttackBoni = System.Text.RegularExpressions.Regex("\+\d+(\/\+\d+)*")
+        let regexGetDamage = System.Text.RegularExpressions.Regex("\((.*?)\)")
+        let regexMatchPlusOnwards = System.Text.RegularExpressions.Regex("\s*(?=plus\s)(.*)")
+        let regexMatchDamage = System.Text.RegularExpressions.Regex("[0-9]+d[0-9]+((\+|\-)[0-9]+)?")
+        let regexNumberOfDie = System.Text.RegularExpressions.Regex("[0-9]+(?=d[0-9]+((\+|\-)[0-9]+)?)")
+        let regexDieSize = System.Text.RegularExpressions.Regex("(?<=[0-9]+d)[0-9]+(?=((\+|\-)[0-9]+)?)")
+        let regexBonusDamage = System.Text.RegularExpressions.Regex("(?<=[0-9]+d[0-9]+)((\+|\-)[0-9]+)?")
+        let regexCriticalRange = System.Text.RegularExpressions.Regex("(?<=/)[0-9]+(\W[0-9}]+)?")
+        let regexCriticalModifier = System.Text.RegularExpressions.Regex("(?<=/x)\d+")
+        let regexPlusBoniExtraDamage = System.Text.RegularExpressions.Regex("[0-9]+d[0-9]+((\+|\-)[0-9]+)?\s\w*")
+        let regexPlusBoniExtraDamageType = System.Text.RegularExpressions.Regex("(?<=[0-9]+d[0-9]+((\+|\-)[0-9]+)?\s)\w*")
+    
+        // this function is used to finally check if the attack actually exists. if a empty string is detected a filler is inserted
+        // otherwise the original value is given back
+        let getInformation (intVal:int) (arr: string []) =
+            if arr.[intVal] = ""
+            then match intVal with
+                 | 2 -> "+0"
+                 | 3 -> "20-20"
+                 | 4 -> "2"
+                 | 5 -> "0"
+                 | 6 -> "0"
+                 | 7 -> "+0"
+                 | 8 -> ""
+                 | 9 -> ""
+                 | 0 -> "0"
+                 | 1 -> "0"
+                 | _ -> failwith "Unknown Parameter; Error01.1"
+            else arr.[intVal]
+        
+        // this function translates the possible 19-20 input to an array from the first to the latter number
+        let getCriticalModifer (str:string) =
+            let redexMatchSeparator = System.Text.RegularExpressions.Regex("(?<=[0-9]+)\W(?=[0-9}]+)?")
+            redexMatchSeparator.Split(str)
+            |> fun x -> [|int x.[0] .. int x.[1]|]
+    
+        //pattern matching for the damage given in brackets
+        let damage = 
+            let patternMatch = regexGetDamage.Matches(str)
+            if patternMatch.Count > 0 
+            then (patternMatch.Item (patternMatch.Count-1)).Value
+                 |> fun x -> x.Trim([|'(';')'|])
+            else ""
+    
+        //same pattern matching as befor, but this time the dmg is replaced with "", so we only get the rest
+        let attack = regexGetDamage.Replace(str,"") 
+                     |> fun x -> x.Trim()
+    
+        // the following resolves the non-damage part, splitting it into a weapon name and an attack arr.
+        // weapon name is build by any substring not containing a number. Which also leads to "touch" also being part of the name, altough its meant to describe a touch attack.
+        // number of attacks with that weapon is calculated taking multiples of the same weapon into account
+        let (name,attackArr) =
+    
+            let splitAttackArr = attack.Split(' ')
+            let checkMultipleAttacks =
+                if String.IsNullOrEmpty attack = true
+                then 0
+                else attack.[0] 
+                     |> fun x -> if Char.IsNumber(x) 
+                                 then splitAttackArr
+                                      |> Array.head
+                                      |> int
+                                 else 1
+            let weaponName =
+                splitAttackArr
+                |> Array.filter (fun x -> if String.IsNullOrEmpty x = true
+                                          then x = x
+                                          else Char.IsLetter(x.[0]) = true
+                                )
+                |> Array.fold (fun elem arr -> elem + " " + arr) ""
+                |> fun x -> x.Trim()
+            let iterativeAttacks =
+                Array.rev splitAttackArr
+                |> Array.tryPick (fun x -> match regexIterativeAttackBoni.IsMatch(x) with
+                                           | true -> Some x
+                                           | false -> None
+                                 )
+                |> fun x -> if x.IsSome
+                            then x.Value.Split('/')
+                                 |> Array.map (fun x -> int x)
+                                 |> fun x -> [|for i = 1 to checkMultipleAttacks do
+                                                  yield x|]
+                                 |> Array.concat
+                            else [|0|]
             
-            //all necessary regex pattern matchings to get the information
-            let regexIterativeAttackBoni = System.Text.RegularExpressions.Regex("\+\d+(\/\+\d+)*")
-            let regexGetDamage = System.Text.RegularExpressions.Regex("\((.*?)\)")
-            let regexMatchPlusOnwards = System.Text.RegularExpressions.Regex("\s*(?=plus\s)(.*)")
-            let regexMatchDamage = System.Text.RegularExpressions.Regex("[0-9]+d[0-9]+((\+|\-)[0-9]+)?")
-            let regexNumberOfDie = System.Text.RegularExpressions.Regex("[0-9]+(?=d[0-9]+((\+|\-)[0-9]+)?)")
-            let regexDieSize = System.Text.RegularExpressions.Regex("(?<=[0-9]+d)[0-9]+(?=((\+|\-)[0-9]+)?)")
-            let regexBonusDamage = System.Text.RegularExpressions.Regex("(?<=[0-9]+d[0-9]+)((\+|\-)[0-9]+)?")
-            let regexCriticalRange = System.Text.RegularExpressions.Regex("(?<=/)[0-9]+(\W[0-9}]+)?")
-            let regexCriticalModifier = System.Text.RegularExpressions.Regex("(?<=/x)\d+")
-            let regexPlusBoniExtraDamage = System.Text.RegularExpressions.Regex("[0-9]+d[0-9]+((\+|\-)[0-9]+)?\s\w*")
-            let regexPlusBoniExtraDamageType = System.Text.RegularExpressions.Regex("(?<=[0-9]+d[0-9]+((\+|\-)[0-9]+)?\s)\w*")
-        
-            // this function is used to finally check if the attack actually exists. if a empty string is detected a filler is inserted
-            // otherwise the original value is given back
-            let getInformation (intVal:int) (arr: string []) =
-                if arr.[intVal] = ""
-                then match intVal with
-                     | 2 -> "+0"
-                     | 3 -> "20-20"
-                     | 4 -> "2"
-                     | 5 -> "0"
-                     | 6 -> "0"
-                     | 7 -> "+0"
-                     | 8 -> ""
-                     | 9 -> ""
-                     | 0 -> "0"
-                     | 1 -> "0"
-                     | _ -> failwith "Unknown Parameter; Error01.1"
-                else arr.[intVal]
-            
-            // this function translates the possible 19-20 input to an array from the first to the latter number
-            let getCriticalModifer (str:string) =
-                let redexMatchSeparator = System.Text.RegularExpressions.Regex("(?<=[0-9]+)\W(?=[0-9}]+)?")
-                redexMatchSeparator.Split(str)
-                |> fun x -> [|int x.[0] .. int x.[1]|]
-        
-            //pattern matching for the damage given in brackets
-            let damage = 
-                let patternMatch = regexGetDamage.Matches(str)
-                (patternMatch.Item (patternMatch.Count-1)).Value
-                |> fun x -> x.Trim([|'(';')'|])
-
-            //same pattern matching as befor, but this time the dmg is replaced with "", so we only get the rest
-            let attack = regexGetDamage.Replace(str,"") 
-                         |> fun x -> x.Trim()
-        
-            // the following resolves the non-damage part, splitting it into a weapon name and an attack arr.
-            // weapon name is build by any substring not containing a number. Which also leads to "touch" also being part of the name, altough its meant to describe a touch attack.
-            // number of attacks with that weapon is calculated taking multiples of the same weapon into account
-            let (name,attackArr) =
-
-                let splitAttackArr = attack.Split(' ')
-                let checkMultipleAttacks =
-                    if String.IsNullOrEmpty attack = true
-                    then 0
-                    else attack.[0] 
-                         |> fun x -> if Char.IsNumber(x) 
-                                     then splitAttackArr
-                                          |> Array.head
-                                          |> int
-                                     else 1
-                let weaponName =
-                    splitAttackArr
-                    |> Array.filter (fun x -> if String.IsNullOrEmpty x = true
-                                              then x = x
-                                              else Char.IsLetter(x.[0]) = true
-                                    )
-                    |> Array.fold (fun elem arr -> elem + " " + arr) ""
-                    |> fun x -> x.Trim()
-                let iterativeAttacks =
-                    Array.rev splitAttackArr
-                    |> Array.tryPick (fun x -> match regexIterativeAttackBoni.IsMatch(x) with
-                                               | true -> Some x
-                                               | false -> None
-                                     )
-                    |> fun x -> if x.IsSome
-                                then x.Value.Split('/')
-                                     |> Array.map (fun x -> int x)
-                                     |> fun x -> [|for i = 1 to checkMultipleAttacks do
-                                                      yield x|]
-                                     |> Array.concat
-                                else [|0|]
-                
-                weaponName, iterativeAttacks
-
-            // the following function resolves the damage extraction, more or less an huge stream of regex pattern matchings to get the needed values into the correct place.
-            // this needs to be based on a string array, as there could be no damage for attacks only inflicting status effects. so an string array of length = 1 signals such a case and gives back only the whole
-            // attack description.
-            let weaponDmg =
-
-                let removePlusBoni = regexMatchPlusOnwards.Replace(damage,"")
-                let getPlusBoni = regexMatchPlusOnwards.Match(damage).Value
-                                  |> fun x -> x.Trim()
-                let getBaseDamage = regexMatchDamage.Match(removePlusBoni).Value
-                let plusBoniExtraDamage = regexPlusBoniExtraDamage.Match(getPlusBoni).Value
-                let plusBoniExtraDamageValues = 
-                    (regexPlusBoniExtraDamageType.Replace(plusBoniExtraDamage,"") |> fun x -> x.Trim())
-                    |> fun x -> x
-                let plusBoniWithoutDamage = 
-                    regexPlusBoniExtraDamage.Replace(getPlusBoni,"")
-                    |> fun x -> x.Replace("plus","")
-                    |> fun x -> x.Trim()
-                let urlDmg = if String.IsNullOrEmpty getBaseDamage 
-                             then [|damage|]
-                             else [|regexNumberOfDie.Match(removePlusBoni).Value;
-                                    regexDieSize.Match(removePlusBoni).Value;
-                                    regexBonusDamage.Match(removePlusBoni).Value;
-                                    regexCriticalRange.Match(removePlusBoni).Value;
-                                    regexCriticalModifier.Match(removePlusBoni).Value
-                                    regexNumberOfDie.Match(plusBoniExtraDamageValues).Value;
-                                    regexDieSize.Match(plusBoniExtraDamageValues).Value;
-                                    regexBonusDamage.Match(plusBoniExtraDamageValues).Value;
-                                    regexPlusBoniExtraDamageType.Match(plusBoniExtraDamage).Value;
-                                    plusBoniWithoutDamage
-                                    |]
-                urlDmg
-            
-            //here check for actual damage or just description
-            if weaponDmg.Length = 1
-            then weaponDmg 
-                 |> fun x -> createURLAttack    attackArr
-                                                name
-                                                (createURLDamage 0 0 0 "flat") 
-                                                (createURLDamage 0 0 0 "flat")
-                                                [|0|]
-                                                0
-                                                x.[0]
-            else weaponDmg
-                 |> fun x -> createURLAttack    attackArr
-                                                name
-                                                (createURLDamage (int (getInformation 0 x)) (int (getInformation 1 x)) (int (getInformation 2 x)) "flat")
-                                                (createURLDamage (int (getInformation 5 x)) (int (getInformation 6 x)) (int (getInformation 7 x)) (getInformation 8 x))
-                                                (getCriticalModifer (getInformation 3 x))
-                                                (int (getInformation 4 x))
-                                                (getInformation 9 x)
-        
-        // TODO: give more information here
-        /// This function returns all necessary information of a pathfinder bestiary monster/NPC by exctracting the information from the d20pfsrd entry via regex pattern matching.
-        let getMonsterInformation url = 
-        
-            let regexFindMonsterStats = System.Text.RegularExpressions.Regex("(?s)(?=article-content)(.*?)((?=<div id=\"comments\" class=\"comments\">)|(?=section15)|(?=ECOLOGY))")
-            let regexFindMeleeStats (meleeOrRanged:AttackVariant)= System.Text.RegularExpressions.Regex( sprintf "(?s)(?=%A)(.*?)((?=<br>)|(?=</p>)|(?=<br />))" meleeOrRanged)
-            let regexFindHTMLTags = System.Text.RegularExpressions.Regex("\<(.*?)\>")
-            let regexCommaOutsideBrackets = System.Text.RegularExpressions.Regex(",(?![^(]*\))")
-            let regexMatchWithOr = System.Text.RegularExpressions.Regex("(?<=\s)or(?=\s)")
-            let regexMatchScore (str:string) = System.Text.RegularExpressions.Regex(("(?s)(?<=STATISTICS.*"+str+"\s)\d+"))
-            let regexBAB = System.Text.RegularExpressions.Regex("(?s)(?<=Base Atk.)(\+\d+)(?=.*Skills)")
-            let regexGetSpecialFeats = System.Text.RegularExpressions.Regex("(?s)(?<=Feats.*)(\w+\s)?(Two\WWeapon\sFighting|Power\sAttack|Rapid\sShot|Deadly\sAim)(?=.*Skills)")
-            let regexSize =  System.Text.RegularExpressions.Regex("(?s)(?<=XP.*)(Fine|Diminuitive|Tiny|Small|Medium|Large|Huge|Gargantuan|Colossal)(?!=.*DEFENSE)")
-        
-            // writes html code of webpage to string
-            let baseString = fetchUrl2 url
-            // matches size string to give back size directly
-            let matchSize (str:string) =
-                match str with 
-                | "Fine"           -> Fine 
-                | "Diminuitive"    -> Diminuitive
-                | "Tiny"           -> Tiny
-                | "Small"          -> Small
-                | "Medium"         -> Medium
-                | "Large"          -> Large
-                | "Huge"           -> Huge
-                | "Gargantuan"     -> Gargantuan
-                | "Colossal"       -> Colossal
-                | _ -> failwith "found unknown size category in monsterstatblock; Error02.1"
-        
-            // delete all webpage information from the string; only leaves statblock
-            let monsterInformation = regexFindMonsterStats.Match baseString     //.Match returns always only the first hit
-                                     |> fun x -> x.Value
-                                     |> fun x -> x.Replace('–','-')
-            // deletes all html tags from the statblock, as the linebreak html tag is used to extract melee/ranged this can not be done from the beginning
-            let monsterInformationWithoutHTML = regexFindHTMLTags.Replace(monsterInformation,"")
-            // gets all attack combinations/schemes and writes them into the URLAttack type, that is easily accessible in later functions
-            let getAttacks (meleeOrRanged:AttackVariant) = 
-                let attackInfo = (regexFindMeleeStats meleeOrRanged).Match monsterInformation        //.Match returns always only the first hit
-                                 |> fun x -> regexFindHTMLTags.Replace(x.Value,"")
-                                 |> fun x -> x.Replace('–','-')
-             
-                attackInfo
-                |> fun x -> x.Replace((sprintf "%A" meleeOrRanged),"")
-                |> fun x -> regexMatchWithOr.Split(x)
-                |> Array.map (fun x -> regexCommaOutsideBrackets.Split(x)
-                                       |> Array.map (fun x -> x.Trim())
-                                       |> Array.map (fun x -> createAttackFromString x)
-                             )
+            weaponName, iterativeAttacks
+    
+        // the following function resolves the damage extraction, more or less an huge stream of regex pattern matchings to get the needed values into the correct place.
+        // this needs to be based on a string array, as there could be no damage for attacks only inflicting status effects. so an string array of length = 1 signals such a case and gives back only the whole
+        // attack description.
+        let weaponDmg =
+    
+            let removePlusBoni = regexMatchPlusOnwards.Replace(damage,"")
+            let getPlusBoni = regexMatchPlusOnwards.Match(damage).Value
+                              |> fun x -> x.Trim()
+            let getBaseDamage = regexMatchDamage.Match(removePlusBoni).Value
+            let plusBoniExtraDamage = regexPlusBoniExtraDamage.Match(getPlusBoni).Value
+            let plusBoniExtraDamageValues = 
+                (regexPlusBoniExtraDamageType.Replace(plusBoniExtraDamage,"") |> fun x -> x.Trim())
                 |> fun x -> x
-            let attacksMelee = getAttacks Melee
-                               |> Array.map (fun x -> Melee, x)
-            let attacksRanged = getAttacks Ranged
-                                |> Array.map (fun x -> Ranged, x)
-            let attacks = Array.append attacksMelee attacksRanged
+            let plusBoniWithoutDamage = 
+                regexPlusBoniExtraDamage.Replace(getPlusBoni,"")
+                |> fun x -> x.Replace("plus","")
+                |> fun x -> x.Trim()
+            let urlDmg = if String.IsNullOrEmpty getBaseDamage 
+                         then [|damage|]
+                         else [|regexNumberOfDie.Match(removePlusBoni).Value;
+                                regexDieSize.Match(removePlusBoni).Value;
+                                regexBonusDamage.Match(removePlusBoni).Value;
+                                regexCriticalRange.Match(removePlusBoni).Value;
+                                regexCriticalModifier.Match(removePlusBoni).Value
+                                regexNumberOfDie.Match(plusBoniExtraDamageValues).Value;
+                                regexDieSize.Match(plusBoniExtraDamageValues).Value;
+                                regexBonusDamage.Match(plusBoniExtraDamageValues).Value;
+                                regexPlusBoniExtraDamageType.Match(plusBoniExtraDamage).Value;
+                                plusBoniWithoutDamage
+                                |]
+            urlDmg
+        
+        //here check for actual damage or just description
+        if weaponDmg.Length = 1
+        then weaponDmg 
+             |> fun x -> createURLAttack    attackArr
+                                            name
+                                            (createURLDamage 0 0 0 "flat") 
+                                            (createURLDamage 0 0 0 "flat")
+                                            [|0|]
+                                            0
+                                            x.[0]
+        else weaponDmg
+             |> fun x -> createURLAttack    attackArr
+                                            name
+                                            (createURLDamage (int (getInformation 0 x)) (int (getInformation 1 x)) (int (getInformation 2 x)) "flat")
+                                            (createURLDamage (int (getInformation 5 x)) (int (getInformation 6 x)) (int (getInformation 7 x)) (getInformation 8 x))
+                                            (getCriticalModifer (getInformation 3 x))
+                                            (int (getInformation 4 x))
+                                            (getInformation 9 x)
+    
+    // TODO: give more information here
+    /// This function returns all necessary information of a pathfinder bestiary monster/NPC by exctracting the information from the d20pfsrd entry via regex pattern matching.
+    let getMonsterInformation url = 
+    
+        let regexFindMonsterStats = System.Text.RegularExpressions.Regex("(?s)(?=article-content)(.*?)((?=<div id=\"comments\" class=\"comments\">)|(?=section15)|(?=ECOLOGY))")
+        let regexFindMeleeStats (meleeOrRanged:AttackVariant)= System.Text.RegularExpressions.Regex( sprintf "(?s)(?=%A)(.*?)((?=<br>)|(?=</p>)|(?=<br />))" meleeOrRanged)
+        let regexFindHTMLTags = System.Text.RegularExpressions.Regex("\<(.*?)\>")
+        let regexCommaOutsideBrackets = System.Text.RegularExpressions.Regex(",(?![^(]*\))")
+        let regexMatchWithOr = System.Text.RegularExpressions.Regex("(?<=\s)or(?=\s)")
+        let regexMatchScore (str:string) = System.Text.RegularExpressions.Regex(("(?s)(?<=STATISTICS.*"+str+"\s)\d+"))
+        let regexBAB = System.Text.RegularExpressions.Regex("(?s)(?<=Base Atk.)(\+\d+)(?=.*Skills)")
+        let regexGetSpecialFeats = System.Text.RegularExpressions.Regex("(?s)(?<=Feats.*)(\w+\s)?(Two\WWeapon\sFighting|Power\sAttack|Rapid\sShot|Deadly\sAim)(?=.*Skills)")
+        let regexSize = System.Text.RegularExpressions.Regex("(?s)(?<=XP.*)(Fine|Diminuitive|Tiny|Small|Medium|Large|Huge|Gargantuan|Colossal)(?!=.*DEFENSE)")
+    
+        // writes html code of webpage to string
+        let baseString = fetchUrl2 url
+        // matches size string to give back size directly
+        let matchSize (str:string) =
+            match str with 
+            | "Fine"           -> Fine 
+            | "Diminuitive"    -> Diminuitive
+            | "Tiny"           -> Tiny
+            | "Small"          -> Small
+            | "Medium"         -> Medium
+            | "Large"          -> Large
+            | "Huge"           -> Huge
+            | "Gargantuan"     -> Gargantuan
+            | "Colossal"       -> Colossal
+            | _ -> failwith "found unknown size category in monsterstatblock; Error02.1"
+    
+        // delete all webpage information from the string; only leaves statblock
+        let monsterInformation = regexFindMonsterStats.Match baseString     //.Match returns always only the first hit
+                                 |> fun x -> x.Value
+                                 |> fun x -> x.Replace('–','-')
+        // deletes all html tags from the statblock, as the linebreak html tag is used to extract melee/ranged this can not be done from the beginning
+        let monsterInformationWithoutHTML = regexFindHTMLTags.Replace(monsterInformation,"")
+        // gets all attack combinations/schemes and writes them into the URLAttack type, that is easily accessible in later functions
+        let getAttacks (meleeOrRanged:AttackVariant) = 
+            let attackInfo = (regexFindMeleeStats meleeOrRanged).Match monsterInformation        //.Match returns always only the first hit
+                             |> fun x -> regexFindHTMLTags.Replace(x.Value,"")
+         
+            attackInfo
+            |> fun x -> x.Replace((sprintf "%A" meleeOrRanged),"")
+            |> fun x -> regexMatchWithOr.Split(x)
+            |> Array.map (fun x -> regexCommaOutsideBrackets.Split(x)
+                                   |> Array.map (fun x -> x.Trim())
+                                   |> Array.map (fun x -> createAttackFromString x)
+                         )
+            |> fun x -> x
+        let attacksMelee = getAttacks Melee
+                           |> Array.map (fun x -> Melee, x)
+        let attacksRanged = getAttacks Ranged
+                            |> Array.map (fun x -> Ranged, x)
+        let attacks = Array.append attacksMelee attacksRanged
+    
+        let testMatchToInt (var:Text.RegularExpressions.Match) = 
+            if var.Success = true then (int var.Value) else 0
+        // final part writes all information into the URLMonsterAttacks type
+        [|for i = 0 to (attacks.Length-1) do
+            yield createURLMonsterAttacks (fst attacks.[i])
+                                          (snd attacks.[i]) 
+                                          (regexBAB.Match(monsterInformationWithoutHTML).Value |> int)
+                                          (testMatchToInt ((regexMatchScore "Str").Match(monsterInformationWithoutHTML))) 
+                                          (testMatchToInt ((regexMatchScore "Dex").Match(monsterInformationWithoutHTML)))
+                                          (regexGetSpecialFeats.Matches(monsterInformationWithoutHTML)
+                                           |>  fun x -> [|for i = 0 to (x.Count-1) do 
+                                                            yield (x.Item i).Value|]
+                                          )
+                                          (matchSize (regexSize.Match(monsterInformationWithoutHTML).Value))
+                                          
+        |]
+        //filter out empty attackschemes (e.g. a non existing ranged attack scheme)
+        |> Array.filter (fun x -> x.AttackScheme
+                                  |> fun urlAttackArr -> Array.exists (fun urlAttack -> (urlAttack.WeaponName <> "") && urlAttack.CriticalModifier <> 0) urlAttackArr
+                        )
 
-            // final part writes all information into the URLMonsterAttacks type
-            [|for i = 0 to (attacks.Length-1) do
-                yield createURLMonsterAttacks (fst attacks.[i])
-                                              (snd attacks.[i]) 
-                                              (regexBAB.Match(monsterInformationWithoutHTML).Value |> int)
-                                              ((regexMatchScore "Str").Match(monsterInformationWithoutHTML).Value |> int) 
-                                              ((regexMatchScore "Dex").Match(monsterInformationWithoutHTML).Value |> int)
-                                              (regexGetSpecialFeats.Matches(monsterInformationWithoutHTML)
-                                               |>  fun x -> [|for i = 0 to (x.Count-1) do 
-                                                                yield (x.Item i).Value|]
-                                              )
-                                              (matchSize (regexSize.Match(monsterInformationWithoutHTML).Value))
-                                              
-            |]
-            //filter out empty attackschemes (e.g. a non existing ranged attack scheme)
-            |> Array.filter (fun x -> x.AttackScheme
-                                      |> fun urlAttackArr -> Array.exists (fun urlAttack -> (urlAttack.WeaponName <> "") && urlAttack.CriticalModifier <> 0) urlAttackArr
-                            )
-
-
-    module URLCalculator =
-
-        open AuxFunctions
-        open MonsterInfo
-        
-        /// This function returns the calculated attack rolls of a d20pfsrd bestiary entry.
-        /// attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
-        /// attackNumber = the exact attack variant that should be calculated, starting at 1
-        let calculateURLAttack (attackInfo: URLMonsterAttacks []) (attackVariant:AttackVariant) (attackNumber:int) =
-            
-            //check if there is actually the attack wanted by the user
-            if attackNumber > attackInfo.Length then failwith "The chosen url does not provide enough different attacks for the attackNumber given. Try giving a smaller number or 1."
-            
-            let rollDice count (diceSides:int) =
-                let rnd = System.Random()
-                if diceSides = 0 
-                then [|0|]
-                else Array.init count (fun _ -> rnd.Next (1, diceSides+1))
-            
-            let getRndArrElement =
-                let rnd = Random()
-                fun (arr : int[]) -> arr.[rnd.Next(arr.Length)]
-        
-            //filter for either melee or ranged
-            let wantedAttack =
-                attackInfo
-                |> Array.filter (fun x -> x.AttackType = attackVariant)
-                |> fun x -> if x.Length = 0 
-                            then failwith "The chosen url does not provide any attacks for the chosen attack type (melee or ranged)."
-                            else x.[attackNumber-1]
-        
-            let attackArr =
-                wantedAttack
-                |> fun x -> x.AttackScheme
-                            |> Array.collect (fun attack -> [|for i = 0 to (attack.AttackBonus.Length-1) do
-                                                                yield attack.AttackBonus.[i], attack|] 
-                                             )
-        
-            let calculateOneAttack attackBonus (attackInfo: URLAttack) =
-                
-                let (attackRoll,critConfirmationRoll) = 
-                    let getAttackRolls =
-                            rollDice 10000 20
-                    getRndArrElement getAttackRolls,getRndArrElement getAttackRolls
-        
-                let combinedAttackBoni =
-                    attackBonus
-        
-                let totalAttackBonus =
-                    attackRoll + attackBonus
-        
-                let damageRolls =
-                    let getDamageRolls =
-                        rollDice 1000 attackInfo.WeaponDamage.Die
-                    [|for i=1 to attackInfo.WeaponDamage.NumberOfDie do
-                        yield getRndArrElement getDamageRolls|]
-                    |> Array.sum
-        
-                let totalDamage =
-                    damageRolls + attackInfo.WeaponDamage.BonusDamage
-                    |> fun x -> if x <= 0 then 1 else x
-        
-                let extraDamage =
-                    let getDamageRolls numberOfDie die=
-                        let rolledDice = rollDice 1000 die
-                        [|for i=1 to numberOfDie do
-                            yield getRndArrElement rolledDice|]
-                        |> Array.sum
-                    //normally create array of all extra damage, then map over it with the prior function, for now just apply to extra damage
-                    [|(getDamageRolls attackInfo.ExtraDamage.NumberOfDie attackInfo.ExtraDamage.Die, attackInfo.ExtraDamage.DamageType)|]
-                    |> Array.filter (fun (extraDmgValue,damageType) -> extraDmgValue <> 0)
-        
-                let extraDamageToString = 
-                    extraDamage
-                    |> Array.map (fun (value,dmgType) -> "+" + (string value) + " " + (string dmgType) + " " + "damage" + ", ")
-                    |> Array.fold (fun strArr x -> strArr + x) "" 
-                    |> fun x -> x.TrimEnd [|' ';','|]       
-        
-                let additionalInfoString =
-                    if attackInfo.AdditionalEffects = ""
-                    then ""
-                    else "plus " + attackInfo.AdditionalEffects
-        
-                ///
-                if (Array.contains attackRoll attackInfo.CriticalRange) = false && extraDamage = [||]
-                    then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" attackInfo.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
-                elif (Array.contains attackRoll attackInfo.CriticalRange) = true && extraDamage = [||] 
-                    then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" attackInfo.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage attackInfo.CriticalModifier additionalInfoString
-                elif (Array.contains attackRoll attackInfo.CriticalRange) = false && extraDamage <> [||]
-                    then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s !" attackInfo.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
-                elif (Array.contains attackRoll attackInfo.CriticalRange) = true && extraDamage <> [||] 
-                    then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s !") attackInfo.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage extraDamageToString attackInfo.CriticalModifier additionalInfoString
-              
-            attackArr
-            |> Array.map (fun (attackBonus,attack) -> calculateOneAttack attackBonus attack)
