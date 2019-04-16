@@ -40,7 +40,7 @@
 <p>A modification needs certain informations for a correct calculation.
 Right now this is not hand-held at all, but might get better in a future version.</p>
 <p>This is by far the most complex variant of information-type.
-Therefore, i create a library of pre-written modifications.</p>
+Therefore, i create a library of modifications. For a full list of all prebuild modifications please see <a href="https://freymaurer.github.io/PathfinderAttackSimulator/reference/pathfinderattacksimulator-library-modifications.html">here</a></p>
 <p>Let's see how this works for the famous Haste spell</p>
 <h3><a name="Haste" class="anchor" href="#Haste">Haste</a></h3>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
@@ -92,7 +92,7 @@ flat bonus to all attack rolls, and also some non - attack related boni.</p>
 <li>BonusDamage = bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage)</li>
 <li>ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.</li>
 <li>AppliedTo = apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.</li>
-<li>StatChanges = e.g. the alchemist's mutagen (createStatChange "Str" 2 Alchemical) the number again, represents the modifier increase. Can be left empty if no stat change applies.</li>
+<li>StatChanges = e.g. the alchemist's mutagen (createStatChange Strength 2 Alchemical) the number again, represents the modifier increase. Can be left empty if no stat change applies.</li>
 <li>
 SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
 Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Armor).
