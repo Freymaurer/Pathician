@@ -4,7 +4,7 @@ open System
 
 module Library =
 
-           
+    /// This module contains all necessary types and create functions to operate the StandardAttack and Full-RoundAttack module
     module AuxLibFunctions =
 
         type SizeType =
@@ -232,13 +232,14 @@ module Library =
             Description         : string
             }
 
+    /// library for all prebuild characters; this is mostly for personal use or functions as an example
     module Characters =
 
         open AuxLibFunctions
 
         ///Stats for Character
         let myParrn = {
-            CharacterName = createStringForLib "Parrn"
+            CharacterName = "Parrn"
             BAB = 6
             Strength = 6
             Dexterity = 0
@@ -252,7 +253,7 @@ module Library =
 
 
         let myTumor = {
-            CharacterName = createStringForLib "Stephano"
+            CharacterName = "Stephano"
             BAB = 6
             Strength = -2
             Dexterity = 1
@@ -265,7 +266,7 @@ module Library =
             }
 
         let myElemental = {
-            CharacterName = createStringForLib "Michelangelo"
+            CharacterName = "Michelangelo"
             BAB = 6
             Strength = 1
             Dexterity = 2
@@ -277,6 +278,7 @@ module Library =
             CasterLevel2 = 0
             }
 
+    /// library for all pre-written weapons; this is mostly for personal use or meant as an example
     module Weapons =
 
         open AuxLibFunctions
@@ -450,6 +452,7 @@ module Library =
             Description         = ""
             }
 
+    /// Library for all pre-written modifications
     module Modifications =
 
         open AuxLibFunctions
@@ -476,6 +479,19 @@ module Library =
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
             Description = "Blessing of Fervor with the +2 attack bonus as choice"
+            }
+        
+        /// use this modification to add fast and easy flat boni to attack rolls or to damage.
+        let BonusAttackDamage attack damage= {
+            Name = "Blessing of Fervor"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createBonus attack Flat
+            BonusDamage = createBonus damage Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Use this modification to add fast and easy flat boni to attack rolls or to damage"
             }
 
         let Charging = {
@@ -829,7 +845,8 @@ module Library =
             Description = ""
             }
 
-        /// Never delete this!! This is 100% necessary for FullRoundAttackAction to function, as it works as a filler for the modificationArrays
+        /// Never delete this!! This is 100% necessary for FullRoundAttackAction to function, as it works as a filler for the modificationArrays.
+        /// It also functions as a example for a completly empty modification, as this could be added multiple times without changing anything.
         let ZeroMod = {
             Name = ""
             BonusAttacks = createBonusAttacks 0 NoBA All
@@ -857,7 +874,7 @@ module Library =
                                                         Multiattack;SneakAttackOnce 0;TwoWeaponFighting;TwoWeaponFightingImproved;Haste;FlurryOfBlows;Shaken;WeaponFocus;EnlargePerson;MutagenStrength;
                                                         Invisibility;PlanarFocusFire 0;SneakAttack 0;Wrath;DivineFavor;FuriousFocus 0;PowerAttack 0;Flanking;Charging;WeaponSpecialization;Fatigued;
                                                         AidAnother;VitalStrike;VitalStrikeImproved;VitalStrikeGreater;InspireCourage 0; ShockingGrasp 0 true; ShockingGraspEmpowered 0 true; PowerAttackURL OffHand 0;
-                                                        BlessingOfFervorAttackBonus
+                                                        BlessingOfFervorAttackBonus; BonusAttackDamage 0 0;
                                                       |]
                                                       |> Array.map (fun x -> x.Name)
                                                       |> Array.sortBy (fun x -> x)
