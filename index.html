@@ -48,13 +48,14 @@
   <div class="span1"></div>
 </div>
 <p>Pathfinder is, and that is a great part of why i like it so much, very free in character design and allows for a variety of different options.
-But with great freedom in character design comes grreat complexity and especially a attack calculation can get quite complex.
+But with great freedom in character design comes great complexity and especially a attack calculation that can get quite complex.
 Of course you can calculate all different options beforehand and write them down separatly ... but then the bard starts with his Inspire Courage,
-the cleric adds Blessing of Fervor, arcane casters start throwing around Haste and Enlarge Person and .. yes you can prepare for that and write also this down
-(although it is already getting out of hand) but then comes a nasty poison or conditions and calculating attack rolls really are a mess and take a lot of time to calculate.
-That is why i wrote this this Attack Action Simulator to ease down all of this complexity and free up some brainpower for the story, strategy and roleplaying.</p>
-<p>This is my first coding project, so there will be lots of style errors and inefficient functions. If you notice something like this, please feel free to open an issue and i will gladly fix it.
-The function itself should work without errors, but if you encounter any please (again) open an issue and let me know.</p>
+the cleric adds Blessing of Fervor, arcane casters start throwing around Haste and Enlarge Person and .. yes you can prepare for that and write down each and every option
+(although it is already getting out of hand) but then comes a nasty poison or conditions and calculating attack rolls really are a mess and take a lot of time.
+That is why i wrote this this Attack Action Calculator to ease down all of this complexity and free up some brainpower for the story, strategy and roleplaying.</p>
+<p>This is my first coding project, so there will be lots of style errors and inefficient functions. If you notice something like this, please feel free to open an <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/issues">issue</a> and i will gladly fix it.
+The function itself should work without errors, but if you encounter any please (again) open an <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/issues">issue</a> and let me know.</p>
+<p>The current version also features an d20pfsrd bestiary entry reader and a calculator for these bestiary entry. Allowing gamemasters more easily to fill a board with lots of nice and deadly minions.</p>
 <h2><a name="Example-for-a-automatic-calculated-full-round-attack-action" class="anchor" href="#Example-for-a-automatic-calculated-full-round-attack-action">Example for a automatic calculated full round attack action.</a></h2>
 <p>This example demonstrates the full round attack action calculater, which is able to automatically:</p>
 <ul>
@@ -88,6 +89,7 @@ missing some modifiers or calculating everything wrong.</p>
 <span class="l">14: </span>
 <span class="l">15: </span>
 <span class="l">16: </span>
+<span class="l">17: </span>
 </pre></td>
 <td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pp">#r</span> <span class="s">&quot;PathfinderAttackSimulator.dll&quot;</span>
 <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">FullRoundAttackAction</span>
@@ -95,16 +97,17 @@ missing some modifiers or calculating everything wrong.</p>
 <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 6)" onmouseover="showTip(event, 'fs1', 6)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 7)" onmouseover="showTip(event, 'fs3', 7)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs5', 8)" onmouseover="showTip(event, 'fs5', 8)" class="id">Characters</span>
 <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 9)" onmouseover="showTip(event, 'fs1', 9)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 10)" onmouseover="showTip(event, 'fs3', 10)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs6', 11)" onmouseover="showTip(event, 'fs6', 11)" class="id">Modifications</span>
 <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 12)" onmouseover="showTip(event, 'fs1', 12)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 13)" onmouseover="showTip(event, 'fs3', 13)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs7', 14)" onmouseover="showTip(event, 'fs7', 14)" class="id">Weapons</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 15)" onmouseover="showTip(event, 'fs1', 15)" class="id">PathfinderAttackSimulator</span>
 
-<span onmouseout="hideTip(event, 'fs8', 15)" onmouseover="showTip(event, 'fs8', 15)" class="fn">myFullAttack</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="id">myParrn</span> <span onmouseout="hideTip(event, 'fs10', 17)" onmouseover="showTip(event, 'fs10', 17)" class="uc">Medium</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs11', 18)" onmouseover="showTip(event, 'fs11', 18)" class="id">greatswordParrn</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs12', 19)" onmouseover="showTip(event, 'fs12', 19)" class="uc">PrimaryMain</span><span class="pn">;</span> 
-                            <span onmouseout="hideTip(event, 'fs11', 20)" onmouseover="showTip(event, 'fs11', 20)" class="id">greatswordParrn</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs13', 21)" onmouseover="showTip(event, 'fs13', 21)" class="uc">Primary</span><span class="pn">;</span> 
-                            <span onmouseout="hideTip(event, 'fs14', 22)" onmouseover="showTip(event, 'fs14', 22)" class="id">bite</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs15', 23)" onmouseover="showTip(event, 'fs15', 23)" class="uc">Secondary</span><span class="pn">|]</span> 
+<span onmouseout="hideTip(event, 'fs8', 16)" onmouseover="showTip(event, 'fs8', 16)" class="fn">myFullAttack</span> <span onmouseout="hideTip(event, 'fs9', 17)" onmouseover="showTip(event, 'fs9', 17)" class="id">myParrn</span> <span onmouseout="hideTip(event, 'fs10', 18)" onmouseover="showTip(event, 'fs10', 18)" class="uc">Medium</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs11', 19)" onmouseover="showTip(event, 'fs11', 19)" class="id">greatswordParrn</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs12', 20)" onmouseover="showTip(event, 'fs12', 20)" class="uc">PrimaryMain</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs11', 21)" onmouseover="showTip(event, 'fs11', 21)" class="id">greatswordParrn</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs13', 22)" onmouseover="showTip(event, 'fs13', 22)" class="uc">Primary</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs14', 23)" onmouseover="showTip(event, 'fs14', 23)" class="id">bite</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs15', 24)" onmouseover="showTip(event, 'fs15', 24)" class="uc">Secondary</span><span class="pn">|]</span> 
                             
-                            <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs16', 24)" onmouseover="showTip(event, 'fs16', 24)" class="id">Flanking</span><span class="pn">;</span> 
-                            <span onmouseout="hideTip(event, 'fs17', 25)" onmouseover="showTip(event, 'fs17', 25)" class="fn">SneakAttack</span> <span class="n">8</span><span class="pn">;</span> 
-                            <span onmouseout="hideTip(event, 'fs18', 26)" onmouseover="showTip(event, 'fs18', 26)" class="id">MutagenStrength</span><span class="pn">;</span> 
-                            <span onmouseout="hideTip(event, 'fs19', 27)" onmouseover="showTip(event, 'fs19', 27)" class="id">Haste</span><span class="pn">;</span> 
-                            <span onmouseout="hideTip(event, 'fs20', 28)" onmouseover="showTip(event, 'fs20', 28)" class="id">TwoWeaponFighting</span><span class="pn">|]</span>
+                            <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs16', 25)" onmouseover="showTip(event, 'fs16', 25)" class="id">Flanking</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs17', 26)" onmouseover="showTip(event, 'fs17', 26)" class="fn">SneakAttack</span> <span class="n">8</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs18', 27)" onmouseover="showTip(event, 'fs18', 27)" class="id">MutagenStrength</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs19', 28)" onmouseover="showTip(event, 'fs19', 28)" class="id">Haste</span><span class="pn">;</span> 
+                            <span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="id">TwoWeaponFighting</span><span class="pn">|]</span>
 </code></pre></td>
 </tr>
 </table>
@@ -115,6 +118,51 @@ missing some modifiers or calculating everything wrong.</p>
 <p>You attack with a Large +1 Keen Greatsword and hit the enemy with a 30 (rolled 14) for 16 Slashing damage +12 Precision Schaden !</p>
 <p>You attack with a Bite and hit the enemy with a 30 (rolled 18) for 10 BludgeoningOrPiercingOrSlashing damage +10 Precision Schaden !</p>
 </blockquote>
+<p>Next will be a short example for the d20pfsrd bestiary entry reader.
+This will be shown with the help of <a href="https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord">Kyton Eremite Overlord</a></p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+<span class="l">16: </span>
+<span class="l">17: </span>
+<span class="l">18: </span>
+<span class="l">19: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="id">D20pfsrdReader</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="id">D20pfsrdReader</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs22', 32)" onmouseover="showTip(event, 'fs22', 32)" class="id">AuxFunctions</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs23', 33)" onmouseover="showTip(event, 'fs23', 33)" class="id">D20pfsrdCalculator</span>
+
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 34)" onmouseover="showTip(event, 'fs24', 34)" class="id">kytonEremiteOverlord</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 35)" onmouseover="showTip(event, 'fs25', 35)" class="fn">getMonsterInformation</span> <span class="s">&quot;https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord&quot;</span>
+
+<span onmouseout="hideTip(event, 'fs26', 36)" onmouseover="showTip(event, 'fs26', 36)" class="fn">calculateStandardAttack</span> <span onmouseout="hideTip(event, 'fs24', 37)" onmouseover="showTip(event, 'fs24', 37)" class="id">kytonEremiteOverlord</span> <span onmouseout="hideTip(event, 'fs27', 38)" onmouseover="showTip(event, 'fs27', 38)" class="uc">Melee</span> <span class="n">1</span> <span class="pn">[|</span><span class="pn">|]</span>
+<span class="c">// &gt; You attack with a bite and hit with a 53 (rolled 16) for 24 damage plus pain!</span>
+
+<span onmouseout="hideTip(event, 'fs28', 39)" onmouseover="showTip(event, 'fs28', 39)" class="fn">calculateFullAttack</span> <span onmouseout="hideTip(event, 'fs24', 40)" onmouseover="showTip(event, 'fs24', 40)" class="id">kytonEremiteOverlord</span> <span onmouseout="hideTip(event, 'fs27', 41)" onmouseover="showTip(event, 'fs27', 41)" class="uc">Melee</span> <span class="n">1</span> <span class="pn">[|</span><span class="pn">|]</span>
+<span class="c">// &gt; You attack with a bite and hit with a 41 (rolled 4) for 23 damage plus pain!</span>
+<span class="c">// &gt; You attack with a claws and hit with a 43 (rolled 6) for 21 damage plus pain!</span>
+<span class="c">// &gt; You attack with a claws and hit with a 55 (rolled 18) for 24 damage plus pain!</span>
+<span class="c">// &gt; You attack with a thorn vines touch and hit with a 45 (rolled 13) for 0 damage plus pain plus grab, constrict and energy drain!</span>
+<span class="c">// &gt; You attack with a thorn vines touch and hit with a 36 (rolled 4) for 0 damage plus pain plus grab, constrict and energy drain!</span>
+<span class="c">// &gt; You attack with a thorn vines touch and hit with a 40 (rolled 8) for 0 damage plus pain plus grab, constrict and energy drain!</span>
+<span class="c">// &gt; You attack with a thorn vines touch and hit with a 43 (rolled 11) for 0 damage plus pain plus grab, constrict and energy drain!</span>
+<span class="c">// &gt; You attack with a thorn vines touch and hit with a 50 (rolled 18) for 0 damage plus pain plus grab, constrict and energy drain!</span>
+<span class="c">// &gt; You attack with a thorn vines touch and hit with a 36 (rolled 4) for 0 damage plus pain plus grab, constrict and energy drain!</span>
+</code></pre></td>
+</tr>
+</table>
+<p>It is also possible to add modifications to these attacks to easily adapt to the game.</p>
 <h2><a name="Samples-amp-documentation" class="anchor" href="#Samples-amp-documentation">Samples &amp; documentation</a></h2>
 <p>The library comes with comprehensible documentation.
 It can include tutorials automatically generated from <code>*.fsx</code> files in <a href="https://github.com/fsprojects/PathfinderAttackSimulator/tree/master/docs/content">the content folder</a>.
@@ -155,6 +203,14 @@ redistribution for both commercial and non-commercial purposes. For more informa
 <div class="tip" id="fs18">val MutagenStrength : AttackModification</div>
 <div class="tip" id="fs19">val Haste : AttackModification</div>
 <div class="tip" id="fs20">val TwoWeaponFighting : AttackModification</div>
+<div class="tip" id="fs21">module D20pfsrdReader<br /><br />from PathfinderAttackSimulator</div>
+<div class="tip" id="fs22">module AuxFunctions<br /><br />from PathfinderAttackSimulator.D20pfsrdReader</div>
+<div class="tip" id="fs23">module D20pfsrdCalculator<br /><br />from PathfinderAttackSimulator</div>
+<div class="tip" id="fs24">val kytonEremiteOverlord : URLMonsterAttacks []</div>
+<div class="tip" id="fs25">val getMonsterInformation : url:string -&gt; URLMonsterAttacks []</div>
+<div class="tip" id="fs26">val calculateStandardAttack : attackInfo:URLMonsterAttacks [] -&gt; attackVariant:AttackVariant -&gt; attackNumber:int -&gt; modifications:AttackModification [] -&gt; unit</div>
+<div class="tip" id="fs27">union case AttackVariant.Melee: AttackVariant</div>
+<div class="tip" id="fs28">val calculateFullAttack : attackInfo:URLMonsterAttacks [] -&gt; attackVariant:AttackVariant -&gt; attackNumber:int -&gt; modifications:AttackModification [] -&gt; unit []</div>
 
         </div>
         <div class="span3">
