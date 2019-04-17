@@ -58,7 +58,7 @@ calculateStandardAttack ancientLunarDragon Melee 1 [||]
 (**
 ### Example Blade Lord
 
-For the related link please click [here](https://www.d20pfsrd.com/bestiary/npc-s/npcs-cr-19/blade-lord-elf-rogue-20/)
+For the related link please click [here](https://www.d20pfsrd.com/bestiary/npc-s/npcs-cr-19/blade-lord-elf-rogue-20/).
 *)
 
 let bladeLord = getMonsterInformation "https://www.d20pfsrd.com/bestiary/npc-s/npcs-cr-19/blade-lord-elf-rogue-20/"
@@ -81,7 +81,7 @@ calculateFullAttack bladeLord Melee 1 [||]
 
 If we now change the given "1" in the function above to "2" we get his second attack scheme ("or +2 brilliant energy longsword +21/+16/+11 (1d8+5/19–20)")
 and so on.
-...But wait... isn't this a bit _weak_ for a CR 19 npc? Well, then let us add his lvl 20 sneak attack ability to the AttackModificationArray
+...But wait... isn't this a bit _weak_ for a CR 19 npc? Well, then let us add his lvl 20 sneak attack ability to the AttackModificationArray.
 *)
 
 calculateFullAttack bladeLord Melee 1 [|Modifications.SneakAttack 20|]
@@ -110,7 +110,7 @@ let testBoni1 = Modifications.BonusAttackDamage 2 5
 (**
 This would create a modification with +2 to attack rolls and +5 to damage rolls. You can also write this, without any namebinding, directly into the ModificationArray.
 
-In the end one more example of a more complex variant.
+In the end, one more example of a more complex variant.
 
 ### Kryton Eremite Overlord
 

@@ -30,12 +30,12 @@ That is why i wrote this this Attack Action Calculator to ease down all of this 
 This is my first coding project, so there will be lots of style errors and inefficient functions. If you notice something like this, please feel free to open an [issue](https://github.com/Freymaurer/PathfinderAttackSimulator/issues) and i will gladly fix it.
 The function itself should work without errors, but if you encounter any please (again) open an [issue](https://github.com/Freymaurer/PathfinderAttackSimulator/issues) and let me know.
 
-The current version also features an d20pfsrd bestiary entry reader and a calculator for these bestiary entry. Allowing gamemasters more easily to fill a board with lots of nice and deadly minions.
+The current version also features an d20pfsrd bestiary entry reader and a calculator for these bestiary entries. Allowing gamemasters more easily to fill a board with lots of nice and deadly minions.
 
 Example for a automatic calculated full round attack action.
 -------
 
-This example demonstrates the full round attack action calculater, which is able to automatically: 
+This example demonstrates the full round attack action calculater, which is able to calculate automatically: 
 
 * the number of attacks
 * boni from all kind of modifications
@@ -47,7 +47,7 @@ This example demonstrates the full round attack action calculater, which is able
 
 to just list a few of the implemented options.
 
-> Parrn is one of my characters i currently play. He is a half-giant rogue with 20 strength (_please don't judge_) and likes to hit like a truck with his greatsword.
+> Parrn is one of my characters, i currently play. He is a half-giant rogue with 20 strength (_please don't judge_) and likes to hit like a truck with his greatsword.
 > And because he has some familiars that attack with him, using such a script is a nice option for me, because it frees up some mindpower for roleplaying and strategy, without having to worry about
 > missing some modifiers or calculating everything wrong.
 
@@ -82,7 +82,7 @@ myFullAttack myParrn Medium [|greatswordParrn,PrimaryMain;
 >
 
 Next will be a short example for the d20pfsrd bestiary entry reader.
-This will be shown with the help of [Kyton Eremite Overlord](https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord)
+This will be shown with the help of [Kyton Eremite Overlord](https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord).
 *)
 open D20pfsrdReader
 open D20pfsrdReader.AuxFunctions

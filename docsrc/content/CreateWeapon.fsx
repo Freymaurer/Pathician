@@ -22,43 +22,33 @@ Let's start with an easy example a +2 keen flaming greatsword
 open PathfinderAttackSimulator.Library.AuxLibFunctions
 
 let keenflaming2greatsword = {
-        Name                = "+2 keen flaming greatsword"
-        Damage              = createDamage 2 6 Slashing
-        DamageBonus         = 2
-        ExtraDamage         = createDamage 1 6 Fire
-        BonusAttackRolls    = 2
-        CriticalRange       = [|17 .. 20|] 
-        CriticalModifier    = 2
-        Modifier            = createUsedModifier Strength Strength TwoHanded 1.5
-        ManufacturedOrNatural = Manufactured
-        Description         = ""
+        Name                    = "+2 keen flaming greatsword"
+        Damage                  = createDamage 2 6 Slashing
+        DamageBonus             = 2
+        ExtraDamage             = createDamage 1 6 Fire
+        BonusAttackRolls        = 2
+        CriticalRange           = [|17 .. 20|] 
+        CriticalModifier        = 2
+        Modifier                = createUsedModifier Strength Strength TwoHanded 1.5
+        ManufacturedOrNatural   = Manufactured
+        Description             = ""
         }
-
-(**
-The most difficult part might actually be to think of a nice name for the type-binding, as you can't start with a number.
-Because a weapon is a type it is really easy to handle, as you can just dot into the weapon name if you are unsure if you made some mistake creating the weapon.
-*)
-
-let showName = sprintf "The name of this weapon is: %A." keenflaming2greatsword.Name
-
-(*** include-value:showName ***)
-
-let showDamageDie = sprintf "This weapon uses %Ad%A for its damage calculation." keenflaming2greatsword.Damage.NumberOfDie keenflaming2greatsword.Damage.Die 
-
-(*** include-value:showDamageDie ***)
 
 (**
 Now to explain the different categories:
 
-* Name = the actual correct name of the weapon, currently not relevant for the code
-* Damage = the core weapon damage for 2d6 slashing this needs to be "createDamage 2 6 Slashing"
-* DamageBonus = enhancement bonus to dmg
-* ExtraDamage = Damage that will be calculated and displayed separately, e.g. 1d6 fire from flaming
-* BonusAttackRolls = enhancement bonus to attack roll
-* CriticalRange = all rolled dice, representing a crit
-* CriticalModifier = currently just displayed and not automatically calculated
-* Modifier = the modifier used to hit something, to calculate damage, either OneHanded or TwoHanded and the multiplicator for dmg in this order.
-* ManufacturedOrNatural = either Manufactured or Natural, this is necessary for a correct fullround attack action. 
+* Name = The actual correct name of the weapon, currently not relevant for the code.
+* Damage = The core weapon damage. For 2d6 slashing this needs to be "createDamage 2 6 Slashing".
+* DamageBonus = Enhancement bonus to dmg, or weapon specific boni like Weapon Specialization.
+* ExtraDamage = Damage that will be calculated and displayed separately, e.g. 1d6 fire from flaming.
+* BonusAttackRolls = Enhancement bonus to attack roll and weapon specific boni like Weapon Focus.
+* CriticalRange = All rolled dice representing a crit.
+* CriticalModifier = The critical hit modifier for that weapon.
+* Modifier = The modifier used to hit something, to calculate damage, either OneHanded or TwoHanded and the multiplicator for dmg. 
+    These variables are shown above in this order.
+* ManufacturedOrNatural = Either Manufactured or Natural, this is necessary for a correct full-round attack action.
+* Description = Whatever you want to take note of. For special weapon you can copy pase additional effects in here. 
+    Or you might want to take note that the weapon has weapon focus applied to it.
 
 *)
 
