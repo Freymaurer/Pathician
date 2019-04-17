@@ -639,7 +639,7 @@ module Library =
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
-            StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -2 Alchemical)|]
+            StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -1 Alchemical)|]
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
@@ -818,7 +818,7 @@ module Library =
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
-            Description = ""
+            Description = "Only use this if you only use one weapon."
             }
 
         let WeaponSpecialization ={

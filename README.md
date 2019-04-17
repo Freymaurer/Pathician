@@ -1,10 +1,7 @@
 # PathfinderAttackSimulator
 
-Hello, this attack calculator/simulator is currently under construction.
-For the time being it can already be used to calculate both standard attacks and full round attack actions.
-Because this is meant to be very variable it is also not completly hand-held when using it.
-To calculate these attack routines the function needs information about the character, the used weapon/weapons and the used modifications, 
-which can be spells, feats, class abilitys, debuffs and so on.
+A pathfinder toolbox written in F#, designed to aid pathfinder players and gamemasters in managing multiple and/or complex characters.
+Below you can find a list of the currently supported features. 
 
 - [Features](#features)
 - [How To Contribute](#how-to-contribute)

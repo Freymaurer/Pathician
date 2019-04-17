@@ -13,10 +13,11 @@
 To calculate an attack action you need a character, a weapon and the relevant modifications. For the modifications you might already find everything in the library, but for the character and weapon you will most likely have to write your own.
 
 Let us start with the character creation of an example character.
-For this i will build a lvl 7 elf magus, who will use dexterity to hit the enemy but still use strength to damage.
+For this i will build a lvl 6 elf magus, who will use dexterity to hit the enemy but still use strength to damage.
 *)
 #r "PathfinderAttackSimulator.dll"
-open PathfinderAttackSimulator.Library.AuxLibFunctions
+open PathfinderAttackSimulator
+open Library.AuxLibFunctions
 
 let myMagus =  {
     CharacterName = "Best Character Name Ever"
@@ -34,24 +35,25 @@ let myMagus =  {
 > This character has 12 Str, 20 dex (17 buy in, +2 racial, +1 from lvl 4 ability score increase) and caster level 6 with BAB 4.
 >
 
-Now we need to decide for a weapon, and like every magus there is we decide to use a Scimitar.
+Now we need to decide for a weapon. Like every magus we decide to use a Scimitar.
 *)
 
 let Scimitar = {
-        Name                = "Scimitar"
-        Damage              = createDamage 1 6 Slashing
-        DamageBonus         = 0
-        ExtraDamage         = createDamage 0 0 Untyped
-        BonusAttackRolls    = 0
-        CriticalRange       = [|18 .. 20|] 
-        CriticalModifier    = 2
-        Modifier            = createUsedModifier Dexterity Strength OneHanded 1.
-        ManufacturedOrNatural = Manufactured
-        Description         = "Normal Scimitar"
+        Name                    = "Scimitar"
+        Damage                  = createDamage 1 6 Slashing
+        DamageBonus             = 0
+        ExtraDamage             = createDamage 0 0 Untyped
+        BonusAttackRolls        = 0
+        CriticalRange           = [|18 .. 20|] 
+        CriticalModifier        = 2
+        Modifier                = createUsedModifier Dexterity Strength OneHanded 1.
+        ManufacturedOrNatural   = Manufactured
+        Description             = "Normal Scimitar"
         }
 
 (** 
-Now we want to calculate the Standard Attack Action with some modifications from the library and also a new one: The modification for an intensified, empowered Shocking Grasp.
+Now we want to calculate the Standard Attack Action with some modifications from the library (for a full list see For a full list of all prebuild modifications please see [here](https://freymaurer.github.io/PathfinderAttackSimulator/reference/pathfinderattacksimulator-library-modifications.html))
+and also a new one: The modification for an intensified, empowered Shocking Grasp.
 So how do we create this modification, which is a quite complex modification if we want it to be flexibel.
 *)
 
@@ -69,24 +71,23 @@ let ShockingGraspEmpowered casterLevel metalTF = {
     }
 (** 
 Now This is the most flexible version. It calculates the amount of d6 electricity damage depending on the caster level up to a maximum of 10d6
-and also has option to ask wether or not the modification is used against someone with a metal armor/weapon.
+and also has asks wether or not the modification is used against someone with a metal armor/weapon.
 
 The other modifications we will use are: Haste and Weapon Focus 
 
-> It might be necessary to add Weapon Focus boni to the specific weapon it applies to!
-> Right now this function cannot separate modifications to specific weapons!
+> If you use different weapons, don't use the Weapon Focus modification, but add its bonus directly to the weapon!
 >
 
 As we only use one weapon we can use Weapon Focus as a modification.
 *)
-open PathfinderAttackSimulator.StandardAttackAction
-open PathfinderAttackSimulator.Library
-open PathfinderAttackSimulator.Library.Modifications
+
+open StandardAttackAction
+open Library.Modifications
 
 myStandardAttack myMagus Medium Scimitar [|ShockingGraspEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|]
 
 (** 
-> You hit the enemy with a 17 (rolled 2) for 5 Slashing damage +31 Electricity Schaden (Intensified Empowered Shocking Grasp) !
+> You hit the enemy with a 21 (rolled 6) for 7 Slashing damage +27 Electricity damage (Intensified Empowered Shocking Grasp) !
 >
 
 
@@ -103,12 +104,12 @@ This gives high flexibility and a fast calculation of all relevant boni!
 
 To calculate a full round attack action you need a character, a weapon/weapons and the relevant modifications. 
 For the modifications you might already find everything in the library, but for the character and weapon you will most likely have to write your own.
-A Full round attack actions also needs additional info about as what type of weapon a weapon is used. 
+A full-round attack action also needs additional information. Especially as what type of weapon a weapon should be used. 
 Because this is difficult to explain let me first show you the difference between a full round attack action and a standard attack action:
 
 *)
 
-open PathfinderAttackSimulator.FullRoundAttackAction
+open FullRoundAttackAction
 
 /// This is the previous standard attack action
 myStandardAttack myMagus Medium Scimitar [|ShockingGraspEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|]
@@ -116,12 +117,13 @@ myStandardAttack myMagus Medium Scimitar [|ShockingGraspEmpowered myMagus.Caster
 myFullAttack myMagus Medium [|Scimitar,PrimaryMain|] [|ShockingGraspEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|] 
 
 (**
-As you can see the difference, an (weapon * WeaponType) instead of simply a weapon is due to the fact which weapon is meant for additional attacks, e.g. Haste or also for Two Weapon Fighting.
+As you can see the difference is an (weapon * WeaponType) array instead of simply a weapon.
+This is necessary for the calculator to know which weapon is should be used for additional attacks, e.g. Haste, Two Weapon Fighting.
 Here are some example for this:
 
 - Haste/FlurryOfBlows adds an additional attack to the _PrimaryMain_ weapon.
 - Two-Weapon-Fighting has a _PrimaryMain_ weapon for e.g. Haste and the other Weapon needs to be classified as a _Primary_ weapon.
-- Secondary natural attacks are always classified as _Secondary_.
+- Natural attacks (together with manufactured attacks) are always classified as _Secondary_.
 - Primary natural attacks without any manufactured weapons are the only case when there is __no__ _PrimaryMain_ weapon and all primary natural attacks are classified as _Primary_.
 
 Now let us skip some level and look at our Magus at a level 16
@@ -181,7 +183,7 @@ myFullAttack myMagus2 Medium [| ShinyBlingBlingScimitar,PrimaryMain;
                                 PowerAttack myMagus2.BAB; 
                                 FuriousFocus myMagus2.BAB;
                                 BlessingOfFervorAttackBonus;
-                                InspireCourage|]
+                                InspireCourage 15|]
 
 (** 
 > You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and hit the enemy with a 35 (rolled 2) for 26 Slashing damage +30 Electricity Schaden (Intensified Empowered Shocking Grasp), +2 Untyped Schaden (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) !
@@ -197,8 +199,7 @@ myFullAttack myMagus2 Medium [| ShinyBlingBlingScimitar,PrimaryMain;
 > You attack with a Huge Tentacle and hit the enemy with a 31 (rolled 16) for 24 Bludgeoning damage +3 Cold Schaden (Huge Tentacle (we prop. became the herold of an ancient god or something)) !
 >
 
-But! You can also see, that at this point calculations are work, and this function can really help and do lots of the work alone!
-If there are feature requests or bugs please let me know and open an issue on the repository 
+Such a calculation could easily take 5 minutes, which can be reduced to several seconds with this script.
 
 </br>
 

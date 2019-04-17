@@ -14,9 +14,9 @@ A modification needs certain informations for a correct calculation.
 Right now this is not hand-held at all, but might get better in a future version.
 
 This is by far the most complex variant of information-type.
-Therefore, i create a library of pre-written modifications.
+Therefore, i am working on a library of modifications. For a full list of all prebuild modifications please see [here](https://freymaurer.github.io/PathfinderAttackSimulator/reference/pathfinderattacksimulator-library-modifications.html).
 
-Let's see how this works for the famous Haste spell
+Let's see how this works for the famous Haste spell.
 
 ### Haste
 *)
@@ -43,17 +43,17 @@ So a short introduction to the spell for all who might not know it (so like comp
 
 So how does this work:
 
-* Name = the actual correct name of the weapon, currently not relevant for the code
-* BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack
+* Name = The actual correct name of the modification.
+* BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack.
 
 > Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.
 
-* BonusDamage = bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage)
+* BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).
 * ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
-* AppliedTo = apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
-* StatChanges = e.g. the alchemist's mutagen (createStatChange "Str" 2 Alchemical) the number again, represents the modifier increase. Can be left empty if no stat change applies.
+* AppliedTo = Apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
+* StatChanges = Represents ability score changes due to this modification, e.g. the alchemist's mutagen (createStatChange Strength 2 Alchemical). Can be left empty if no stat change applies.
 * SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
-Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Armor).
+Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Attack).
 * Description = A short Description for additional information. Not used in the script right now.
 
 Some further Examples:
@@ -69,7 +69,7 @@ let MutagenStrength = {
     BonusDamage = createBonus 0 Flat
     ExtraDamage = createDamage 0 0 Untyped
     AppliedTo = [|All|], -20
-    StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -2 Alchemical)|]
+    StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -1 Alchemical)|]
     SizeChanges = createSizechange 0 Flat false
     Description = ""
     }
@@ -96,7 +96,7 @@ let EnlargePerson = {
 
 Here you can see that you can even make these modifications to small automatic functions. This one calculates the SneakAttack damage for a full rogue progression.
 To do this it needs additional information in form of the rogue level.
-Also this bonus is meant to be applied only once, therefore we have under "AppliedTo" [|All|], 1; because this will we applied to any weapon that is calculated first and then only to the first attack.
+Also this bonus is meant to be applied only once, therefore we have under "AppliedTo" [|All|], 1; because of this the modification will be applied to any weapon that is calculated first and then only to the first attack.
 *)
 let SneakAttackOnce rogueLevel = {
     Name = "Sneak Attack on first attack"
