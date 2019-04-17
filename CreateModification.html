@@ -40,8 +40,8 @@
 <p>A modification needs certain informations for a correct calculation.
 Right now this is not hand-held at all, but might get better in a future version.</p>
 <p>This is by far the most complex variant of information-type.
-Therefore, i create a library of modifications. For a full list of all prebuild modifications please see <a href="https://freymaurer.github.io/PathfinderAttackSimulator/reference/pathfinderattacksimulator-library-modifications.html">here</a></p>
-<p>Let's see how this works for the famous Haste spell</p>
+Therefore, i am working on a library of modifications. For a full list of all prebuild modifications please see <a href="https://freymaurer.github.io/PathfinderAttackSimulator/reference/pathfinderattacksimulator-library-modifications.html">here</a>.</p>
+<p>Let's see how this works for the famous Haste spell.</p>
 <h3><a name="Haste" class="anchor" href="#Haste">Haste</a></h3>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
@@ -82,20 +82,20 @@ flat bonus to all attack rolls, and also some non - attack related boni.</p>
 </blockquote>
 <p>So how does this work:</p>
 <ul>
-<li>Name = the actual correct name of the weapon, currently not relevant for the code</li>
-<li>BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack</li>
+<li>Name = The actual correct name of the modification.</li>
+<li>BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack.</li>
 </ul>
 <blockquote>
 <p>Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.</p>
 </blockquote>
 <ul>
-<li>BonusDamage = bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage)</li>
+<li>BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).</li>
 <li>ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.</li>
-<li>AppliedTo = apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.</li>
-<li>StatChanges = e.g. the alchemist's mutagen (createStatChange Strength 2 Alchemical) the number again, represents the modifier increase. Can be left empty if no stat change applies.</li>
+<li>AppliedTo = Apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.</li>
+<li>StatChanges = Represents ability score changes due to this modification, e.g. the alchemist's mutagen (createStatChange Strength 2 Alchemical). Can be left empty if no stat change applies.</li>
 <li>
 SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
-Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Armor).
+Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Attack).
 </li>
 <li>Description = A short Description for additional information. Not used in the script right now.</li>
 </ul>
@@ -121,7 +121,7 @@ Last is a false/true question, whether this size change is an actual size change
     <span class="id">BonusDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 25)" onmouseover="showTip(event, 'fs9', 25)" class="fn">createBonus</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 26)" onmouseover="showTip(event, 'fs10', 26)" class="uc">Flat</span>
     <span class="id">ExtraDamage</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs11', 27)" onmouseover="showTip(event, 'fs11', 27)" class="fn">createDamage</span> <span class="n">0</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs12', 28)" onmouseover="showTip(event, 'fs12', 28)" class="uc">Untyped</span>
     <span class="id">AppliedTo</span> <span class="o">=</span> <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs13', 29)" onmouseover="showTip(event, 'fs13', 29)" class="uc">All</span><span class="pn">|]</span><span class="pn">,</span> <span class="o">-</span><span class="n">20</span>
-    <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="uc">Strength</span> <span class="n">2</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="uc">Alchemical</span><span class="pn">)</span><span class="pn">;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="uc">Intelligence</span> <span class="o">-</span><span class="n">2</span> <span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="uc">Alchemical</span><span class="pn">)</span><span class="pn">|]</span>
+    <span class="id">StatChanges</span> <span class="o">=</span> <span class="pn">[|</span><span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 30)" onmouseover="showTip(event, 'fs17', 30)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs18', 31)" onmouseover="showTip(event, 'fs18', 31)" class="uc">Strength</span> <span class="n">2</span> <span onmouseout="hideTip(event, 'fs19', 32)" onmouseover="showTip(event, 'fs19', 32)" class="uc">Alchemical</span><span class="pn">)</span><span class="pn">;</span> <span class="pn">(</span><span onmouseout="hideTip(event, 'fs17', 33)" onmouseover="showTip(event, 'fs17', 33)" class="fn">createStatChange</span> <span onmouseout="hideTip(event, 'fs20', 34)" onmouseover="showTip(event, 'fs20', 34)" class="uc">Intelligence</span> <span class="o">-</span><span class="n">1</span> <span onmouseout="hideTip(event, 'fs19', 35)" onmouseover="showTip(event, 'fs19', 35)" class="uc">Alchemical</span><span class="pn">)</span><span class="pn">|]</span>
     <span class="id">SizeChanges</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 36)" onmouseover="showTip(event, 'fs14', 36)" class="fn">createSizechange</span> <span class="n">0</span> <span onmouseout="hideTip(event, 'fs10', 37)" onmouseover="showTip(event, 'fs10', 37)" class="uc">Flat</span> <span class="k">false</span>
     <span class="id">Description</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
     <span class="pn">}</span>
@@ -159,7 +159,7 @@ Last is a false/true question, whether this size change is an actual size change
 <h3><a name="Sneak-Attack-from-invisibility" class="anchor" href="#Sneak-Attack-from-invisibility">Sneak Attack (from invisibility)</a></h3>
 <p>Here you can see that you can even make these modifications to small automatic functions. This one calculates the SneakAttack damage for a full rogue progression.
 To do this it needs additional information in form of the rogue level.
-Also this bonus is meant to be applied only once, therefore we have under "AppliedTo" [|All|], 1; because this will we applied to any weapon that is calculated first and then only to the first attack.</p>
+Also this bonus is meant to be applied only once, therefore we have under "AppliedTo" [|All|], 1; because of this the modification will be applied to any weapon that is calculated first and then only to the first attack.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
 <span class="l"> 3: </span>

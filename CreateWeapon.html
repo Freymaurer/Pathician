@@ -61,47 +61,38 @@ Right now this is not hand-held at all, but might get better in a future version
 <span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">AuxLibFunctions</span>
 
 <span class="k">let</span> <span onmouseout="hideTip(event, 'fs4', 4)" onmouseover="showTip(event, 'fs4', 4)" class="id">keenflaming2greatsword</span> <span class="o">=</span> <span class="pn">{</span>
-        <span class="id">Name</span>                <span class="o">=</span> <span class="s">&quot;+2 keen flaming greatsword&quot;</span>
-        <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="id">Damage</span>              <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="fn">createDamage</span> <span class="n">2</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="uc">Slashing</span>
-        <span class="id">DamageBonus</span>         <span class="o">=</span> <span class="n">2</span>
-        <span class="id">ExtraDamage</span>         <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="fn">createDamage</span> <span class="n">1</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="uc">Fire</span>
-        <span class="id">BonusAttackRolls</span>    <span class="o">=</span> <span class="n">2</span>
-        <span class="id">CriticalRange</span>       <span class="o">=</span> <span class="pn">[|</span><span class="n">17</span> <span class="o">..</span> <span class="n">20</span><span class="pn">|]</span> 
-        <span class="id">CriticalModifier</span>    <span class="o">=</span> <span class="n">2</span>
-        <span class="id">Modifier</span>            <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="fn">createUsedModifier</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="uc">TwoHanded</span> <span class="n">1.5</span>
-        <span class="id">ManufacturedOrNatural</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="uc">Manufactured</span>
-        <span class="id">Description</span>         <span class="o">=</span> <span class="s">&quot;&quot;</span>
+        <span class="id">Name</span>                    <span class="o">=</span> <span class="s">&quot;+2 keen flaming greatsword&quot;</span>
+        <span onmouseout="hideTip(event, 'fs5', 5)" onmouseover="showTip(event, 'fs5', 5)" class="id">Damage</span>                  <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 6)" onmouseover="showTip(event, 'fs6', 6)" class="fn">createDamage</span> <span class="n">2</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs7', 7)" onmouseover="showTip(event, 'fs7', 7)" class="uc">Slashing</span>
+        <span class="id">DamageBonus</span>             <span class="o">=</span> <span class="n">2</span>
+        <span class="id">ExtraDamage</span>             <span class="o">=</span> <span onmouseout="hideTip(event, 'fs6', 8)" onmouseover="showTip(event, 'fs6', 8)" class="fn">createDamage</span> <span class="n">1</span> <span class="n">6</span> <span onmouseout="hideTip(event, 'fs8', 9)" onmouseover="showTip(event, 'fs8', 9)" class="uc">Fire</span>
+        <span class="id">BonusAttackRolls</span>        <span class="o">=</span> <span class="n">2</span>
+        <span class="id">CriticalRange</span>           <span class="o">=</span> <span class="pn">[|</span><span class="n">17</span> <span class="o">..</span> <span class="n">20</span><span class="pn">|]</span> 
+        <span class="id">CriticalModifier</span>        <span class="o">=</span> <span class="n">2</span>
+        <span class="id">Modifier</span>                <span class="o">=</span> <span onmouseout="hideTip(event, 'fs9', 10)" onmouseover="showTip(event, 'fs9', 10)" class="fn">createUsedModifier</span> <span onmouseout="hideTip(event, 'fs10', 11)" onmouseover="showTip(event, 'fs10', 11)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs10', 12)" onmouseover="showTip(event, 'fs10', 12)" class="uc">Strength</span> <span onmouseout="hideTip(event, 'fs11', 13)" onmouseover="showTip(event, 'fs11', 13)" class="uc">TwoHanded</span> <span class="n">1.5</span>
+        <span class="id">ManufacturedOrNatural</span>   <span class="o">=</span> <span onmouseout="hideTip(event, 'fs12', 14)" onmouseover="showTip(event, 'fs12', 14)" class="uc">Manufactured</span>
+        <span class="id">Description</span>             <span class="o">=</span> <span class="s">&quot;&quot;</span>
         <span class="pn">}</span>
 </code></pre></td>
 </tr>
 </table>
-<p>The most difficult part might actually be to think of a nice name for the type-binding, as you can't start with a number.
-Because a weapon is a type it is really easy to handle, as you can just dot into the weapon name if you are unsure if you made some mistake creating the weapon.</p>
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
-</pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs13', 15)" onmouseover="showTip(event, 'fs13', 15)" class="id">showName</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 16)" onmouseover="showTip(event, 'fs14', 16)" class="fn">sprintf</span> <span class="s">&quot;The name of this weapon is: </span><span class="pf">%A</span><span class="s">.&quot;</span> <span onmouseout="hideTip(event, 'fs4', 17)" onmouseover="showTip(event, 'fs4', 17)" class="id">keenflaming2greatsword</span><span class="pn">.</span><span class="id">Name</span>
-</code></pre></td>
-</tr>
-</table>
-<table class="pre"><tr><td><pre><code>"The name of this weapon is: "+2 keen flaming greatsword"."</code></pre></td></tr></table>
-<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
-</pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">let</span> <span onmouseout="hideTip(event, 'fs15', 18)" onmouseover="showTip(event, 'fs15', 18)" class="id">showDamageDie</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="fn">sprintf</span> <span class="s">&quot;This weapon uses </span><span class="pf">%A</span><span class="s">d</span><span class="pf">%A</span><span class="s"> for its damage calculation.&quot;</span> <span onmouseout="hideTip(event, 'fs4', 20)" onmouseover="showTip(event, 'fs4', 20)" class="id">keenflaming2greatsword</span><span class="pn">.</span><span class="id">Damage</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="id">NumberOfDie</span> <span onmouseout="hideTip(event, 'fs4', 22)" onmouseover="showTip(event, 'fs4', 22)" class="id">keenflaming2greatsword</span><span class="pn">.</span><span class="id">Damage</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="id">Die</span> 
-</code></pre></td>
-</tr>
-</table>
-<table class="pre"><tr><td><pre><code>"This weapon uses 2d6 for its damage calculation."</code></pre></td></tr></table>
 <p>Now to explain the different categories:</p>
 <ul>
-<li>Name = the actual correct name of the weapon, currently not relevant for the code</li>
-<li>Damage = the core weapon damage for 2d6 slashing this needs to be "createDamage 2 6 Slashing"</li>
-<li>DamageBonus = enhancement bonus to dmg</li>
-<li>ExtraDamage = Damage that will be calculated and displayed separately, e.g. 1d6 fire from flaming</li>
-<li>BonusAttackRolls = enhancement bonus to attack roll</li>
-<li>CriticalRange = all rolled dice, representing a crit</li>
-<li>CriticalModifier = currently just displayed and not automatically calculated</li>
-<li>Modifier = the modifier used to hit something, to calculate damage, either OneHanded or TwoHanded and the multiplicator for dmg in this order.</li>
-<li>ManufacturedOrNatural = either Manufactured or Natural, this is necessary for a correct fullround attack action.</li>
+<li>Name = The actual correct name of the weapon, currently not relevant for the code.</li>
+<li>Damage = The core weapon damage. For 2d6 slashing this needs to be "createDamage 2 6 Slashing".</li>
+<li>DamageBonus = Enhancement bonus to dmg, or weapon specific boni like Weapon Specialization.</li>
+<li>ExtraDamage = Damage that will be calculated and displayed separately, e.g. 1d6 fire from flaming.</li>
+<li>BonusAttackRolls = Enhancement bonus to attack roll and weapon specific boni like Weapon Focus.</li>
+<li>CriticalRange = All rolled dice representing a crit.</li>
+<li>CriticalModifier = The critical hit modifier for that weapon.</li>
+<li>
+Modifier = The modifier used to hit something, to calculate damage, either OneHanded or TwoHanded and the multiplicator for dmg. 
+These variables are shown above in this order.
+</li>
+<li>ManufacturedOrNatural = Either Manufactured or Natural, this is necessary for a correct full-round attack action.</li>
+<li>
+Description = Whatever you want to take note of. For special weapon you can copy pase additional effects in here. 
+Or you might want to take note that the weapon has weapon focus applied to it.
+</li>
 </ul>
 
 <div class="tip" id="fs1">namespace PathfinderAttackSimulator</div>
@@ -116,10 +107,6 @@ Because a weapon is a type it is really easy to handle, as you can just dot into
 <div class="tip" id="fs10">union case AbilityScore.Strength: AbilityScore</div>
 <div class="tip" id="fs11">union case WeaponHanded.TwoHanded: WeaponHanded</div>
 <div class="tip" id="fs12">union case NaturalManufactured.Manufactured: NaturalManufactured</div>
-<div class="tip" id="fs13">val showName : string</div>
-<div class="tip" id="fs14">val sprintf : format:Printf.StringFormat&lt;&#39;T&gt; -&gt; &#39;T</div>
-<div class="tip" id="fs15">val showDamageDie : string</div>
-<div class="tip" id="fs16"></div>
 
         </div>
         <div class="span3">
