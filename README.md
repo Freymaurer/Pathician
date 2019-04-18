@@ -21,6 +21,19 @@ If you are not sure about opening an issue you can also E-Mail me directly (Frey
 
 ## Installation
 
+Below you can find two installation types. For most users the Quick Start variant will easily be enough to use.
+
+### Quick Start
+
+1. [Click here](https://code.visualstudio.com/download) to download VisualStudioCode
+2. Install Ionide in visual studio code:
+	(_open visual studio code -> Extensions -> type in Ionide-fsharp -> install_)
+3. Download the Quickstart zip file [here](https://github.com/Freymaurer/PathfinderAttackSimulator/archive/QuickStart.zip)
+4. Unzip it with WinRAR or 7zip
+5. You can now go the PathfinderAttackSimulator_qs folder and open the PathfinderCalculator.fsx and start using it.
+
+### Full Installation
+
 It is possible, that this won't work for Windows 10 Enterprise
 
 1. [Click here](https://code.visualstudio.com/download) to download VisualStudioCode
@@ -48,5 +61,5 @@ It is possible, that this won't work for Windows 10 Enterprise
 9. Console command: fake build
 10. Install Ionide in visual studio code:
 	(_open visual studio code -> Extensions -> type in Ionide-fsharp -> install_)
-11. Thats finally it, you can now go the PathfinderAttackSimulator folder and open the PathfinderCalculator.fsx adn start using it.
+11. Thats finally it, you can now go the PathfinderAttackSimulator folder and open the PathfinderCalculator.fsx and start using it.
 

@@ -146,7 +146,7 @@ let ShinyBlingBlingScimitar = {
     Name                = "Really Shiny +5 Flaming Keen Ghost Touch Scimitar"
     Damage              = createDamage 1 6 Slashing
     DamageBonus         = 5
-    ExtraDamage         = createDamage 1 6 Untyped
+    ExtraDamage         = createDamage 1 6 Fire
     BonusAttackRolls    = 6
     CriticalRange       = [|15 .. 20|] 
     CriticalModifier    = 2
@@ -186,18 +186,19 @@ myFullAttack myMagus2 Medium [| ShinyBlingBlingScimitar,PrimaryMain;
                                 InspireCourage 15|]
 
 (** 
-> You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and hit the enemy with a 35 (rolled 2) for 26 Slashing damage +30 Electricity Schaden (Intensified Empowered Shocking Grasp), +2 Untyped Schaden (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) !
+> You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and (hopefully) critically hit the enemy with a 49 (rolled 17) and confirm your crit with a 45 (rolled 13) for 24 Slashing damage +33 Electricity damage (Intensified Empowered Shocking Grasp), +5 Fire damage (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) (crit * 2)!
+> 
+> You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and (hopefully) critically hit the enemy with a 43 (rolled 18) and confirm your crit with a 32 (rolled 7) for 29 Slashing damage +3 Fire damage (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) (crit * 2)!
+> 
+> You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and hit the enemy with a 30 (rolled 10) for 31 Slashing damage +5 Fire damage (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) !
+> 
+> You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and hit the enemy with a 29 (rolled 14) for 27 Slashing damage +5 Fire damage (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) !
+> 
+> You attack with a Huge Tentacle and hit the enemy with a 15 (rolled 1) for 22 Bludgeoning damage +2 Cold damage (Huge Tentacle) !
+> 
+> You attack with a Huge Tentacle and hit the enemy with a 22 (rolled 8) for 30 Bludgeoning damage +5 Cold damage (Huge Tentacle) !
 >
-> You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and (hopefully) critically hit the enemy with a 45 (rolled 19) and confirm your crit with a 28 (rolled 2) for 26 Slashing damage +2 Untyped Schaden (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) (crit * 2)!
->
-> You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and hit the enemy with a 33 (rolled 12) for 33 Slashing damage +4 Untyped Schaden (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) !
->
-> You attack with a Really Shiny +5 Flaming Keen Ghost Touch Scimitar and (hopefully) critically hit the enemy with a 35 (rolled 19) and confirm your crit with a 21 (rolled 5) for 25 Slashing damage +1 Untyped Schaden (Really Shiny +5 Flaming Keen Ghost Touch Scimitar) (crit * 2)!
->
-> You attack with a Huge Tentacle and hit the enemy with a 31 (rolled 16) for 39 Bludgeoning damage +5 Cold Schaden (Huge Tentacle (we prop. became the herold of an ancient god or something)) !
->
-> You attack with a Huge Tentacle and hit the enemy with a 31 (rolled 16) for 24 Bludgeoning damage +3 Cold Schaden (Huge Tentacle (we prop. became the herold of an ancient god or something)) !
->
+
 
 Such a calculation could easily take 5 minutes, which can be reduced to several seconds with this script.
 
