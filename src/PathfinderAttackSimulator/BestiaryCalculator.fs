@@ -4,15 +4,15 @@ open System
 open Library
 open Library.AuxLibFunctions
 
-module D20pfsrdCalculator =
+module BestiaryCalculator =
     
-    open D20pfsrdReader.AuxFunctions
+    open BestiaryReader.AuxFunctions
 
     let private testForNaturalAttack (str:string) =
         let regexNaturalAttack = System.Text.RegularExpressions.Regex("(claw|vine|tentacle|bite|gore|hoof|wing|pincers|tail\sslap|slam|sting|talon|tongue)")
         regexNaturalAttack.IsMatch(str)
 
-    /// This function returns the calculated attack rolls of a d20pfsrd bestiary entry.
+    /// This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
     /// attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
     /// attackNumber = the exact attack variant that should be calculated, starting at 1
     /// modifications = array of attackmodifications (StatChanges will not work for this function)
@@ -337,7 +337,7 @@ module D20pfsrdCalculator =
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamage <> [||] 
             then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") wantedAttack.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage extraDamageToString wantedAttack.CriticalModifier additionalInfoString
 
-    /// This function returns the calculated attack rolls of a d20pfsrd bestiary entry.
+    /// This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
     /// attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
     /// attackNumber = the exact attack variant that should be calculated, starting at 1
     /// modifications = array of attackmodifications (StatChanges will not work for this function)
