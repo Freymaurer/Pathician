@@ -27,7 +27,7 @@ open PathfinderAttackSimulator.Library.AuxLibFunctions
 let Haste = {
     Name = "Haste"
     BonusAttacks = createBonusAttacks 1 HasteLike PrimaryMain
-    BonusAttackRoll = createBonus 1 Flat
+    BonusAttackRoll = createHitAndCritAttackBoni 1 Flat 0 Flat
     BonusDamage = createBonus 0 Flat
     ExtraDamage = createDamage 0 0 Untyped
     AppliedTo = [|All|], -20
@@ -47,7 +47,7 @@ So how does this work:
 * BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack.
 
 > Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.
-
+* BonusAttackRoll = The first two variables are the bonus to the attack role and its type. The last two variables are added boni for critical hit confirmation rolls (used for e.g. [Critical Focus](https://www.d20pfsrd.com/feats/combat-feats/critical-focus-combat/))
 * BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).
 * ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
 * AppliedTo = Apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
@@ -65,7 +65,7 @@ This is a nice example to showcase the StatChanges attribute.
 let MutagenStrength = {
     Name = "Strength Mutagen"
     BonusAttacks = createBonusAttacks 0 NoBA All
-    BonusAttackRoll = createBonus 0 Flat
+    BonusAttackRoll = createHitAndCritAttackBoni 0 Flat 0 Flat
     BonusDamage = createBonus 0 Flat
     ExtraDamage = createDamage 0 0 Untyped
     AppliedTo = [|All|], -20
@@ -82,7 +82,7 @@ Pay attention to the StatChanges and the SizeChanges. There is also no -1 at "Bo
 let EnlargePerson = {
     Name = "Enlarge Person"
     BonusAttacks = createBonusAttacks 0 NoBA All
-    BonusAttackRoll = createBonus 0 Flat
+    BonusAttackRoll = createHitAndCritAttackBoni 0 Flat 0 Flat
     BonusDamage = createBonus 0 Flat
     ExtraDamage = createDamage 0 0 Untyped
     AppliedTo = [|All|], -20
@@ -101,7 +101,7 @@ Also this bonus is meant to be applied only once, therefore we have under "Appli
 let SneakAttackOnce rogueLevel = {
     Name = "Sneak Attack on first attack"
     BonusAttacks = createBonusAttacks 0 NoBA All
-    BonusAttackRoll = createBonus 0 Flat
+    BonusAttackRoll = createHitAndCritAttackBoni 0 Flat 0 Flat
     BonusDamage = createBonus 0 Flat
     ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
     AppliedTo = [|All|], 1        
