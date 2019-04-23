@@ -8,9 +8,9 @@ open Library.AuxLibFunctions
 open Library.Modifications
 open StandardAttackAction
 open FullRoundAttackAction
-open D20pfsrdReader
-open D20pfsrdReader.AuxFunctions
-open D20pfsrdCalculator
+open BestiaryReader
+open BestiaryReader.AuxFunctions
+open BestiaryCalculator
 
 //     Hello,
 // below are some "empty" templates for modifications, weapons and characters 
@@ -31,14 +31,14 @@ let modificationTemplate =
 let characterTemplate = { 
         CharacterName = ""
         BAB = 0
-        Strength = 0
-        Dexterity = 0
-        Constitution = 0
-        Intelligence = 0
-        Wisdom = 0
-        Charisma = 0
-        CasterLevel1 = 0
-        CasterLevel2 = 0
+        Strength = 10
+        Dexterity = 10
+        Constitution = 10
+        Intelligence = 10
+        Wisdom = 10
+        Charisma = 10
+        CasterLevel1 = 10
+        CasterLevel2 = 10
         }
 
 let weaponTemplate = {
@@ -54,7 +54,7 @@ let weaponTemplate = {
         Description         = ""
         }
 
-// Below you can find the d20pfsrd reader & calculator
+// Below you can find the d20pfsrd/archives of nethys reader & calculator
 
 let importantMonster = getMonsterInformation "https://www.d20pfsrd.com/bestiary/monster-listings/animals/rat/rat-common/"
 
@@ -82,3 +82,5 @@ let test = myFullAttack characterTemplate Medium [|weaponTemplate,PrimaryMain;we
 // if you have questions about how to use anything here, even if the question is really simple, pls message me as i plan to make a FAQ.
 // PS: everything written behind "//" is not recogniced as code and is not executed, use it to write notes or whatever you want.
 // PPS: you can try and hover over different parts of these functions for more informartion, albeit a bit difficult to read.
+
+//Version 0.0.1
