@@ -354,7 +354,7 @@ module FullRoundAttackAction =
             ///
             let addBoniToAttack = 
                 modifications 
-                |> Array.map (fun x -> x.BonusAttackRoll)
+                |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
                 |> Array.groupBy (fun x -> x.BonusType)
                 |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
                                                        then bonusArr
@@ -380,19 +380,34 @@ module FullRoundAttackAction =
                 char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + addBoniToAttack + addSizeBonus + iterativeModifier
     
             ///
-            let getAttackRolls =
-                rollDice 100000 20
-            let calculateRolls =
-                getRandArrElement getAttackRolls
-                |> fun roll -> roll, Array.map (fun x -> roll = x) weapon.CriticalRange
-                |> fun (x,y) -> x, Array.contains true y
-                |> fun (firstRoll,crit) -> firstRoll, if crit = true
-                                                      then getRandArrElement getAttackRolls
-                                                      else -20
-                |> fun (firstRoll,crit) -> if crit <> -20 
-                                           then firstRoll + getBonusToAttack, firstRoll, crit + getBonusToAttack, crit
-                                           else firstRoll + getBonusToAttack, firstRoll,-20,-20
+            let (attackRoll,critConfirmationRoll) = 
+                let getAttackRolls =
+                        rollDice 10000 20
+                getRndArrElement getAttackRolls,getRndArrElement getAttackRolls
+
+            let totalAttackBonus =
+                attackRoll + getBonusToAttack
     
+            let totalAttackCritBonus =
+                let critSpecificBonus =
+                    modifications
+                    |> Array.map (fun x -> x.BonusAttackRoll.OnCrit)
+                    |> Array.groupBy (fun x -> x.BonusType)
+                    |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
+                                                           then bonusArr
+                                                                |> Array.sortByDescending (fun x -> x.Value) 
+                                                                |> fun x -> Array.head x
+                                                                |> fun x -> x.Value
+                                                           elif header = BonusTypes.Flat
+                                                           then bonusArr
+                                                                |> Array.map (fun x -> x.Value)
+                                                                |> Array.sum
+                                                           else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'"
+                                  )
+                    |> Array.sum
+                critConfirmationRoll + getBonusToAttack + critSpecificBonus
+
+
             ///
             let getDamageRolls die =
                 rollDice 100000 die
@@ -547,7 +562,7 @@ module FullRoundAttackAction =
 
             let addWeaponDamage = 
                 let rec getRandRoll listOfRolls=
-                    (getRandArrElement (getDamageRolls sizeAdjustedWeaponDamage.Die) )::listOfRolls
+                    (getRndArrElement (getDamageRolls sizeAdjustedWeaponDamage.Die) )::listOfRolls
                     |> fun rollList -> if rollList.Length >= (sizeAdjustedWeaponDamage.NumberOfDie)
                                        then rollList
                                        else getRandRoll rollList
@@ -557,7 +572,7 @@ module FullRoundAttackAction =
             ///getRandRoll is not so good; try find something better
             let getExtraDamage = 
                 let rec getRandRoll listOfRolls die number =
-                    (getRandArrElement (getDamageRolls die))::listOfRolls
+                    (getRndArrElement (getDamageRolls die))::listOfRolls
                     |> fun rollList -> if rollList.Length >= number
                                        then rollList
                                        else getRandRoll rollList die number
@@ -616,14 +631,14 @@ module FullRoundAttackAction =
                 addDamageMod + addWeaponDamage + addDamageBoni
                 |> fun x -> if x <= 0 then 1 else x
     
-            if (calculateRolls |> fun (x,y,z,u) -> u) = -20 && getExtraDamage = [||]
-                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage!" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType
-            elif (calculateRolls |> fun (x,y,z,u) -> u) <> -20 && getExtraDamage = [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (crit * %i)!" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType weapon.CriticalModifier
-            elif (calculateRolls |> fun (x,y,z,u) -> u) = -20 && getExtraDamage <> [||]
-                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage %s !" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) getDamage weapon.Damage.DamageType extraDamageToString
-            elif (calculateRolls |> fun (x,y,z,u) -> u) <> -20 && getExtraDamage <> [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage %s (crit * %i)!" weapon.Name (calculateRolls |> fun (x,y,z,u) -> x) (calculateRolls |> fun (x,y,z,u) -> y) (calculateRolls |> fun (x,y,z,u) -> z) (calculateRolls |> fun (x,y,z,u) -> u) getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
+            if (Array.contains attackRoll weapon.CriticalRange) = false && getExtraDamage = [||]
+                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage!" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType
+            elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamage = [||] 
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (crit * %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier
+            elif (Array.contains attackRoll weapon.CriticalRange) && getExtraDamage <> [||]
+                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage %s !" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType extraDamageToString
+            elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamage <> [||] 
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage %s (crit * %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
      
         addAllWeaponTypeSpecificModifications
         |> Array.map (fun (w,wType,modi,modArr) -> getOneAttack w wType modi modArr)

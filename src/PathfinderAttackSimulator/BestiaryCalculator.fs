@@ -108,7 +108,7 @@ module BestiaryCalculator =
 
         let attackBoniModifications = 
             modifications 
-            |> Array.map (fun x -> x.BonusAttackRoll)
+            |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
             |> Array.groupBy (fun x -> x.BonusType)
             |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
                                                    then bonusArr
@@ -157,6 +157,25 @@ module BestiaryCalculator =
     
         let totalAttackBonus =
             attackRoll + combinedAttackBoni
+
+        let totalAttackCritBonus =
+            let critSpecificBonus =
+                modifications
+                |> Array.map (fun x -> x.BonusAttackRoll.OnCrit)
+                |> Array.groupBy (fun x -> x.BonusType)
+                |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
+                                                       then bonusArr
+                                                            |> Array.sortByDescending (fun x -> x.Value) 
+                                                            |> fun x -> Array.head x
+                                                            |> fun x -> x.Value
+                                                       elif header = BonusTypes.Flat
+                                                       then bonusArr
+                                                            |> Array.map (fun x -> x.Value)
+                                                            |> Array.sum
+                                                       else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'"
+                              )
+                |> Array.sum
+            critConfirmationRoll + combinedAttackBoni + critSpecificBonus
     
         /////End attack boni/Start damage boni/////
     
@@ -331,11 +350,11 @@ module BestiaryCalculator =
         if (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamage = [||]
             then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamage = [||] 
-            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
+            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamage <> [||]
             then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamage <> [||] 
-            then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") wantedAttack.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage extraDamageToString wantedAttack.CriticalModifier additionalInfoString
+            then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage extraDamageToString wantedAttack.CriticalModifier additionalInfoString
 
     /// This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
     /// attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
@@ -457,7 +476,7 @@ module BestiaryCalculator =
             //Start adding up attack boni
             let AttackBoniModifications = 
                 modificationArr 
-                |> Array.map (fun x -> x.BonusAttackRoll)
+                |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
                 |> Array.groupBy (fun x -> x.BonusType)
                 |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
                                                        then bonusArr
@@ -476,6 +495,26 @@ module BestiaryCalculator =
     
             let totalAttackBonus =
                 attackRoll + combinedAttackBoni
+
+            let totalAttackCritBonus =
+
+                let critSpecificBonus =
+                    modifications
+                    |> Array.map (fun x -> x.BonusAttackRoll.OnCrit)
+                    |> Array.groupBy (fun x -> x.BonusType)
+                    |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
+                                                           then bonusArr
+                                                                |> Array.sortByDescending (fun x -> x.Value) 
+                                                                |> fun x -> Array.head x
+                                                                |> fun x -> x.Value
+                                                           elif header = BonusTypes.Flat
+                                                           then bonusArr
+                                                                |> Array.map (fun x -> x.Value)
+                                                                |> Array.sum
+                                                           else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'"
+                                  )
+                    |> Array.sum
+                critConfirmationRoll + combinedAttackBoni + critSpecificBonus
     
             /////End attack boni/Start damage boni/////
     
@@ -651,11 +690,11 @@ module BestiaryCalculator =
             if (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamage = [||]
                 then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
             elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamage = [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
             elif (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamage <> [||]
                 then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
             elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamage <> [||] 
-                then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") urlAttack.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage extraDamageToString urlAttack.CriticalModifier additionalInfoString
+                then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage extraDamageToString urlAttack.CriticalModifier additionalInfoString
         
         attackArr
         |> Array.mapi (fun i (attackBonus,attack) -> calculateOneAttack attackBonus attack modificationsCombined.[i])

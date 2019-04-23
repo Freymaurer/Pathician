@@ -124,6 +124,11 @@ module Library =
             EffectiveSizeChange : bool
             }
 
+        type HitAndCritBonus = {
+            OnHit   : Bonus
+            OnCrit  : Bonus
+            }
+
         /// NoAS 0 Flat if no StatChange, or leave array empty
         let createStatChange att attChange bType = {
             Attribute = att
@@ -182,6 +187,12 @@ module Library =
             Size = sizeType
             }
 
+        // the OnHit bonus is applied to all attacks crit or not, whereas the OnCrit bonus is applied to crits IN ADDITION to the OnHit Bonus.
+        let createHitAndCritBoni hitValue hitValueType critValue critValueType = {
+            OnHit = createBonus hitValue hitValueType
+            OnCrit = createBonus critValue critValueType
+            }
+
         let findSizes = [1,createSizeAttributes 8 1 Fine;
                         2,createSizeAttributes 4 2 Diminuitive;
                         3,createSizeAttributes 2 3 Tiny;
@@ -223,7 +234,7 @@ module Library =
         type AttackModification = {
             Name                : string
             BonusAttacks        : BonusAttacks
-            BonusAttackRoll     : Bonus
+            BonusAttackRoll     : HitAndCritBonus
             BonusDamage         : Bonus
             ExtraDamage         : Damage
             AppliedTo           : WeaponType [] * int
@@ -460,7 +471,7 @@ module Library =
         let AidAnother = {
             Name = "Aid Another"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], 1
@@ -472,7 +483,7 @@ module Library =
         let BlessingOfFervorAttackBonus = {
             Name = "Blessing of Fervor"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 Flat
+            BonusAttackRoll = createHitAndCritBoni 2 Flat 0 Flat
             BonusDamage = createBonus 2 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -485,7 +496,7 @@ module Library =
         let BonusAttackDamage attack damage= {
             Name = "Blessing of Fervor"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus attack Flat
+            BonusAttackRoll = createHitAndCritBoni attack Flat 0 Flat
             BonusDamage = createBonus damage Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -497,7 +508,7 @@ module Library =
         let Charging = {
             Name = "Charge-Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 BonusTypes.Flat
+            BonusAttackRoll = createHitAndCritBoni 2 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -506,10 +517,22 @@ module Library =
             Description = ""
             }
 
+        let CriticalFocus = {
+            Name = "Critical Focus"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 4 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamage 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Applies +4 to all crits not, as its not able to separate weapons"
+            }
+
         let DivineFavor = {
             Name = "Divine Favor"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 1 Luck
+            BonusAttackRoll = createHitAndCritBoni 1 Luck 0 Flat
             BonusDamage = createBonus 1 Luck
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -521,7 +544,7 @@ module Library =
         let EnlargePerson = {
             Name = "Enlarge Person"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -533,7 +556,7 @@ module Library =
         let Fatigued = {
             Name = "Fatigued"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -545,7 +568,7 @@ module Library =
         let Flanking = {
             Name = "Flanking"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 BonusTypes.Flat
+            BonusAttackRoll = createHitAndCritBoni 2 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -557,7 +580,7 @@ module Library =
         let FlurryOfBlows = {
             Name = "Flurry Of Blows"
             BonusAttacks = createBonusAttacks 1 NoBA PrimaryMain
-            BonusAttackRoll = createBonus 0 BonusTypes.Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -569,7 +592,7 @@ module Library =
         let FuriousFocus bab = {
             Name = "Furious Focus"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (int(floor (float bab/4. + 1.))) BonusTypes.Flat
+            BonusAttackRoll = createHitAndCritBoni (int(floor (float bab/4. + 1.))) BonusTypes.Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|PrimaryMain|], 1
@@ -581,7 +604,7 @@ module Library =
         let Haste = {
             Name = "Haste"
             BonusAttacks = createBonusAttacks 1 HasteLike PrimaryMain
-            BonusAttackRoll = createBonus 1 BonusTypes.Flat
+            BonusAttackRoll = createHitAndCritBoni 1 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -599,7 +622,7 @@ module Library =
             {
             Name = "Inspire Courage"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus bonusValue Competence
+            BonusAttackRoll = createHitAndCritBoni bonusValue Competence 0 Flat
             BonusDamage = createBonus bonusValue Competence
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -611,7 +634,7 @@ module Library =
         let Invisibility = {
             Name = "Invisibility"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 Flat
+            BonusAttackRoll = createHitAndCritBoni 2 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -623,7 +646,7 @@ module Library =
         let Multiattack =  {
             Name = "Multiattack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 3 BonusTypes.Flat
+            BonusAttackRoll = createHitAndCritBoni 3 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|Secondary|], -20
@@ -635,7 +658,7 @@ module Library =
         let MutagenStrength = {
             Name = "Strength Mutagen"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -649,7 +672,7 @@ module Library =
             {
             Name = "Planar Focus"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage NumberOfExtraDie 6 Fire
             AppliedTo = [|All|], -20
@@ -661,7 +684,7 @@ module Library =
         let PowerAttack bab = {
             Name = "Power Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (int( - (floor (float bab/4. + 1.)) )) BonusTypes.Flat
+            BonusAttackRoll = createHitAndCritBoni (int( - (floor (float bab/4. + 1.)) )) Flat 0 Flat
             BonusDamage = createBonus (int( (floor (float bab/4.) * 2.) + 2. )) BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -673,7 +696,7 @@ module Library =
         let PowerAttackURL (handed:WeaponHanded) bab= {
             Name = "Power Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (int( - (floor (float bab/4. + 1.)) )) Flat
+            BonusAttackRoll = createHitAndCritBoni (int( - (floor (float bab/4. + 1.)) )) Flat 0 Flat
             BonusDamage = (floor (float bab/4.) * 2.) + 2. 
                           |> fun x -> match handed with
                                       | TwoHanded -> createBonus (int (x * 1.5)) Flat
@@ -689,7 +712,7 @@ module Library =
         let Shaken = {
             Name = "Shaken"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus -2 Flat
+            BonusAttackRoll = createHitAndCritBoni -2 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -701,7 +724,7 @@ module Library =
         let ShockingGrasp casterLevel metalTF = {
             Name = "Intensified Empowered Shocking Grasp"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (if metalTF = true then 3 else 0) Flat
+            BonusAttackRoll = createHitAndCritBoni (if metalTF = true then 3 else 0) Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage (if casterLevel > 5 then 5 else casterLevel) 6 Electricity
             AppliedTo = [|All|], 1
@@ -713,7 +736,7 @@ module Library =
         let ShockingGraspEmpowered casterLevel metalTF = {
             Name = "Intensified Empowered Shocking Grasp"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (if metalTF = true then 3 else 0) Flat
+            BonusAttackRoll = createHitAndCritBoni (if metalTF = true then 3 else 0) Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage ((if casterLevel > 10 then 10 else casterLevel) 
                                        |> fun x -> x + int (float x * 0.5) ) 6 Electricity
@@ -726,7 +749,7 @@ module Library =
         let SneakAttack (rogueLevel:int) = {
             Name = "Sneak Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
             AppliedTo = [|All|], -20
@@ -738,7 +761,7 @@ module Library =
         let SneakAttackOnce rogueLevel = {
             Name = "Sneak Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 BonusTypes.Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
             AppliedTo = [|All|], 1        
@@ -751,7 +774,7 @@ module Library =
         let TwoWeaponFighting = {
             Name = "Two-Weapon-Fighting"
             BonusAttacks = createBonusAttacks 1 TWFLike Primary
-            BonusAttackRoll = createBonus -2 TwoWeaponFightingMalus
+            BonusAttackRoll = createHitAndCritBoni -2 TwoWeaponFightingMalus 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|Primary; PrimaryMain|], -20
@@ -764,7 +787,7 @@ module Library =
         let TwoWeaponFightingImproved = {
             Name = "Improved Two-Weapon-Fighting"
             BonusAttacks = createBonusAttacks 2 TWFLike Primary
-            BonusAttackRoll = createBonus -2 BonusTypes.TwoWeaponFightingMalus
+            BonusAttackRoll = createHitAndCritBoni -2 TwoWeaponFightingMalus 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|Primary; PrimaryMain|], -20
@@ -776,7 +799,7 @@ module Library =
         let VitalStrike = {
             Name = "Vital Strike"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 1 0 VitalStrikeDamage
             AppliedTo = [|All|], -20
@@ -788,7 +811,7 @@ module Library =
         let VitalStrikeImproved = {
             Name = "Improved Vital Strike"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 2 0 VitalStrikeDamage
             AppliedTo = [|All|], -20
@@ -800,7 +823,7 @@ module Library =
         let VitalStrikeGreater = {
             Name = "Vital Strike"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 3 0 VitalStrikeDamage
             AppliedTo = [|All|], -20
@@ -812,7 +835,7 @@ module Library =
         let WeaponFocus = {
             Name = "Weapon Focus"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 1 Flat
+            BonusAttackRoll = createHitAndCritBoni 1 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -824,7 +847,7 @@ module Library =
         let WeaponSpecialization ={
             Name = "WeaponSpecialization"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 2 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -836,7 +859,7 @@ module Library =
         let Wrath = {
             Name = "Wrath"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 1 Moral
+            BonusAttackRoll = createHitAndCritBoni 1 Moral 0 Flat
             BonusDamage = createBonus 1 Moral
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
@@ -850,7 +873,7 @@ module Library =
         let ZeroMod = {
             Name = ""
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createHitAndCritBoni 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
