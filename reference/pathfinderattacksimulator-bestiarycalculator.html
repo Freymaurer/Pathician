@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Namespaces - PathfinderAttackSimulator</title>
+    <title>BestiaryCalculator - PathfinderAttackSimulator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Kevin Frey"/>
@@ -35,60 +35,71 @@
         <div class="span9" id="main">
           
 
-<h1>PathfinderAttackSimulator</h1>
 
 
-  <h2>PathfinderAttackSimulator Namespace</h2>
-    <div>
-      <table class="table table-bordered module-list">
+<h1>BestiaryCalculator</h1>
+<p>
+  <span>Namespace: PathfinderAttackSimulator</span><br />
+  </p>
+<div class="xmldoc">
+</div>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
+  <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Module</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
-        <tr>
-          <td class="module-name">
-            <a href="pathfinderattacksimulator-bestiarycalculator.html">BestiaryCalculator</a>
-          </td>
-          <td class="xmldoc">
-          
-          </td>
-        </tr>
-        <tr>
-          <td class="module-name">
-            <a href="pathfinderattacksimulator-bestiaryreader.html">BestiaryReader</a>
-          </td>
-          <td class="xmldoc">
-          
-          </td>
-        </tr>
-        <tr>
-          <td class="module-name">
-            <a href="pathfinderattacksimulator-fullroundattackaction.html">FullRoundAttackAction</a>
-          </td>
-          <td class="xmldoc">
-          
-          </td>
-        </tr>
-        <tr>
-          <td class="module-name">
-            <a href="pathfinderattacksimulator-library.html">Library</a>
-          </td>
-          <td class="xmldoc">
-          
-          </td>
-        </tr>
-        <tr>
-          <td class="module-name">
-            <a href="pathfinderattacksimulator-standardattackaction.html">StandardAttackAction</a>
-          </td>
-          <td class="xmldoc">
-          
-          </td>
-        </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '1', 1)" onmouseover="showTip(event, '1', 1)">
+            calculateFullAttack (...)
+          </code>
+          <div class="tip" id="1">
+            <strong>Signature:</strong> attackInfo:URLMonsterAttacks [] -&gt; attackVariant:AttackVariant -&gt; attackNumber:int -&gt; modifications:AttackModification [] -&gt; unit []<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/BestiaryCalculator.fs#L344-344" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
+attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
+attackNumber = the exact attack variant that should be calculated, starting at 1
+modifications = array of attackmodifications (StatChanges will not work for this function)</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
+            calculateStandardAttack (...)
+          </code>
+          <div class="tip" id="2">
+            <strong>Signature:</strong> attackInfo:URLMonsterAttacks [] -&gt; attackVariant:AttackVariant -&gt; attackNumber:int -&gt; modifications:AttackModification [] -&gt; unit<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/BestiaryCalculator.fs#L19-19" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
+attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
+attackNumber = the exact attack variant that should be calculated, starting at 1
+modifications = array of attackmodifications (StatChanges will not work for this function)</p>
+
+
+        </td>
+      </tr>
     </tbody>
   </table>
-
-    </div>
 
         </div>
         <div class="span3">
