@@ -51,7 +51,7 @@ So how does this work:
 * BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).
 * ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
 * AppliedTo = Apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
-* StatChanges = Represents ability score changes due to this modification, e.g. the alchemist's mutagen (createStatChange Strength 2 Alchemical). Can be left empty if no stat change applies.
+* StatChanges = Represents ability score changes due to this modification, e.g. the alchemist's mutagen (createStatChange Strength 4 Alchemical). Can be left empty if no stat change applies.
 * SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
 Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Attack).
 * Description = A short Description for additional information. Not used in the script right now.
@@ -69,7 +69,7 @@ let MutagenStrength = {
     BonusDamage = createBonus 0 Flat
     ExtraDamage = createDamage 0 0 Untyped
     AppliedTo = [|All|], -20
-    StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -1 Alchemical)|]
+    StatChanges = [|(createStatChange Strength 4 Alchemical); (createStatChange Intelligence -2 Alchemical)|]
     SizeChanges = createSizechange 0 Flat false
     Description = ""
     }
@@ -86,7 +86,7 @@ let EnlargePerson = {
     BonusDamage = createBonus 0 Flat
     ExtraDamage = createDamage 0 0 Untyped
     AppliedTo = [|All|], -20
-    StatChanges = [|(createStatChange Strength 1 Size);(createStatChange Dexterity -1 Size)|]
+    StatChanges = [|(createStatChange Strength 2 Size);(createStatChange Dexterity -2 Size)|]
     SizeChanges = createSizechange 1 Polymorph false
     Description = ""
     }

@@ -322,32 +322,35 @@ module FullRoundAttackAction =
                             elif x < 1 then 1
                             else x
 
-
             ///
             let getUsedModifierToHit =
-                match weapon.Modifier.ToHit with
-                | Strength -> char.Strength
-                | Dexterity -> char.Dexterity
-                | Constitution -> char.Constitution
-                | Intelligence -> char.Intelligence
-                | Wisdom -> char.Wisdom
-                | Charisma -> char.Charisma
-                | _ -> 0
-    
-            ///
-            let getStatChangesToHit =
-                modifications
-                |> Array.collect (fun x -> x.StatChanges)
-                |> Array.filter (fun statChange -> statChange.Attribute = weapon.Modifier.ToHit)
-                |> Array.groupBy (fun statChange -> statChange.Bonustype)
-                |> Array.map (fun (uselessHeader,x) -> x)
-                ///nächster Schritt soll höchsten Statchange nehmen um nicht stackende boni auszusortieren. 
-                ///Aber was wenn ein negativer und ein positiver des selben Typs exisiteren?
-                |> Array.map (fun x -> Array.sortByDescending (fun statChange -> statChange.AttributeChange) x)
-                |> Array.map (fun x -> Array.head x)
-                |> Array.map (fun statChange -> statChange.AttributeChange)
-                |> Array.sum
-    
+
+                let getStatChangesToHit =
+                    modifications
+                    |> Array.collect (fun x -> x.StatChanges)
+                    |> Array.filter (fun statChange -> statChange.Attribute = weapon.Modifier.ToHit)
+                    |> Array.groupBy (fun statChange -> statChange.Bonustype)
+                    |> Array.map (fun (uselessHeader,x) -> x)
+                    ///Next step should take the highest stat change to remove non-stacking boni
+                    ///But what if a negative and a positive bonus of the same type exist?
+                    |> Array.map (fun x -> Array.sortByDescending (fun statChange -> statChange.AttributeChange) x)
+                    |> Array.map (fun x -> Array.head x)
+                    |> Array.map (fun statChange -> statChange.AttributeChange)
+                    |> Array.sum
+
+                (match weapon.Modifier.ToHit with
+                | Strength      -> char.Strength
+                | Dexterity     -> char.Dexterity
+                | Constitution  -> char.Constitution
+                | Intelligence  -> char.Intelligence
+                | Wisdom        -> char.Wisdom
+                | Charisma      -> char.Charisma
+                | _             -> 10
+                )
+                |> fun x -> x + getStatChangesToHit
+                |> fun x -> (float x-10.)/2.
+                |> floor |> int
+
             ///
             let addBoniToAttack = 
                 modifications 
@@ -374,7 +377,7 @@ module FullRoundAttackAction =
 
             ///
             let getBonusToAttack =
-                char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + getStatChangesToHit + addBoniToAttack + addSizeBonus + iterativeModifier
+                char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + addBoniToAttack + addSizeBonus + iterativeModifier
     
             ///
             let getAttackRolls =
@@ -407,42 +410,28 @@ module FullRoundAttackAction =
                 |> Array.sum
                 |> float
     
-            ///TODO: make this shorter
+            //
             let addDamageMod =
-                if Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) && 
-                                (wType = Primary || wType = Secondary)
-                then match weapon.Modifier.ToDmg with
-                     | Strength     -> char.Strength
-                     | Dexterity    -> char.Dexterity
-                     | Constitution -> char.Constitution
-                     | Intelligence -> char.Intelligence
-                     | Wisdom       -> char.Wisdom
-                     | Charisma     -> char.Charisma
-                     | _            -> 0
-                     |> fun stat -> ((float stat + getStatChangesToDmg) * 0.5) |> floor |> int
-                elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
-                     && wType = PrimaryMain
-                then match weapon.Modifier.ToDmg with
-                     | Strength     -> char.Strength
-                     | Dexterity    -> char.Dexterity
-                     | Constitution -> char.Constitution
-                     | Intelligence -> char.Intelligence
-                     | Wisdom       -> char.Wisdom
-                     | Charisma     -> char.Charisma
-                     | _            -> 0
-                     |> fun stat -> ((float stat + getStatChangesToDmg) * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
-                elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) = false 
-                     && wType = Primary
-                then match weapon.Modifier.ToDmg with
-                     | Strength     -> char.Strength
-                     | Dexterity    -> char.Dexterity
-                     | Constitution -> char.Constitution
-                     | Intelligence -> char.Intelligence
-                     | Wisdom       -> char.Wisdom
-                     | Charisma     -> char.Charisma
-                     | _            -> 0
-                     |> fun stat -> ((float stat + getStatChangesToDmg) * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
-                else failwith "Unknown Weapon Combination to know if off-hand or not"
+                (match weapon.Modifier.ToDmg with
+                | Strength     -> char.Strength
+                | Dexterity    -> char.Dexterity
+                | Constitution -> char.Constitution
+                | Intelligence -> char.Intelligence
+                | Wisdom       -> char.Wisdom
+                | Charisma     -> char.Charisma
+                | _            -> 10
+                    )
+                |> fun stat -> float stat + getStatChangesToDmg
+                |> fun stat -> if Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
+                                  && (wType = Primary || wType = Secondary)
+                               then (stat * 0.5) |> floor |> int
+                               elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
+                                    && wType = PrimaryMain
+                               then (stat * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
+                               elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) = false 
+                                    && wType = Primary
+                               then (stat * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
+                               else failwith "Unknown Weapon Combination to know if off-hand or not"
                     
             let sizeAdjustedWeaponDamage =
                 

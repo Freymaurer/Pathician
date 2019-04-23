@@ -21,13 +21,13 @@ open Library.AuxLibFunctions
 
 let myMagus =  {
     CharacterName = "Best Character Name Ever"
-    BAB = 5
-    Strength = 1
-    Dexterity = 5
-    Constitution = 0
-    Intelligence = 3
-    Wisdom = 0
-    Charisma = -2
+    BAB = 4
+    Strength = 12
+    Dexterity = 20
+    Constitution = 10
+    Intelligence = 16
+    Wisdom = 10
+    Charisma = 5
     CasterLevel1 = 6
     CasterLevel2 = 0
     }
@@ -36,6 +36,7 @@ let myMagus =  {
 >
 
 Now we need to decide for a weapon. Like every magus we decide to use a Scimitar.
+Importan will be that we want to hit with dexterity but want our damage calculated based on our strength.
 *)
 
 let Scimitar = {
@@ -46,7 +47,7 @@ let Scimitar = {
         BonusAttackRolls        = 0
         CriticalRange           = [|18 .. 20|] 
         CriticalModifier        = 2
-        Modifier                = createUsedModifier Dexterity Strength OneHanded 1.
+        Modifier                = createUsedModifier Dexterity Strength OneHanded 1. //hit with dexterity but damage with strength
         ManufacturedOrNatural   = Manufactured
         Description             = "Normal Scimitar"
         }
@@ -132,12 +133,12 @@ Now let us skip some level and look at our Magus at a level 16
 let myMagus2 =  {
     CharacterName = "Best Character Name Ever^2"
     BAB = 12
-    Strength = 3
-    Dexterity = 7
-    Constitution = 0
-    Intelligence = 6
-    Wisdom = 0
-    Charisma = -2
+    Strength = 16
+    Dexterity = 24
+    Constitution = 10
+    Intelligence = 22
+    Wisdom = 10
+    Charisma = 5
     CasterLevel1 = 16
     CasterLevel2 = 0
     }

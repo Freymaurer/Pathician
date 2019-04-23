@@ -64,28 +64,33 @@ module StandardAttackAction =
 
         ///
         let getUsedModifierToHit =
-            match weapon.Modifier.ToHit with
+
+            let getStatChangesToHit =
+                modifications
+                |> Array.collect (fun x -> x.StatChanges)
+                |> Array.filter (fun statChange -> statChange.Attribute = weapon.Modifier.ToHit)
+                |> Array.groupBy (fun statChange -> statChange.Bonustype)
+                |> Array.map (fun (uselessHeader,x) -> x)
+                ///Next step should take the highest stat change to remove non-stacking boni
+                ///But what if a negative and a positive bonus of the same type exist?
+                |> Array.map (fun x -> Array.sortByDescending (fun statChange -> statChange.AttributeChange) x)
+                |> Array.map (fun x -> Array.head x)
+                |> Array.map (fun statChange -> statChange.AttributeChange)
+                |> Array.sum
+
+            (match weapon.Modifier.ToHit with
             | Strength      -> char.Strength
             | Dexterity     -> char.Dexterity
             | Constitution  -> char.Constitution
             | Intelligence  -> char.Intelligence
             | Wisdom        -> char.Wisdom
             | Charisma      -> char.Charisma
-            | _             -> 0
+            | _             -> 10
+            )
+            |> fun x -> x + getStatChangesToHit
+            |> fun x -> (float x-10.)/2.
+            |> floor |> int
     
-        ///
-        let getStatChangesToHit =
-            modifications
-            |> Array.collect (fun x -> x.StatChanges)
-            |> Array.filter (fun statChange -> statChange.Attribute = weapon.Modifier.ToHit)
-            |> Array.groupBy (fun statChange -> statChange.Bonustype)
-            |> Array.map (fun (uselessHeader,x) -> x)
-            ///Next step should take the highest stat change to remove non-stacking boni
-            ///But what if a negative and a positive bonus of the same type exist?
-            |> Array.map (fun x -> Array.sortByDescending (fun statChange -> statChange.AttributeChange) x)
-            |> Array.map (fun x -> Array.head x)
-            |> Array.map (fun statChange -> statChange.AttributeChange)
-            |> Array.sum
     
         ///
         let addBoniToAttack = 
@@ -113,7 +118,7 @@ module StandardAttackAction =
         
         ///
         let getBonusToAttack =
-            char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + getStatChangesToHit + addBoniToAttack + addSizeBonus
+            char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + addBoniToAttack + addSizeBonus
     
         ///
         let getAttackRolls =
@@ -157,7 +162,9 @@ module StandardAttackAction =
                 | Wisdom        -> char.Wisdom
                 | Charisma      -> char.Charisma
                 | _             -> 0
-            |> fun stat -> ((float stat + getStatChangesToDmg) * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
+            |> fun stat -> float stat + getStatChangesToDmg
+            |> fun x -> (x-10.)/2.
+            |> fun x -> x * weapon.Modifier.MultiplicatorOnDamage.Multiplicator |> floor |> int
     
         let sizeAdjustedWeaponDamage =
             

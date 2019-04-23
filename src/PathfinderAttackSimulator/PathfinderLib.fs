@@ -157,7 +157,7 @@ module Library =
             Damage.DamageType = dType
             }
 
-        /// hitting = Modifier used for hitting; damage = Modifier used for damage calculation; multiplicator = how often is damage modifier added; 1.5 means that power attack is also increased
+        /// hitting = Modifier used for hitting; damage = Modifier used for damage calculation; handling referrs to onehanded twohanded etc. necessary to calculate power attack; multiplicator = how often is damage modifier added
         let createUsedModifier hitting damage handling multiplicator = {
             ToHit = hitting
             ToDmg = damage
@@ -241,12 +241,12 @@ module Library =
         let myParrn = {
             CharacterName = "Parrn"
             BAB = 6
-            Strength = 6
-            Dexterity = 0
-            Constitution = 0
-            Intelligence = 0
-            Wisdom = 0
-            Charisma = 0
+            Strength = 22
+            Dexterity = 10
+            Constitution = 10
+            Intelligence = 10
+            Wisdom = 10
+            Charisma = 10
             CasterLevel1 = 0
             CasterLevel2 = 0
             }
@@ -255,12 +255,12 @@ module Library =
         let myTumor = {
             CharacterName = "Stephano"
             BAB = 6
-            Strength = -2
-            Dexterity = 1
-            Constitution = 0
-            Intelligence = 0
-            Wisdom = 0
-            Charisma = 0
+            Strength = 6
+            Dexterity = 12
+            Constitution = 10
+            Intelligence = 10
+            Wisdom = 10
+            Charisma = 10
             CasterLevel1 = 0
             CasterLevel2 = 0
             }
@@ -268,12 +268,12 @@ module Library =
         let myElemental = {
             CharacterName = "Michelangelo"
             BAB = 6
-            Strength = 1
-            Dexterity = 2
-            Constitution = 1
-            Intelligence = 0
-            Wisdom = 0
-            Charisma = 0
+            Strength = 12
+            Dexterity = 14
+            Constitution = 12
+            Intelligence = 10
+            Wisdom = 10
+            Charisma = 10
             CasterLevel1 = 0
             CasterLevel2 = 0
             }
@@ -525,7 +525,7 @@ module Library =
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
-            StatChanges = [|(createStatChange Strength 1 Size);(createStatChange Dexterity -1 Size)|]
+            StatChanges = [|(createStatChange Strength 2 Size);(createStatChange Dexterity -2 Size)|]
             SizeChanges = createSizechange 1 Polymorph false
             Description = ""
             }
@@ -537,7 +537,7 @@ module Library =
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
-            StatChanges = [||]
+            StatChanges = [|(createStatChange Strength -2 Flat); (createStatChange Dexterity -2 Size)|]
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
@@ -639,7 +639,7 @@ module Library =
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamage 0 0 Untyped
             AppliedTo = [|All|], -20
-            StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -1 Alchemical)|]
+            StatChanges = [|(createStatChange Strength 4 Alchemical); (createStatChange Intelligence -2 Alchemical)|]
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }

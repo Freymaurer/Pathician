@@ -149,4 +149,14 @@ Naturally, despite his buffs, he is still shaken, as he knows he does not stand 
 Last is an example for an Archives of Nethys bestiary entry, click [here](https://aonprd.com/MonsterDisplay.aspx?ItemName=Achaekek,%20the%20Mantis%20God) for the link.
 *)
 
-getMonsterInformation "https://aonprd.com/MonsterDisplay.aspx?ItemName=Achaekek,%20the%20Mantis%20God"
+let mantisGod = getMonsterInformation "https://aonprd.com/MonsterDisplay.aspx?ItemName=Achaekek,%20the%20Mantis%20God"
+
+calculateFullAttack mantisGod Ranged 1 [||]
+
+(**
+> You attack with a spikes and hit with a 47 (rolled 8) for 21 damage plus poison!
+> 
+> You attack with a spikes and hit with a 56 (rolled 17) for 29 damage plus poison!
+>
+
+*)
