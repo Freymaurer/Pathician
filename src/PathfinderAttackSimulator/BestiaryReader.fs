@@ -248,7 +248,7 @@ module BestiaryReader =
         let regexMatchScore (str:string) = System.Text.RegularExpressions.Regex(("(?s)(?<=STATISTICS.*"+str+"\s)\d+"))
         let regexBAB = System.Text.RegularExpressions.Regex("(?s)(?<=Base Atk.)(\+\d+)(?=.*Skills)")
         let regexGetSpecialFeats = System.Text.RegularExpressions.Regex("(?s)(?<=Feats.*)(\w+\s)?(Two\WWeapon\sFighting|Power\sAttack|Rapid\sShot|Deadly\sAim)(?=.*Skills)")
-        let regexSize = System.Text.RegularExpressions.Regex("(?s)(?<=XP.*)(Fine|Diminuitive|Tiny|Small|Medium|Large|Huge|Gargantuan|Colossal)(?!=.*DEFENSE)")
+        let regexSize = System.Text.RegularExpressions.Regex("(?s)(Fine|Diminuitive|Tiny|Small|Medium|Large|Huge|Gargantuan|Colossal)(?!=.*DEFENSE)") //(?<=XP.*) removed after XP pattern match, because of monsters without xp
     
         // writes html code of webpage to string
         let baseString = fetchUrl2 url
