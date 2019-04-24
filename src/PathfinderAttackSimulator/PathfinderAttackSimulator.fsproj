@@ -22,6 +22,7 @@
     <Compile Include="FullRoundAttackAction.fs" />
     <Compile Include="BestiaryReader.fs" />
     <Compile Include="BestiaryCalculator.fs" />
+    <Compile Include="StandardAttackActionDPR.fs" />
     <None Include="paket.references" />
     <None Include="paket.template" />
   </ItemGroup>
