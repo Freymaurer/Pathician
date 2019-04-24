@@ -368,19 +368,21 @@ module BestiaryCalculator =
             |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
 
         let extraDamageCombined =
-            if extraDamageOnCrit = [||]
-            then extraDamageOnHit
-            else Array.map2 (fun (onHit:(int*string)) (onCrit:(int*string)) -> (fst onHit) + (fst onCrit), snd onHit) extraDamageOnHit extraDamageOnCrit
-
-        let extraDamageToString = 
             let getDamageRolls numberOfDie die=
                 let rolledDice = rollDice 1000 die
                 [|for i=1 to numberOfDie do
                     yield getRndArrElement rolledDice|]
                 |> Array.sum
-            [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
-            |> Array.append extraDamageCombined
-            |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+            if extraDamageOnCrit = [||]
+            then extraDamageOnHit
+                |> Array.append [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
+                |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+            else Array.map2 (fun (onHit:(int*string)) (onCrit:(int*string)) -> (fst onHit) + (fst onCrit), snd onHit) extraDamageOnHit extraDamageOnCrit
+                |> Array.append [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
+                |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 ) 
+
+        let extraDamageToString = 
+            extraDamageCombined
             |> Array.map (fun (value,dmgType) -> "+" + (string value) + " " + (string dmgType) + " " + "damage" + ", ")
             |> Array.fold (fun strArr x -> strArr + x) "" 
             |> fun x -> x.TrimEnd [|' ';','|]
@@ -752,19 +754,21 @@ module BestiaryCalculator =
                 |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
 
             let extraDamageCombined =
-                if extraDamageOnCrit = [||]
-                then extraDamageOnHit
-                else Array.map2 (fun (onHit:(int*string)) (onCrit:(int*string)) -> (fst onHit) + (fst onCrit), snd onHit) extraDamageOnHit extraDamageOnCrit
-
-            let extraDamageToString = 
                 let getDamageRolls numberOfDie die=
                     let rolledDice = rollDice 1000 die
                     [|for i=1 to numberOfDie do
                         yield getRndArrElement rolledDice|]
                     |> Array.sum
-                [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
-                |> Array.append extraDamageCombined
-                |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+                if extraDamageOnCrit = [||]
+                then extraDamageOnHit
+                    |> Array.append [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
+                    |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+                else Array.map2 (fun (onHit:(int*string)) (onCrit:(int*string)) -> (fst onHit) + (fst onCrit), snd onHit) extraDamageOnHit extraDamageOnCrit
+                    |> Array.append [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
+                    |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 ) 
+
+            let extraDamageToString = 
+                extraDamageCombined
                 |> Array.map (fun (value,dmgType) -> "+" + (string value) + " " + (string dmgType) + " " + "damage" + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
                 |> fun x -> x.TrimEnd [|' ';','|]
