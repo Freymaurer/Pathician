@@ -523,6 +523,6 @@ module DamagePerRound =
         
         ///
         if extraDamageOnHit = [||] && extraDamageOnCrit = [||]
-            then printfn "You hit the enemy for an average of %s damage (%s = attack roll bonus; %s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits) !" (string avgDmg) (string totalAttackBonus) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit)
+            then printfn "You hit the enemy for an average of %s damage, by %s average health (%s = attack roll bonus; %s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits) !" (string avgDmg) (string hpInfo) (string totalAttackBonus) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit)
         elif extraDamageOnHit <> [||] || extraDamageOnCrit <> [||]
-            then printfn "You hit the enemy for an average of %s damage (%s = attack roll bonus; %s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits (%s)) !" (string avgDmg) (string totalAttackBonus) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit) extraDamageToString
+            then printfn "You hit the enemy for an average of %s damage, by %s average health (%s = attack roll bonus; %s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits (%s)) !" (string avgDmg) (string hpInfo) (string totalAttackBonus) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit) extraDamageToString
