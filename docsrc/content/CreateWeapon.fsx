@@ -21,11 +21,11 @@ Let's start with an easy example a +2 keen flaming greatsword
 #r "PathfinderAttackSimulator.dll"
 open PathfinderAttackSimulator.Library.AuxLibFunctions
 
-let keenflaming2greatsword = {
+let greatswordPlus2KeenFlamingBurst = {
         Name                    = "+2 keen flaming greatsword"
         Damage                  = createDamage 2 6 Slashing
         DamageBonus             = 2
-        ExtraDamage             = createDamage 1 6 Fire
+        ExtraDamage             = createDamageHitAndCrit 1 6 Fire 1 10 Fire
         BonusAttackRolls        = 2
         CriticalRange           = [|17 .. 20|] 
         CriticalModifier        = 2

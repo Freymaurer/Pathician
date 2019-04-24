@@ -6,9 +6,9 @@ open Library.AuxLibFunctions
 open Library.Modifications
 open StandardAttackAction
 open FullRoundAttackAction
-open D20pfsrdReader
-open D20pfsrdReader.AuxFunctions
-open D20pfsrdCalculator
+open BestiaryReader
+open BestiaryReader.AuxFunctions
+open BestiaryCalculator
 
 //     Hello,
 // below are some "empty" templates for modifications, weapons and characters 
@@ -17,9 +17,9 @@ let modificationTemplate =
     {
         Name = "Modification Template"
         BonusAttacks = createBonusAttacks 0 NoBA All
-        BonusAttackRoll = createBonus 0 Flat
+        BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
         BonusDamage = createBonus 0 Flat
-        ExtraDamage = createDamage 0 0 Untyped
+        ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
         AppliedTo = [|All|], -20 
         StatChanges = [|(createStatChange Strength 0 Flat)|] // use: [||] if no ability score change is applied
         SizeChanges = createSizechange 0 Flat false
@@ -43,7 +43,7 @@ let weaponTemplate = {
         Name                = "Test"
         Damage              = createDamage 1 6 Slashing
         DamageBonus         = 0
-        ExtraDamage         = createDamage 0 0 Untyped
+        ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
         BonusAttackRolls    = 0
         CriticalRange       = [|20|]
         CriticalModifier    = 2

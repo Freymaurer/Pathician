@@ -27,9 +27,9 @@ open PathfinderAttackSimulator.Library.AuxLibFunctions
 let Haste = {
     Name = "Haste"
     BonusAttacks = createBonusAttacks 1 HasteLike PrimaryMain
-    BonusAttackRoll = createHitAndCritAttackBoni 1 Flat 0 Flat
+    BonusAttackRoll = createAttackBoniHitAndCrit 1 Flat 0 Flat
     BonusDamage = createBonus 0 Flat
-    ExtraDamage = createDamage 0 0 Untyped
+    ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
     AppliedTo = [|All|], -20
     StatChanges = [||]
     SizeChanges = createSizechange 0 Flat false
@@ -48,8 +48,10 @@ So how does this work:
 
 > Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.
 * BonusAttackRoll = The first two variables are the bonus to the attack role and its type. The last two variables are added boni for critical hit confirmation rolls (used for e.g. [Critical Focus](https://www.d20pfsrd.com/feats/combat-feats/critical-focus-combat/))
+    These values are added in addition to the first variables! so Critical Focus would be "createAttackBoniHitAndCrit 0 Flat 4 Flat".
 * BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).
-* ExtraDamage = Damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
+* ExtraDamage = This field contains damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
+    The first 3 variables are used on non crit attacks, the latter 3 variables are used for critical hits, so a modification with the same damage on crits and non-crits (Sneak Attack) would have the same values for the first and the latter 3 variables.
 * AppliedTo = Apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
 * StatChanges = Represents ability score changes due to this modification, e.g. the alchemist's mutagen (createStatChange Strength 4 Alchemical). Can be left empty if no stat change applies.
 * SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
@@ -65,9 +67,9 @@ This is a nice example to showcase the StatChanges attribute.
 let MutagenStrength = {
     Name = "Strength Mutagen"
     BonusAttacks = createBonusAttacks 0 NoBA All
-    BonusAttackRoll = createHitAndCritAttackBoni 0 Flat 0 Flat
+    BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
     BonusDamage = createBonus 0 Flat
-    ExtraDamage = createDamage 0 0 Untyped
+    ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
     AppliedTo = [|All|], -20
     StatChanges = [|(createStatChange Strength 4 Alchemical); (createStatChange Intelligence -2 Alchemical)|]
     SizeChanges = createSizechange 0 Flat false
@@ -82,9 +84,9 @@ Pay attention to the StatChanges and the SizeChanges. There is also no -1 at "Bo
 let EnlargePerson = {
     Name = "Enlarge Person"
     BonusAttacks = createBonusAttacks 0 NoBA All
-    BonusAttackRoll = createHitAndCritAttackBoni 0 Flat 0 Flat
+    BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
     BonusDamage = createBonus 0 Flat
-    ExtraDamage = createDamage 0 0 Untyped
+    ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
     AppliedTo = [|All|], -20
     StatChanges = [|(createStatChange Strength 2 Size);(createStatChange Dexterity -2 Size)|]
     SizeChanges = createSizechange 1 Polymorph false
@@ -101,9 +103,9 @@ Also this bonus is meant to be applied only once, therefore we have under "Appli
 let SneakAttackOnce rogueLevel = {
     Name = "Sneak Attack on first attack"
     BonusAttacks = createBonusAttacks 0 NoBA All
-    BonusAttackRoll = createHitAndCritAttackBoni 0 Flat 0 Flat
+    BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
     BonusDamage = createBonus 0 Flat
-    ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
+    ExtraDamage = createDamageHitAndCrit (int (ceil (float rogueLevel/2.))) 6 Precision (int (ceil (float rogueLevel/2.))) 6 Precision
     AppliedTo = [|All|], 1        
     StatChanges = [||]
     SizeChanges = createSizechange 0 Flat false
