@@ -40,7 +40,8 @@ Now to explain the different categories:
 * Name = The actual correct name of the weapon, currently not relevant for the code.
 * Damage = The core weapon damage. For 2d6 slashing this needs to be "createDamage 2 6 Slashing".
 * DamageBonus = Enhancement bonus to dmg, or weapon specific boni like Weapon Specialization.
-* ExtraDamage = Damage that will be calculated and displayed separately, e.g. 1d6 fire from flaming.
+* ExtraDamage = This field contains damage that will be calculated and displayed separately, e.g. the flaming burst weapon enchantment.
+    The first 3 variables are used on non crit attacks, the latter 3 variables are used in addition to the first values but only(!) for critical hits.
 * BonusAttackRolls = Enhancement bonus to attack roll and weapon specific boni like Weapon Focus.
 * CriticalRange = All rolled dice representing a crit.
 * CriticalModifier = The critical hit modifier for that weapon.

@@ -51,7 +51,7 @@ So how does this work:
     These values are added in addition to the first variables! so Critical Focus would be "createAttackBoniHitAndCrit 0 Flat 4 Flat".
 * BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).
 * ExtraDamage = This field contains damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
-    The first 3 variables are used on non crit attacks, the latter 3 variables are used for critical hits, so a modification with the same damage on crits and non-crits (Sneak Attack) would have the same values for the first and the latter 3 variables.
+    The first 3 variables are used on non crit attacks, the latter 3 variables are used in addition to the first values but only(!) for critical hits.
 * AppliedTo = Apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
 * StatChanges = Represents ability score changes due to this modification, e.g. the alchemist's mutagen (createStatChange Strength 4 Alchemical). Can be left empty if no stat change applies.
 * SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
