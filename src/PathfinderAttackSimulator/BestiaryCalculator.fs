@@ -391,13 +391,13 @@ module BestiaryCalculator =
             else "plus " + wantedAttack.AdditionalEffects
     
         ////
-        if (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageOnHit = [||]
+        if (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageCombined = [||]
             then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
-        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageOnHit = [||] 
+        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageCombined = [||] 
             then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
-        elif (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageOnHit <> [||]
+        elif (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageCombined <> [||]
             then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
-        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageOnHit <> [||] 
+        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageCombined <> [||] 
             then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage extraDamageToString wantedAttack.CriticalModifier additionalInfoString
 
     /// This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
@@ -775,13 +775,13 @@ module BestiaryCalculator =
                 else "plus " + urlAttack.AdditionalEffects
     
             ////
-            if (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageOnHit = [||]
+            if (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageCombined = [||]
                 then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
-            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageOnHit = [||] 
+            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageCombined = [||] 
                 then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
-            elif (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageOnHit <> [||]
+            elif (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageCombined <> [||]
                 then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
-            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageOnHit <> [||] 
+            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageCombined <> [||] 
                 then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage extraDamageToString urlAttack.CriticalModifier additionalInfoString
         
         attackArr
