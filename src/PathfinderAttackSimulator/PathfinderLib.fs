@@ -198,9 +198,11 @@ module Library =
             OnCrit = createBonus critValue critValueType
             }
 
-        let createDamageHitAndCrit onHitNumberOfDie onHitDie onHitDmgType onCritNumberOfDie onCritDie onCritDmgType = {
-            DamageHitAndCrit.OnHit = createDamage onHitNumberOfDie onHitDie onHitDmgType
-            DamageHitAndCrit.OnCrit = createDamage onCritNumberOfDie onCritDie onCritDmgType
+        /// first 3 variables are number of for extra damage on normal hits, (1d6 Fire damage = 1 6 Fire).
+        /// The latter 3 are used for dmg only(!) applied on crits! (Flaming burst = createDamageHitAndCrit 1 6 Fire 2 10 Fire)
+        let createDamageHitAndCrit numberOfDieoOnHit dieOnHit dmgTypeOnHit numberOfDieOnCrit dieOnCrit dmgTypeOnCrit = {
+            DamageHitAndCrit.OnHit = createDamage numberOfDieoOnHit dieOnHit dmgTypeOnHit
+            DamageHitAndCrit.OnCrit = createDamage numberOfDieOnCrit dieOnCrit dmgTypeOnCrit
             }
 
         let findSizes = [1,createSizeAttributes 8 1 Fine;
@@ -684,7 +686,7 @@ module Library =
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamageHitAndCrit NumberOfExtraDie 6 Fire NumberOfExtraDie 6 Fire
+            ExtraDamage = createDamageHitAndCrit NumberOfExtraDie 6 Fire 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -736,7 +738,7 @@ module Library =
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createAttackBoniHitAndCrit (if metalTF = true then 3 else 0) Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamageHitAndCrit (if casterLevel > 5 then 5 else casterLevel) 6 Electricity ((if casterLevel > 5 then 5 else casterLevel)*2) 6 Electricity
+            ExtraDamage = createDamageHitAndCrit (if casterLevel > 5 then 5 else casterLevel) 6 Electricity (if casterLevel > 5 then 5 else casterLevel) 6 Electricity
             AppliedTo = [|All|], 1
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -750,8 +752,8 @@ module Library =
             BonusDamage = createBonus 0 Flat
             ExtraDamage = createDamageHitAndCrit ((if casterLevel > 10 then 10 else casterLevel) 
                                                  |> fun x -> x + int (float x * 0.5) ) 6 Electricity
-                                                 (((if casterLevel > 10 then 10 else casterLevel) 
-                                                 |> fun x -> x + int (float x * 0.5) )*2) 6 Electricity
+                                                 ((if casterLevel > 10 then 10 else casterLevel) 
+                                                 |> fun x -> x + int (float x * 0.5) ) 6 Electricity
             AppliedTo = [|All|], 1
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -763,7 +765,7 @@ module Library =
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamageHitAndCrit (int (ceil (float rogueLevel/2.))) 6 Precision (int (ceil (float rogueLevel/2.))) 6 Precision
+            ExtraDamage = createDamageHitAndCrit (int (ceil (float rogueLevel/2.))) 6 Precision 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -775,7 +777,7 @@ module Library =
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamageHitAndCrit (int (ceil (float rogueLevel/2.))) 6 Precision (int (ceil (float rogueLevel/2.))) 6 Precision
+            ExtraDamage = createDamageHitAndCrit (int (ceil (float rogueLevel/2.))) 6 Precision 0 0 Untyped
             AppliedTo = [|All|], 1        
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -814,7 +816,7 @@ module Library =
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamageHitAndCrit 1 0 VitalStrikeDamage 1 0 VitalStrikeDamage
+            ExtraDamage = createDamageHitAndCrit 1 0 VitalStrikeDamage 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -827,7 +829,7 @@ module Library =
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamageHitAndCrit 2 0 VitalStrikeDamage 2 0 VitalStrikeDamage
+            ExtraDamage = createDamageHitAndCrit 2 0 VitalStrikeDamage 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -840,7 +842,7 @@ module Library =
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamageHitAndCrit 3 0 VitalStrikeDamage 3 0 VitalStrikeDamage
+            ExtraDamage = createDamageHitAndCrit 3 0 VitalStrikeDamage 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
