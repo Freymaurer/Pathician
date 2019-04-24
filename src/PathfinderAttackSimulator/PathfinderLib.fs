@@ -743,7 +743,7 @@ module Library =
             Description = "Shocking Grasp deals 1d6 / level electricity damage up to a maximum of 5d6."
             }
 
-        let ShockingGraspEmpowered casterLevel metalTF = {
+        let ShockingGraspIntensifiedEmpowered casterLevel metalTF = {
             Name = "Intensified Empowered Shocking Grasp"
             BonusAttacks = createBonusAttacks 0 NoBA All
             BonusAttackRoll = createAttackBoniHitAndCrit (if metalTF = true then 3 else 0) Flat 0 Flat
