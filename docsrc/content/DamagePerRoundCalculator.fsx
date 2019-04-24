@@ -11,7 +11,7 @@ Calculate Damage Per Round
 -------
 
 This tool is meant to help players compare different builds in their damage output per round.
-It reads in the [Average MonsterStats](https://docs.google.com/spreadsheets/d/1E2-s8weiulPoBQjdI05LBzOUToyoZIdSsLKxHAvf8F8/edit#gid=3] and uses the 
+It reads in the [Average MonsterStats](https://docs.google.com/spreadsheets/d/1E2-s8weiulPoBQjdI05LBzOUToyoZIdSsLKxHAvf8F8/edit#gid=3) and uses the 
 information to calculate a players average damage per round against a given cr and armortype.
 
 ### Example 1
