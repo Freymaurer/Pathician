@@ -75,14 +75,35 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '11', 11)" onmouseover="showTip(event, '11', 11)">
-            myStandardAttackDPR (...)
+            myFullAttackDPR (...)
           </code>
           <div class="tip" id="11">
+            <strong>Signature:</strong> char:CharacterStats -&gt; size:SizeType -&gt; weapons:(Weapon * WeaponType) [] -&gt; modifications:AttackModification [] -&gt; cr:int -&gt; targetedArmorType:ArmorClassTypes -&gt; statisticType:StatisticalAverages -&gt; unit<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/DPRCalculator.fs#L539-539" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>This function returns the output of a full round attack action based on the used character stats, weapons and modifications.
+Weapons need an additional WeaponType: PrimaryMain for the weapon which should be used with things like haste, Primary for Primary natural attacks or two weapon fighting, and Secondary for secondary natural attacks.</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '12', 12)" onmouseover="showTip(event, '12', 12)">
+            myStandardAttackDPR (...)
+          </code>
+          <div class="tip" id="12">
             <strong>Signature:</strong> char:CharacterStats -&gt; size:SizeType -&gt; weapon:Weapon -&gt; modifications:AttackModification [] -&gt; cr:int -&gt; targetedArmorType:ArmorClassTypes -&gt; statisticType:StatisticalAverages -&gt; unit<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/StandardAttackActionDPR.fs#L90-90" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/DPRCalculator.fs#L90-90" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -109,7 +130,8 @@
               <li><a href="/PathfinderAttackSimulator/CreateWeapon.html">Create Weapon</a></li>
               <li><a href="/PathfinderAttackSimulator/CreateModification.html">Create Modification</a></li>
               <li><a href="/PathfinderAttackSimulator/AutomaticAttackCalculation.html">Automatic Attack Calculation</a></li>
-              <li><a href="/PathfinderAttackSimulator/d20pfsrdBestiaryReader.html">d20pfsrd Bestiary Reader/Calculator</a></li>
+              <li><a href="/PathfinderAttackSimulator/d20pfsrdBestiaryReader.html">Bestiary Reader/Calculator</a></li>
+              <li><a href="/PathfinderAttackSimulator/DamagePerRoundCalculator.html">Damage Per Round Calculator</a></li>
               <li class="nav-header">Documentation</li>
               <li><a href="/PathfinderAttackSimulator/reference/index.html">API Reference</a></li>
           </ul>

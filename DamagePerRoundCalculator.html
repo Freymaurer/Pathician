@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Damage Per Round Calculator
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="An automatic calculator for both standard and full round attack actions, based on a library of modifications, weapons and characters."/>
+    <meta name="author" content="Kevin Frey"/>
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=11" >
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="/PathfinderAttackSimulator/content/style.css" /> <!--/PathfinderAttackSimulator-->
+    <link type="text/css" rel="stylesheet" href="/PathfinderAttackSimulator/styles/CSBstyles.css" /> <!--/PathfinderAttackSimulator-->
+    <script type="text/javascript" src="/PathfinderAttackSimulator/content/tips.js"></script> <!--/PathfinderAttackSimulator-->
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="https://github.com/Freymaurer/PathfinderAttackSimulator">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="/PathfinderAttackSimulator/index.html">PathfinderAttackSimulator</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+<h1><a name="Damage-Per-Round-Calculator" class="anchor" href="#Damage-Per-Round-Calculator">Damage Per Round Calculator</a></h1>
+<h2><a name="Calculate-Damage-Per-Round" class="anchor" href="#Calculate-Damage-Per-Round">Calculate Damage Per Round</a></h2>
+<p>This tool is meant to help players compare different builds in their damage output per round.
+It reads in the [Average MonsterStats](<a href="https://docs.google.com/spreadsheets/d/1E2-s8weiulPoBQjdI05LBzOUToyoZIdSsLKxHAvf8F8/edit#gid=3]">https://docs.google.com/spreadsheets/d/1E2-s8weiulPoBQjdI05LBzOUToyoZIdSsLKxHAvf8F8/edit#gid=3]</a> and uses the
+information to calculate a players average damage per round against a given cr and armortype.</p>
+<h3><a name="Example-1" class="anchor" href="#Example-1">Example 1</a></h3>
+<p>As a example we will use a simple character from the library.</p>
+<blockquote>
+<p>Parrn is a lvl 8 rouge/vivisectionist so his BAB is 6 and he has full sneak attack progression. He also has 22 Strength and wields a large greatsword.</p>
+</blockquote>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
+<span class="l"> 2: </span>
+<span class="l"> 3: </span>
+<span class="l"> 4: </span>
+<span class="l"> 5: </span>
+<span class="l"> 6: </span>
+<span class="l"> 7: </span>
+<span class="l"> 8: </span>
+<span class="l"> 9: </span>
+<span class="l">10: </span>
+<span class="l">11: </span>
+<span class="l">12: </span>
+<span class="l">13: </span>
+<span class="l">14: </span>
+<span class="l">15: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="pp">#r</span> <span class="s">&quot;PathfinderAttackSimulator.dll&quot;</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs1', 1)" onmouseover="showTip(event, 'fs1', 1)" class="id">PathfinderAttackSimulator</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 2)" onmouseover="showTip(event, 'fs2', 2)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs3', 3)" onmouseover="showTip(event, 'fs3', 3)" class="id">AuxLibFunctions</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 4)" onmouseover="showTip(event, 'fs2', 4)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs4', 5)" onmouseover="showTip(event, 'fs4', 5)" class="id">Characters</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 6)" onmouseover="showTip(event, 'fs2', 6)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs5', 7)" onmouseover="showTip(event, 'fs5', 7)" class="id">Modifications</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs2', 8)" onmouseover="showTip(event, 'fs2', 8)" class="id">Library</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs6', 9)" onmouseover="showTip(event, 'fs6', 9)" class="id">Weapons</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs7', 10)" onmouseover="showTip(event, 'fs7', 10)" class="id">DamagePerRound</span>
+
+<span onmouseout="hideTip(event, 'fs8', 11)" onmouseover="showTip(event, 'fs8', 11)" class="fn">myStandardAttackDPR</span> <span onmouseout="hideTip(event, 'fs9', 12)" onmouseover="showTip(event, 'fs9', 12)" class="id">myParrn</span> 
+                    <span onmouseout="hideTip(event, 'fs10', 13)" onmouseover="showTip(event, 'fs10', 13)" class="uc">Medium</span> 
+                    <span onmouseout="hideTip(event, 'fs11', 14)" onmouseover="showTip(event, 'fs11', 14)" class="id">greatswordParrn</span> 
+                    <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs12', 15)" onmouseover="showTip(event, 'fs12', 15)" class="fn">PowerAttack</span> <span onmouseout="hideTip(event, 'fs9', 16)" onmouseover="showTip(event, 'fs9', 16)" class="id">myParrn</span><span class="pn">.</span><span class="id">BAB</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs13', 17)" onmouseover="showTip(event, 'fs13', 17)" class="fn">FuriousFocus</span> <span onmouseout="hideTip(event, 'fs9', 18)" onmouseover="showTip(event, 'fs9', 18)" class="id">myParrn</span><span class="pn">.</span><span class="id">BAB</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs14', 19)" onmouseover="showTip(event, 'fs14', 19)" class="fn">SneakAttack</span> <span class="n">8</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs15', 20)" onmouseover="showTip(event, 'fs15', 20)" class="id">Flanking</span><span class="pn">|]</span> 
+                    <span class="n">8</span>                              <span class="c">// Used against the average statistics for Cr 8 monsters.</span>
+                    <span onmouseout="hideTip(event, 'fs16', 21)" onmouseover="showTip(event, 'fs16', 21)" class="m">AuxDPRFunctions</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs17', 22)" onmouseover="showTip(event, 'fs17', 22)" class="id">ArmorClass</span>     <span class="c">// Defines the target armor, can be either ArmorClass, FlatFootedArmor or TouchArmor.</span>
+                    <span onmouseout="hideTip(event, 'fs16', 23)" onmouseover="showTip(event, 'fs16', 23)" class="m">AuxDPRFunctions</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs18', 24)" onmouseover="showTip(event, 'fs18', 24)" class="id">Mean</span>           <span class="c">// Determines which statistical value should be used, can be either Mean, Median or Mode</span>
+</code></pre></td>
+</tr>
+</table>
+<blockquote>
+<p>You hit the enemy for an average of 34.35 damage, the average enemy has 96 hp (15 = attack roll bonus; 22.275 damage from normal hits; 2.025 damage from threatened crits; 10.05 damage from confirmed crits (10.5 Precision damage (Sneak Attack))) !</p>
+</blockquote>
+<p>And for the full-round attack action it works the same way.</p>
+<table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l">1: </span>
+<span class="l">2: </span>
+<span class="l">3: </span>
+<span class="l">4: </span>
+<span class="l">5: </span>
+<span class="l">6: </span>
+<span class="l">7: </span>
+</pre></td>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span onmouseout="hideTip(event, 'fs19', 25)" onmouseover="showTip(event, 'fs19', 25)" class="fn">myFullAttackDPR</span> <span onmouseout="hideTip(event, 'fs9', 26)" onmouseover="showTip(event, 'fs9', 26)" class="id">myParrn</span> 
+                <span onmouseout="hideTip(event, 'fs10', 27)" onmouseover="showTip(event, 'fs10', 27)" class="uc">Medium</span> 
+                <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs11', 28)" onmouseover="showTip(event, 'fs11', 28)" class="id">greatswordParrn</span><span class="pn">,</span><span onmouseout="hideTip(event, 'fs20', 29)" onmouseover="showTip(event, 'fs20', 29)" class="uc">PrimaryMain</span><span class="pn">|]</span>
+                <span class="pn">[|</span><span onmouseout="hideTip(event, 'fs12', 30)" onmouseover="showTip(event, 'fs12', 30)" class="fn">PowerAttack</span> <span onmouseout="hideTip(event, 'fs9', 31)" onmouseover="showTip(event, 'fs9', 31)" class="id">myParrn</span><span class="pn">.</span><span class="id">BAB</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs13', 32)" onmouseover="showTip(event, 'fs13', 32)" class="fn">FuriousFocus</span> <span onmouseout="hideTip(event, 'fs9', 33)" onmouseover="showTip(event, 'fs9', 33)" class="id">myParrn</span><span class="pn">.</span><span class="id">BAB</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs14', 34)" onmouseover="showTip(event, 'fs14', 34)" class="fn">SneakAttack</span> <span class="n">8</span><span class="pn">;</span> <span onmouseout="hideTip(event, 'fs15', 35)" onmouseover="showTip(event, 'fs15', 35)" class="id">Flanking</span><span class="pn">|]</span> 
+                <span class="n">8</span>                              <span class="c">// Used against the average statistics for Cr 8 monsters.</span>
+                <span onmouseout="hideTip(event, 'fs16', 36)" onmouseover="showTip(event, 'fs16', 36)" class="m">AuxDPRFunctions</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs17', 37)" onmouseover="showTip(event, 'fs17', 37)" class="id">ArmorClass</span>     <span class="c">// Defines the target armor, can be either ArmorClass, FlatFootedArmor or TouchArmor.</span>
+                <span onmouseout="hideTip(event, 'fs16', 38)" onmouseover="showTip(event, 'fs16', 38)" class="m">AuxDPRFunctions</span><span class="pn">.</span><span onmouseout="hideTip(event, 'fs18', 39)" onmouseover="showTip(event, 'fs18', 39)" class="id">Mean</span>           <span class="c">// Determines which statistical value should be used, can be either Mean, Median or Mode</span>
+</code></pre></td>
+</tr>
+</table>
+<blockquote>
+<p>You hit the enemy for an average of 34.35 damage (15 = attack roll bonus; 22.275 damage from normal hits; 2.025 damage from threatened crits; 10.05 damage from confirmed crits (10.5 Precision damage (Sneak Attack))) !</p>
+<p>You hit the enemy for an average of 18.32 damage (8 = attack roll bonus; 8.1 damage from normal hits; 4.86 damage from threatened crits; 5.36 damage from confirmed crits (5.6 Precision damage (Sneak Attack))) !</p>
+<p>Your combined damage per round is 52.67 damage, the average enemy has 96 hp (30.375 damage from normal hits; 6.885 damage from threatened crits; 15.41 damage from confirmed crits)</p>
+</blockquote>
+<p>For more information on how to set up characters, weapon, modifications or how a normal standard/full-round attack action works please see the respective documentation.</p>
+
+<div class="tip" id="fs1">namespace PathfinderAttackSimulator</div>
+<div class="tip" id="fs2">module Library<br /><br />from PathfinderAttackSimulator</div>
+<div class="tip" id="fs3">module AuxLibFunctions<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs4">module Characters<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs5">module Modifications<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs6">module Weapons<br /><br />from PathfinderAttackSimulator.Library</div>
+<div class="tip" id="fs7">module DamagePerRound<br /><br />from PathfinderAttackSimulator</div>
+<div class="tip" id="fs8">val myStandardAttackDPR : char:CharacterStats -&gt; size:SizeType -&gt; weapon:Weapon -&gt; modifications:AttackModification [] -&gt; cr:int -&gt; targetedArmorType:AuxDPRFunctions.ArmorClassTypes -&gt; statisticType:AuxDPRFunctions.StatisticalAverages -&gt; unit</div>
+<div class="tip" id="fs9">val myParrn : CharacterStats</div>
+<div class="tip" id="fs10">union case SizeType.Medium: SizeType</div>
+<div class="tip" id="fs11">val greatswordParrn : Weapon</div>
+<div class="tip" id="fs12">val PowerAttack : bab:int -&gt; AttackModification</div>
+<div class="tip" id="fs13">val FuriousFocus : bab:int -&gt; AttackModification</div>
+<div class="tip" id="fs14">val SneakAttack : rogueLevel:int -&gt; AttackModification</div>
+<div class="tip" id="fs15">val Flanking : AttackModification</div>
+<div class="tip" id="fs16">module AuxDPRFunctions<br /><br />from PathfinderAttackSimulator.DamagePerRound</div>
+<div class="tip" id="fs17">union case AuxDPRFunctions.ArmorClassTypes.ArmorClass: AuxDPRFunctions.ArmorClassTypes</div>
+<div class="tip" id="fs18">union case AuxDPRFunctions.StatisticalAverages.Mean: AuxDPRFunctions.StatisticalAverages</div>
+<div class="tip" id="fs19">val myFullAttackDPR : char:CharacterStats -&gt; size:SizeType -&gt; weapons:(Weapon * WeaponType) [] -&gt; modifications:AttackModification [] -&gt; cr:int -&gt; targetedArmorType:AuxDPRFunctions.ArmorClassTypes -&gt; statisticType:AuxDPRFunctions.StatisticalAverages -&gt; unit</div>
+<div class="tip" id="fs20">union case WeaponType.PrimaryMain: WeaponType</div>
+
+        </div>
+        <div class="span3">
+          <img src="/PathfinderAttackSimulator/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+              <li class="nav-header">PathfinderAttackSimulator</li>
+              <li><a href="/PathfinderAttackSimulator/index.html">Home page</a></li>
+              <li class="divider"></li>
+              <li><a href="http://nuget.org/packages/PathfinderAttackSimulator">Get Library via NuGet</a></li>
+              <li><a href="https://github.com/Freymaurer/PathfinderAttackSimulator">Source Code on GitHub</a></li>
+              <li><a href="/PathfinderAttackSimulator/license.html">License</a></li>
+              <li><a href="/PathfinderAttackSimulator/release-notes.html">Release Notes</a></li>
+
+              <li class="nav-header">Getting started</li>
+              <li><a href="/PathfinderAttackSimulator/CreateCharacter.html">Create Character</a></li>
+              <li><a href="/PathfinderAttackSimulator/CreateWeapon.html">Create Weapon</a></li>
+              <li><a href="/PathfinderAttackSimulator/CreateModification.html">Create Modification</a></li>
+              <li><a href="/PathfinderAttackSimulator/AutomaticAttackCalculation.html">Automatic Attack Calculation</a></li>
+              <li><a href="/PathfinderAttackSimulator/d20pfsrdBestiaryReader.html">Bestiary Reader/Calculator</a></li>
+              <li><a href="/PathfinderAttackSimulator/DamagePerRoundCalculator.html">Damage Per Round Calculator</a></li>
+              <li class="nav-header">Documentation</li>
+              <li><a href="/PathfinderAttackSimulator/reference/index.html">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="https://github.com/Freymaurer/PathfinderAttackSimulator"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"/></a>
+  </body>
+  </html>

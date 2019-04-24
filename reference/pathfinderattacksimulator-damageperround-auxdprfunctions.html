@@ -99,33 +99,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '12', 12)" onmouseover="showTip(event, '12', 12)">
+          <code onmouseout="hideTip(event, '13', 13)" onmouseover="showTip(event, '13', 13)">
             createCRData (...)
           </code>
-          <div class="tip" id="12">
+          <div class="tip" id="13">
             <strong>Signature:</strong> cr:int -&gt; acMean:float -&gt; acMedian:float -&gt; acMode:float -&gt; flatMean:float -&gt; flatMedian:float -&gt; flatMode:float -&gt; touchMean:float -&gt; touchMedian:float -&gt; touchMode:float -&gt; hpMean:float -&gt; hpMedian:float -&gt; hpMode:float -&gt; nOfEntrys:int -&gt; CRData<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/StandardAttackActionDPR.fs#L43-43" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '13', 13)" onmouseover="showTip(event, '13', 13)">
-            createStatisticalValues mean median mode
-          </code>
-          <div class="tip" id="13">
-            <strong>Signature:</strong> mean:float -&gt; median:float -&gt; mode:float -&gt; StatisticalValues<br />
-                                  </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/StandardAttackActionDPR.fs#L28-28" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/DPRCalculator.fs#L43-43" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -136,14 +118,14 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '14', 14)" onmouseover="showTip(event, '14', 14)">
-            getCrData armor hitpoints cr
+            createStatisticalValues mean median mode
           </code>
           <div class="tip" id="14">
-            <strong>Signature:</strong> armor:string [] [] -&gt; hitpoints:string [] [] -&gt; cr:int -&gt; CRData<br />
+            <strong>Signature:</strong> mean:float -&gt; median:float -&gt; mode:float -&gt; StatisticalValues<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/StandardAttackActionDPR.fs#L52-52" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/DPRCalculator.fs#L28-28" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -154,14 +136,14 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '15', 15)" onmouseover="showTip(event, '15', 15)">
-            getDmgType (arg1, arg2, arg3)
+            getCrData armor hitpoints cr
           </code>
           <div class="tip" id="15">
-            <strong>Signature:</strong> (float * DamageTypes * string) -&gt; DamageTypes<br />
+            <strong>Signature:</strong> armor:string [] [] -&gt; hitpoints:string [] [] -&gt; cr:int -&gt; CRData<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/StandardAttackActionDPR.fs#L82-82" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/DPRCalculator.fs#L52-52" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -172,14 +154,14 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '16', 16)" onmouseover="showTip(event, '16', 16)">
-            getName (arg1, arg2, arg3)
+            getDmgType (arg1, arg2, arg3)
           </code>
           <div class="tip" id="16">
-            <strong>Signature:</strong> (float * DamageTypes * string) -&gt; string<br />
+            <strong>Signature:</strong> (float * DamageTypes * string) -&gt; DamageTypes<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/StandardAttackActionDPR.fs#L84-84" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/DPRCalculator.fs#L82-82" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -190,14 +172,32 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '17', 17)" onmouseover="showTip(event, '17', 17)">
-            getValue (arg1, arg2, arg3)
+            getName (arg1, arg2, arg3)
           </code>
           <div class="tip" id="17">
+            <strong>Signature:</strong> (float * DamageTypes * string) -&gt; string<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/DPRCalculator.fs#L84-84" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '18', 18)" onmouseover="showTip(event, '18', 18)">
+            getValue (arg1, arg2, arg3)
+          </code>
+          <div class="tip" id="18">
             <strong>Signature:</strong> (float * DamageTypes * string) -&gt; float<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/StandardAttackActionDPR.fs#L80-80" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/DPRCalculator.fs#L80-80" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -224,7 +224,8 @@
               <li><a href="/PathfinderAttackSimulator/CreateWeapon.html">Create Weapon</a></li>
               <li><a href="/PathfinderAttackSimulator/CreateModification.html">Create Modification</a></li>
               <li><a href="/PathfinderAttackSimulator/AutomaticAttackCalculation.html">Automatic Attack Calculation</a></li>
-              <li><a href="/PathfinderAttackSimulator/d20pfsrdBestiaryReader.html">d20pfsrd Bestiary Reader/Calculator</a></li>
+              <li><a href="/PathfinderAttackSimulator/d20pfsrdBestiaryReader.html">Bestiary Reader/Calculator</a></li>
+              <li><a href="/PathfinderAttackSimulator/DamagePerRoundCalculator.html">Damage Per Round Calculator</a></li>
               <li class="nav-header">Documentation</li>
               <li><a href="/PathfinderAttackSimulator/reference/index.html">API Reference</a></li>
           </ul>
