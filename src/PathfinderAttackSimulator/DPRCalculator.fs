@@ -93,8 +93,9 @@ module DamagePerRound =
         let crRelatedMonsterInfo = 
             let baseDirectory = __SOURCE_DIRECTORY__
             let baseDirectory' = Directory.GetParent(baseDirectory)
+            let baseDirectory'' = Directory.GetParent(baseDirectory'.FullName)
             let filePath = "Pathfinder Bestiary with Statistics - Statistics.tsv"
-            let fullPath = Path.Combine(baseDirectory'.FullName, filePath)
+            let fullPath = Path.Combine(baseDirectory''.FullName, filePath)
             let file = File.ReadAllLines(fullPath)
             let make2D = file 
                          |> Array.map (fun x -> x.Split('\t'))
@@ -540,8 +541,9 @@ module DamagePerRound =
         let crRelatedMonsterInfo = 
             let baseDirectory = __SOURCE_DIRECTORY__
             let baseDirectory' = Directory.GetParent(baseDirectory)
+            let baseDirectory'' = Directory.GetParent(baseDirectory'.FullName)
             let filePath = "Pathfinder Bestiary with Statistics - Statistics.tsv"
-            let fullPath = Path.Combine(baseDirectory'.FullName, filePath)
+            let fullPath = Path.Combine(baseDirectory''.FullName, filePath)
             let file = File.ReadAllLines(fullPath)
             let make2D = file 
                          |> Array.map (fun x -> x.Split('\t'))
