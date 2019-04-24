@@ -303,19 +303,15 @@ module BestiaryCalculator =
             damageRolls + sizeAdjustedWeaponDamage.BonusDamage + modificationDamageBoni
             |> fun x -> if x <= 0 then 1 else x
     
-        let extraDamage =
+        let extraDamageOnHit =
             let getDamageRolls numberOfDie die=
                 let rolledDice = rollDice 1000 die
                 [|for i=1 to numberOfDie do
                     yield getRndArrElement rolledDice|]
                 |> Array.sum
             let extraDamageModifications =
-                modifications
-                |> Array.map (fun x -> x.ExtraDamage,x.Name) 
-                |> Array.map (fun (extraDmg,name) -> if (Array.contains attackRoll wantedAttack.CriticalRange) = true
-                                                     then extraDmg.OnCrit,name
-                                                     else extraDmg.OnHit,name
-                             )
+                modifications 
+                |> Array.map (fun x -> x.ExtraDamage.OnHit,x.Name)
                 |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
                                                     , extraDmg.DamageType, str
                              )
@@ -335,12 +331,56 @@ module BestiaryCalculator =
                                    else extraDmg
                 |> Array.map (fun (bonusValue,dmgType,modificationName) -> bonusValue,(string dmgType))
             //add weapon extra dmg (e.g. shocking enchantment) to modification extra dmg
-            [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
-            |> Array.append extraDamageModifications
+            extraDamageModifications
             |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
     
+        let extraDamageOnCrit =
+            let getDamageRolls numberOfDie die=
+                let rolledDice = rollDice 1000 die
+                [|for i=1 to numberOfDie do
+                    yield getRndArrElement rolledDice|]
+                |> Array.sum
+            let extraDamageModifications =
+                if (Array.contains attackRoll wantedAttack.CriticalRange) = false
+                then [||]
+                else modifications 
+                     |> Array.map (fun x -> x.ExtraDamage.OnCrit,x.Name)
+                     |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
+                                                         , extraDmg.DamageType, str
+                                  )
+                     ///Vital Strike hardcode
+                     |> fun extraDmg -> if (Array.exists (fun modi -> modi = Modifications.VitalStrike
+                                                                      || modi = Modifications.VitalStrikeImproved
+                                                                      || modi = Modifications.VitalStrikeGreater) modifications 
+                                           ) = true
+                                        then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                             |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
+                                             |> Array.head
+                                             |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
+                                                                 yield getDamageRolls sizeAdjustedWeaponDamage.NumberOfDie sizeAdjustedWeaponDamage.Die|], vitalS.Name
+                                             |> fun x -> x
+                                             |> fun (intList,str) -> Array.sum intList, str
+                                             |> fun (bonus,str) -> Array.append [|bonus,VitalStrikeDamage,str|] extraDmg
+                                        else extraDmg
+                     |> Array.map (fun (bonusValue,dmgType,modificationName) -> bonusValue,(string dmgType))
+            //add weapon extra dmg (e.g. shocking enchantment) to modification extra dmg
+            extraDamageModifications
+            |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+
+        let extraDamageCombined =
+            if extraDamageOnCrit = [||]
+            then extraDamageOnHit
+            else Array.map2 (fun (onHit:(int*string)) (onCrit:(int*string)) -> (fst onHit) + (fst onCrit), snd onHit) extraDamageOnHit extraDamageOnCrit
+
         let extraDamageToString = 
-            extraDamage
+            let getDamageRolls numberOfDie die=
+                let rolledDice = rollDice 1000 die
+                [|for i=1 to numberOfDie do
+                    yield getRndArrElement rolledDice|]
+                |> Array.sum
+            [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
+            |> Array.append extraDamageCombined
+            |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
             |> Array.map (fun (value,dmgType) -> "+" + (string value) + " " + (string dmgType) + " " + "damage" + ", ")
             |> Array.fold (fun strArr x -> strArr + x) "" 
             |> fun x -> x.TrimEnd [|' ';','|]
@@ -351,13 +391,13 @@ module BestiaryCalculator =
             else "plus " + wantedAttack.AdditionalEffects
     
         ////
-        if (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamage = [||]
+        if (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageOnHit = [||]
             then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
-        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamage = [||] 
+        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageOnHit = [||] 
             then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
-        elif (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamage <> [||]
+        elif (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageOnHit <> [||]
             then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
-        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamage <> [||] 
+        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageOnHit <> [||] 
             then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage extraDamageToString wantedAttack.CriticalModifier additionalInfoString
 
     /// This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
@@ -647,7 +687,7 @@ module BestiaryCalculator =
                 //the next line sets a minimum dmg of 1 for all attacks. the additional "(urlAttack.WeaponDamage.NumberOfDie <> 0)" circumvents a 1 dmg attack, if the attack is not meant to deal any attack.
                 |> fun x -> if (x <= 0) && (urlAttack.WeaponDamage.NumberOfDie <> 0) then 1 else x
     
-            let extraDamage =
+            let extraDamageOnHit =
                 let getDamageRolls numberOfDie die=
                     let rolledDice = rollDice 1000 die
                     [|for i=1 to numberOfDie do
@@ -655,11 +695,7 @@ module BestiaryCalculator =
                     |> Array.sum
                 let extraDamageModifications =
                     modificationArr 
-                    |> Array.map (fun x -> x.ExtraDamage,x.Name)
-                    |> Array.map (fun (extraDmg,name) -> if (Array.contains attackRoll urlAttack.CriticalRange) = true
-                                                         then extraDmg.OnCrit,name
-                                                         else extraDmg.OnHit,name
-                                 )
+                    |> Array.map (fun x -> x.ExtraDamage.OnHit,x.Name)
                     |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
                                                         , extraDmg.DamageType, str
                                  )
@@ -679,12 +715,56 @@ module BestiaryCalculator =
                                        else extraDmg
                     |> Array.map (fun (bonusValue,dmgType,modificationName) -> bonusValue,(string dmgType))
                 //add weapon extra dmg (e.g. shocking enchantment) to modification extra dmg
-                [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
-                |> Array.append extraDamageModifications
+                extraDamageModifications
                 |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
     
+            let extraDamageOnCrit =
+                let getDamageRolls numberOfDie die=
+                    let rolledDice = rollDice 1000 die
+                    [|for i=1 to numberOfDie do
+                        yield getRndArrElement rolledDice|]
+                    |> Array.sum
+                let extraDamageModifications =
+                    if (Array.contains attackRoll urlAttack.CriticalRange) = false
+                    then [||]
+                    else modificationArr 
+                         |> Array.map (fun x -> x.ExtraDamage.OnCrit,x.Name)
+                         |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
+                                                             , extraDmg.DamageType, str
+                                      )
+                         ///Vital Strike hardcode
+                         |> fun extraDmg -> if (Array.exists (fun modi -> modi = Modifications.VitalStrike
+                                                                          || modi = Modifications.VitalStrikeImproved
+                                                                          || modi = Modifications.VitalStrikeGreater) modifications 
+                                               ) = true
+                                            then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                                 |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
+                                                 |> Array.head
+                                                 |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
+                                                                     yield getDamageRolls sizeAdjustedWeaponDamage.NumberOfDie sizeAdjustedWeaponDamage.Die|], vitalS.Name
+                                                 |> fun x -> x
+                                                 |> fun (intList,str) -> Array.sum intList, str
+                                                 |> fun (bonus,str) -> Array.append [|bonus,VitalStrikeDamage,str|] extraDmg
+                                            else extraDmg
+                         |> Array.map (fun (bonusValue,dmgType,modificationName) -> bonusValue,(string dmgType))
+                //add weapon extra dmg (e.g. shocking enchantment) to modification extra dmg
+                extraDamageModifications
+                |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+
+            let extraDamageCombined =
+                if extraDamageOnCrit = [||]
+                then extraDamageOnHit
+                else Array.map2 (fun (onHit:(int*string)) (onCrit:(int*string)) -> (fst onHit) + (fst onCrit), snd onHit) extraDamageOnHit extraDamageOnCrit
+
             let extraDamageToString = 
-                extraDamage
+                let getDamageRolls numberOfDie die=
+                    let rolledDice = rollDice 1000 die
+                    [|for i=1 to numberOfDie do
+                        yield getRndArrElement rolledDice|]
+                    |> Array.sum
+                [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
+                |> Array.append extraDamageCombined
+                |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
                 |> Array.map (fun (value,dmgType) -> "+" + (string value) + " " + (string dmgType) + " " + "damage" + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
                 |> fun x -> x.TrimEnd [|' ';','|]
@@ -695,13 +775,13 @@ module BestiaryCalculator =
                 else "plus " + urlAttack.AdditionalEffects
     
             ////
-            if (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamage = [||]
+            if (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageOnHit = [||]
                 then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
-            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamage = [||] 
+            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageOnHit = [||] 
                 then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
-            elif (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamage <> [||]
+            elif (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageOnHit <> [||]
                 then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
-            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamage <> [||] 
+            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageOnHit <> [||] 
                 then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage extraDamageToString urlAttack.CriticalModifier additionalInfoString
         
         attackArr

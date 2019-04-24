@@ -570,18 +570,14 @@ module FullRoundAttackAction =
                 |> fun damageDice -> damageDice + weapon.DamageBonus
     
             //
-            let getExtraDamage = 
+            let getExtraDamageOnHit = 
                 let rec getRandRoll listOfRolls die number =
                     (getRndArrElement (getDamageRolls die))::listOfRolls
                     |> fun rollList -> if rollList.Length >= number
                                        then rollList
                                        else getRandRoll rollList die number
-                [|weapon.ExtraDamage,weapon.Name|]
-                |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage,x.Name) )
-                |> Array.map (fun (extraDmg,name) -> if (Array.contains attackRoll weapon.CriticalRange) = true
-                                                     then extraDmg.OnCrit,name
-                                                     else extraDmg.OnHit,name
-                             )
+                [|weapon.ExtraDamage.OnHit,weapon.Name|]
+                |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage.OnHit,x.Name) )
                 |> Array.map (fun (extraD,str) -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
                                                   , extraD.DamageType, str
                              )
@@ -602,9 +598,52 @@ module FullRoundAttackAction =
                                    else extraDmg
                 |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0,Untyped) && (bonus,dType) <> (0,VitalStrikeDamage) )
 
+            //
+            let getExtraDamageOnCrit = 
+                let rec getRandRoll listOfRolls die number =
+                    (getRndArrElement (getDamageRolls die))::listOfRolls
+                    |> fun rollList -> if rollList.Length >= number
+                                       then rollList
+                                       else getRandRoll rollList die number
+                if (Array.contains attackRoll weapon.CriticalRange) = false
+                // stop function right here if there is no crit
+                then [||]
+                else [|weapon.ExtraDamage.OnCrit,weapon.Name|]
+                     |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage.OnCrit,x.Name) )
+                     |> Array.map (fun (extraD,str) -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
+                                                       , extraD.DamageType, str
+                                  )
+                     |> fun x -> x
+                     ///Vital Strike hardcode
+                     |> fun extraDmg -> if Array.contains true (Array.map (fun x -> x = VitalStrike 
+                                                                                    || x = VitalStrikeImproved 
+                                                                                    || x = VitalStrikeGreater) modifications)
+                                        then Array.filter (fun x -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                             |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
+                                             |> Array.head
+                                             |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
+                                                                 yield getRandRoll [] sizeAdjustedWeaponDamage.Die sizeAdjustedWeaponDamage.NumberOfDie|], vitalS.Name
+                                             |> fun (intList,str) -> Array.map List.sum intList, str
+                                             |> fun x -> x
+                                             |> fun (intList,str) -> Array.sum intList, str
+                                             |> fun (bonus,str) -> Array.append [|bonus,sizeAdjustedWeaponDamage.DamageType,str|] extraDmg
+                                        else extraDmg
+                     |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0,Untyped) && (bonus,dType) <> (0,VitalStrikeDamage) )
+            
+            let extraDamageCombined =
+                let getValue (triple:(int*DamageTypes*string)) = 
+                    triple |> fun (value,dType,string) -> value
+                let getDmgType (triple:(int*DamageTypes*string)) = 
+                    triple |> fun (value,dType,string) -> dType
+                let getName (triple:(int*DamageTypes*string)) = 
+                    triple |> fun (value,dType,string) -> string
+                if getExtraDamageOnCrit = [||]
+                then getExtraDamageOnHit
+                else Array.map2 (fun onHit onCrit -> (getValue onHit) + (getValue onCrit), getDmgType onHit, getName onHit) getExtraDamageOnHit getExtraDamageOnCrit
+
                 ///
             let extraDamageToString = 
-                getExtraDamage
+                extraDamageCombined
                 |> Array.map (fun (value,dType,name) -> "+" + (string value) + " " + (string dType) + " " + "damage" + " (" + name + ")" + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
                 |> fun x -> x.TrimEnd [|' ';','|]       
@@ -636,13 +675,13 @@ module FullRoundAttackAction =
                 addDamageMod + addWeaponDamage + addDamageBoni
                 |> fun x -> if x <= 0 then 1 else x
     
-            if (Array.contains attackRoll weapon.CriticalRange) = false && getExtraDamage = [||]
+            if (Array.contains attackRoll weapon.CriticalRange) = false && getExtraDamageOnHit = [||]
                 then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage!" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType
-            elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamage = [||] 
+            elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamageOnHit = [||] 
                 then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (crit * %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier
-            elif (Array.contains attackRoll weapon.CriticalRange) && getExtraDamage <> [||]
+            elif (Array.contains attackRoll weapon.CriticalRange) && getExtraDamageOnHit <> [||]
                 then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage %s !" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType extraDamageToString
-            elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamage <> [||] 
+            elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamageOnHit <> [||] 
                 then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage %s (crit * %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
      
         addAllWeaponTypeSpecificModifications

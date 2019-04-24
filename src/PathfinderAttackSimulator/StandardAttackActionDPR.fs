@@ -49,11 +49,6 @@ module DamagePerRound =
             NumberOfEntrys      = nOfEntrys
             }
         
-        
-        
-        
-        
-        
         let getCrData (armor: string [][]) (hitpoints: string [][]) (cr:int) = 
             let tryParseIntOrReplace (str:string)=
                 let parsedString = System.Int32.TryParse str
@@ -81,6 +76,13 @@ module DamagePerRound =
                          (tryParseFloatOrReplace crAvgHP.[15]) // hpMedian
                          (tryParseFloatOrReplace crAvgHP.[16]) // hpMode
                          (tryParseIntOrReplace crAvgArmor.[1]) // number of entrys
+
+        let getValue (triple:(float*DamageTypes*string)) = 
+            triple |> fun (value,dType,string) -> value
+        let getDmgType (triple:(float*DamageTypes*string)) = 
+            triple |> fun (value,dType,string) -> dType
+        let getName (triple:(float*DamageTypes*string)) = 
+            triple |> fun (value,dType,string) -> string
 
     open AuxDPRFunctions
     open System.IO
@@ -453,6 +455,8 @@ module DamagePerRound =
         
         /// calculates the extra dmg values for hits,critical threats and critical hits
         let (avgExtraDmgOnHit, avgExtraDmgOnThreatenedCrit, avgExtraDmgOnConfirmedCrit) =
+            let sumOfHitAndCrit = 
+                Array.map2 (fun onHit onCrit -> getValue onHit + getValue onCrit, getDmgType onHit, getName onCrit) extraDamageOnHit extraDamageOnCrit
             let onHit =
                 extraDamageOnHit
                 |> Array.map (fun (value,dmgType,name) -> value * propabilityToHit ,dmgType,name)
@@ -460,18 +464,12 @@ module DamagePerRound =
                 extraDamageOnHit
                 |> Array.map (fun (value,dmgType,name) -> value * (propabilitytoCrit * (1.-propabilityToConfirmCrit)) ,dmgType,name )
             let dmgFromConfirmedCrit =
-                extraDamageOnCrit
+                sumOfHitAndCrit
                 |> Array.map (fun (value,dmgType,name) -> value * (propabilitytoCrit * propabilityToConfirmCrit) ,dmgType,name )
             onHit, dmgFromThreatenedCrit, dmgFromConfirmedCrit
         
         /// combines all values from function above for "extraDamageToString" function
         let extraDmgCombined =
-            let getValue (triple:(float*DamageTypes*string)) = 
-                triple |> fun (value,dType,string) -> value
-            let getDmgType (triple:(float*DamageTypes*string)) = 
-                triple |> fun (value,dType,string) -> dType
-            let getName (triple:(float*DamageTypes*string)) = 
-                triple |> fun (value,dType,string) -> string
             Array.map3 (fun x y z -> getValue x + getValue y + getValue z, getDmgType x, getName x) avgExtraDmgOnHit avgExtraDmgOnThreatenedCrit avgExtraDmgOnConfirmedCrit
     
         ///
