@@ -300,7 +300,7 @@ module StandardAttackAction =
             getRandRoll [] |> List.toArray |> Array.sum
             |> fun damageDice -> damageDice + weapon.DamageBonus
     
-        ///getRandRoll is not so good; try find something better
+        //
         let getExtraDamage = 
             let rec getRandRoll listOfRolls die number =
                 (getRndArrElement (getDamageRolls die))::listOfRolls
@@ -309,6 +309,10 @@ module StandardAttackAction =
                                    else getRandRoll rollList die number
             [|weapon.ExtraDamage,weapon.Name|]
             |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage,x.Name) )
+            |> Array.map (fun (extraDmg,name) -> if (Array.contains attackRoll weapon.CriticalRange) = true
+                                                 then extraDmg.OnCrit,name
+                                                 else extraDmg.OnHit,name
+                         )
             |> Array.map (fun (extraD,str) -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
                                               , extraD.DamageType, str
                          )
@@ -317,10 +321,10 @@ module StandardAttackAction =
             |> fun extraDmg -> if Array.contains true (Array.map (fun x -> x = VitalStrike 
                                                                            || x = VitalStrikeImproved 
                                                                            || x = VitalStrikeGreater) modifications)
-                               then Array.filter (fun x -> x.ExtraDamage.DamageType = VitalStrikeDamage) modifications
-                                    |> Array.sortByDescending (fun x -> x.ExtraDamage.NumberOfDie)
+                               then Array.filter (fun x -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                    |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
                                     |> Array.head
-                                    |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.NumberOfDie do
+                                    |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
                                                         yield getRandRoll [] sizeAdjustedWeaponDamage.Die sizeAdjustedWeaponDamage.NumberOfDie|], vitalS.Name
                                     |> fun (intList,str) -> Array.map List.sum intList, str
                                     |> fun x -> x

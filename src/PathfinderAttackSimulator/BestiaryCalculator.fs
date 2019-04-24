@@ -312,6 +312,10 @@ module BestiaryCalculator =
             let extraDamageModifications =
                 modifications
                 |> Array.map (fun x -> x.ExtraDamage,x.Name) 
+                |> Array.map (fun (extraDmg,name) -> if (Array.contains attackRoll wantedAttack.CriticalRange) = true
+                                                     then extraDmg.OnCrit,name
+                                                     else extraDmg.OnHit,name
+                             )
                 |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
                                                     , extraDmg.DamageType, str
                              )
@@ -320,10 +324,10 @@ module BestiaryCalculator =
                                                                  || modi = Modifications.VitalStrikeImproved
                                                                  || modi = Modifications.VitalStrikeGreater) modifications 
                                       ) = true
-                                   then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.DamageType = VitalStrikeDamage) modifications
-                                        |> Array.sortByDescending (fun x -> x.ExtraDamage.NumberOfDie)
+                                   then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                        |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
                                         |> Array.head
-                                        |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.NumberOfDie do
+                                        |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
                                                             yield getDamageRolls sizeAdjustedWeaponDamage.NumberOfDie sizeAdjustedWeaponDamage.Die|], vitalS.Name
                                         |> fun x -> x
                                         |> fun (intList,str) -> Array.sum intList, str
@@ -651,7 +655,11 @@ module BestiaryCalculator =
                     |> Array.sum
                 let extraDamageModifications =
                     modificationArr 
-                    |> Array.map (fun x -> x.ExtraDamage,x.Name) 
+                    |> Array.map (fun x -> x.ExtraDamage,x.Name)
+                    |> Array.map (fun (extraDmg,name) -> if (Array.contains attackRoll urlAttack.CriticalRange) = true
+                                                         then extraDmg.OnCrit,name
+                                                         else extraDmg.OnHit,name
+                                 )
                     |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
                                                         , extraDmg.DamageType, str
                                  )
@@ -660,10 +668,10 @@ module BestiaryCalculator =
                                                                      || modi = Modifications.VitalStrikeImproved
                                                                      || modi = Modifications.VitalStrikeGreater) modifications 
                                           ) = true
-                                       then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.DamageType = VitalStrikeDamage) modifications
-                                            |> Array.sortByDescending (fun x -> x.ExtraDamage.NumberOfDie)
+                                       then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                            |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
                                             |> Array.head
-                                            |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.NumberOfDie do
+                                            |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
                                                                 yield getDamageRolls sizeAdjustedWeaponDamage.NumberOfDie sizeAdjustedWeaponDamage.Die|], vitalS.Name
                                             |> fun x -> x
                                             |> fun (intList,str) -> Array.sum intList, str
