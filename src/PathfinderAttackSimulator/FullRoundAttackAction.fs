@@ -437,16 +437,17 @@ module FullRoundAttackAction =
                 | _            -> 10
                     )
                 |> fun stat -> float stat + getStatChangesToDmg
-                |> fun stat -> if Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
-                                  && (wType = Primary || wType = Secondary)
-                               then (stat * 0.5) |> floor |> int
-                               elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
-                                    && wType = PrimaryMain
-                               then (stat * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
-                               elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) = false 
-                                    && wType = Primary
-                               then (stat * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
-                               else failwith "Unknown Weapon Combination to know if off-hand or not"
+                |> fun stat -> floor ((stat - 10.)/2.)
+                |> fun modifier -> if Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
+                                      && (wType = Primary || wType = Secondary)
+                                   then (modifier * 0.5) |> floor |> int
+                                   elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
+                                        && wType = PrimaryMain
+                                   then (modifier * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
+                                   elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) = false 
+                                        && wType = Primary
+                                   then (modifier * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
+                                   else failwith "Unknown Weapon Combination to know if off-hand or not"
                     
             let sizeAdjustedWeaponDamage =
                 

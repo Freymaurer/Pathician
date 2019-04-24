@@ -56,7 +56,7 @@ module DamagePerRound =
                 then snd parsedString
                 else 0   
             let tryParseFloatOrReplace (str:string)=
-                let parsedString = System.Int64.TryParse str
+                let parsedString = System.Single.TryParse str
                 if fst parsedString = true
                 then float str
                 else 0. 
@@ -72,9 +72,9 @@ module DamagePerRound =
                          (tryParseFloatOrReplace crAvgArmor.[22]) // touchMean
                          (tryParseFloatOrReplace crAvgArmor.[23]) // touchMedian
                          (tryParseFloatOrReplace crAvgArmor.[24]) // touchMode
-                         (tryParseFloatOrReplace crAvgHP.[14]) // hpMean
-                         (tryParseFloatOrReplace crAvgHP.[15]) // hpMedian
-                         (tryParseFloatOrReplace crAvgHP.[16]) // hpMode
+                         (tryParseFloatOrReplace crAvgHP.[22]) // hpMean
+                         (tryParseFloatOrReplace crAvgHP.[23]) // hpMedian
+                         (tryParseFloatOrReplace crAvgHP.[24]) // hpMode
                          (tryParseIntOrReplace crAvgArmor.[1]) // number of entrys
 
         let getValue (triple:(float*DamageTypes*string)) = 
@@ -530,9 +530,9 @@ module DamagePerRound =
         
         ///
         if extraDamageOnHit = [||] && extraDamageOnCrit = [||]
-            then printfn "You hit the enemy for an average of %s damage, by %s average health (%s = attack roll bonus; %s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits) !" (string avgDmg) (string hpInfo) (string totalAttackBonus) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit)
+            then printfn "You hit the enemy for an average of %s damage, the average enemy has %s hp (%s = attack roll bonus; %s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits) !" (string avgDmg) (string hpInfo) (string totalAttackBonus) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit)
         elif extraDamageOnHit <> [||] || extraDamageOnCrit <> [||]
-            then printfn "You hit the enemy for an average of %s damage, by %s average health (%s = attack roll bonus; %s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits (%s)) !" (string avgDmg) (string hpInfo) (string totalAttackBonus) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit) extraDamageToString
+            then printfn "You hit the enemy for an average of %s damage, the average enemy has %s hp (%s = attack roll bonus; %s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits (%s)) !" (string avgDmg) (string hpInfo) (string totalAttackBonus) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit) extraDamageToString
 
     ///This function returns the output of a full round attack action based on the used character stats, weapons and modifications.
     ///Weapons need an additional WeaponType: PrimaryMain for the weapon which should be used with things like haste, Primary for Primary natural attacks or two weapon fighting, and Secondary for secondary natural attacks.
@@ -1011,16 +1011,17 @@ module DamagePerRound =
                 | _            -> 10
                     )
                 |> fun stat -> float stat + getStatChangesToDmg
-                |> fun stat -> if Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
-                                  && (wType = Primary || wType = Secondary)
-                               then (stat * 0.5) |> floor |> int
-                               elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
-                                    && wType = PrimaryMain
-                               then (stat * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
-                               elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) = false 
-                                    && wType = Primary
-                               then (stat * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
-                               else failwith "Unknown Weapon Combination to know if off-hand or not"
+                |> fun stat -> floor ((stat - 10.)/2.)
+                |> fun modifier -> if Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
+                                      && (wType = Primary || wType = Secondary)
+                                   then (modifier * 0.5) |> floor |> int
+                                   elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) 
+                                        && wType = PrimaryMain
+                                   then (modifier * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
+                                   elif Array.contains PrimaryMain (Array.map (fun x -> snd x) weapons) = false 
+                                        && wType = Primary
+                                   then (modifier * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
+                                   else failwith "Unknown Weapon Combination to know if off-hand or not"
                     
             let sizeAdjustedWeaponDamage =
                 
@@ -1274,6 +1275,6 @@ module DamagePerRound =
         addAllWeaponTypeSpecificModifications
         |> Array.map (fun (w,wType,modi,modArr) -> getOneAttack w wType modi modArr)
         |> fun quadruple -> Array.fold (fun acc (x,y,z,w) -> x + acc) 0. quadruple, Array.fold (fun acc (x,y,z,w) -> y + acc) 0. quadruple, Array.fold (fun acc (x,y,z,w) -> z + acc) 0. quadruple, Array.fold (fun acc (x,y,z,w) -> w + acc) 0. quadruple
-        |> fun (avgDmg, dmgFromHit, dmgFromThreatenedCrit, dmgFromConfirmedCrit) -> printfn "Your combined damage per round is %s damage (%s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits)" (string avgDmg) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit)
+        |> fun (avgDmg, dmgFromHit, dmgFromThreatenedCrit, dmgFromConfirmedCrit) -> printfn "Your combined damage per round is %s damage, the average enemy has %s hp (%s damage from normal hits; %s damage from threatened crits; %s damage from confirmed crits)" (string avgDmg) (string hpInfo) (string dmgFromHit) (string dmgFromThreatenedCrit) (string dmgFromConfirmedCrit)
 
 
