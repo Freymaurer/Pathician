@@ -43,7 +43,7 @@ let Scimitar = {
         Name                    = "Scimitar"
         Damage                  = createDamage 1 6 Slashing
         DamageBonus             = 0
-        ExtraDamage             = createDamage 0 0 Untyped
+        ExtraDamage             = createDamageHitAndCrit 0 0 Untyped
         BonusAttackRolls        = 0
         CriticalRange           = [|18 .. 20|] 
         CriticalModifier        = 2
@@ -61,7 +61,7 @@ So how do we create this modification, which is a quite complex modification if 
 let ShockingGraspEmpowered casterLevel metalTF = {
     Name = "Intensified Empowered Shocking Grasp"
     BonusAttacks = createBonusAttacks 0 NoBA All
-    BonusAttackRoll = createHitAndCritAttackBoni (if metalTF = true then 3 else 0) Flat 0 Flat
+    BonusAttackRoll = createAttackBoniHitAndCrit (if metalTF = true then 3 else 0) Flat 0 Flat
     BonusDamage = createBonus 0 Flat
     ExtraDamage = createDamage ((if casterLevel > 10 then 10 else casterLevel) 
                                |> fun x -> x + int (float x * 0.5) ) 6 Electricity
