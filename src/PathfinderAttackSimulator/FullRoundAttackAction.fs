@@ -6,9 +6,10 @@ open Library.Modifications
 open StandardAttackAction
 open StandardAttackAction.AuxFunctions
 
-
+/// This module contains the calculator for full-round attack actions "myFullAttack"
 module FullRoundAttackAction =
 
+    
     ///This function returns the output of a full round attack action based on the used character stats, weapons and modifications.
     ///Weapons need an additional WeaponType: PrimaryMain for the weapon which should be used with things like haste, Primary for Primary natural attacks or two weapon fighting, and Secondary for secondary natural attacks.
     let myFullAttack (char: CharacterStats) (size :SizeType) (weapons: (Weapon * WeaponType) []) (modifications: AttackModification []) =
@@ -143,7 +144,7 @@ module FullRoundAttackAction =
                           elif arr = [||]
                           then [|Array.create getAttackArray.Length ZeroMod|]
                           else failwith "Unknown Problem related to limited attack modifiers for all weapons; pls contact support)"
-
+    
         ///adds all modifications from "getAttackModificationsForAll" and "getAttackModificationsForAllLimited"
         let addAllAttackModificationsForAll =
             getAttackModificationsForAllLimited
@@ -153,7 +154,7 @@ module FullRoundAttackAction =
             |> Array.map (fun (header,tuple) -> tuple)
             |> Array.map (fun x -> Array.map (fun x -> snd x) x)
             |> Array.map (fun arr -> Array.append getAttackModificationsForAll arr)
-
+    
         ///adds all modifications for All weapons to the several weapon attacks from "getAttackArray"
         let addAllUnspecifcModificationsToAttackArray =
             addAllAttackModificationsForAll
@@ -287,7 +288,7 @@ module FullRoundAttackAction =
     
             ///
             let calculatedSize =
-
+    
                 let startSize =
                     match size with
                     | Fine          -> 1
@@ -316,15 +317,15 @@ module FullRoundAttackAction =
                                                            else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'" 
                                  )
                     |> Array.sum
-
+    
                 (startSize + changeSizeBy)
                 |> fun x -> if x > 9 then 9
                             elif x < 1 then 1
                             else x
-
+    
             ///
             let getUsedModifierToHit =
-
+    
                 let getStatChangesToHit =
                     modifications
                     |> Array.collect (fun x -> x.StatChanges)
@@ -337,7 +338,7 @@ module FullRoundAttackAction =
                     |> Array.map (fun x -> Array.head x)
                     |> Array.map (fun statChange -> statChange.AttributeChange)
                     |> Array.sum
-
+    
                 (match weapon.Modifier.ToHit with
                 | Strength      -> char.Strength
                 | Dexterity     -> char.Dexterity
@@ -350,7 +351,7 @@ module FullRoundAttackAction =
                 |> fun x -> x + getStatChangesToHit
                 |> fun x -> (float x-10.)/2.
                 |> floor |> int
-
+    
             ///
             let addBoniToAttack = 
                 modifications 
@@ -374,7 +375,7 @@ module FullRoundAttackAction =
                 calculatedSize
                 |> fun x -> Map.find x findSizes
                 |> fun x -> x.SizeModifier
-
+    
             ///
             let getBonusToAttack =
                 char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + addBoniToAttack + addSizeBonus + iterativeModifier
@@ -384,7 +385,7 @@ module FullRoundAttackAction =
                 let getAttackRolls =
                         rollDice 10000 20
                 getRndArrElement getAttackRolls,getRndArrElement getAttackRolls
-
+    
             let totalAttackBonus =
                 attackRoll + getBonusToAttack
     
@@ -406,8 +407,8 @@ module FullRoundAttackAction =
                                   )
                     |> Array.sum
                 critConfirmationRoll + getBonusToAttack + critSpecificBonus
-
-
+    
+    
             ///
             let getDamageRolls die =
                 rollDice 100000 die
@@ -462,9 +463,9 @@ module FullRoundAttackAction =
                     | Huge          -> 7
                     | Gargantuan    -> 8
                     | Colossal      -> 9
-
+    
                 let effectiveSize =
-
+    
                     let changeSizeBy =
                         modifications
                         |> Array.map (fun x -> x.SizeChanges)
@@ -481,16 +482,16 @@ module FullRoundAttackAction =
                                                                else failwith "Unrecognized Pattern of sizeChangeBoni." 
                                      )
                         |> Array.sum
-
+    
                     (startSize + changeSizeBy)
                     |> fun x -> if x > 9 then 9
                                 elif x < 1 then 1
                                 else x
-
+    
                 let diceRow = 
                     [|(1,1);(1,2);(1,3);(1,4);(1,6);(1,8);(1,10);(2,6);(2,8);(3,6);(3,8);
                     (4,6);(4,8);(6,6);(6,8);(8,6);(8,8);(12,6);(12,8);(16,6);(16,8);(24,6);(24,8);(36,6);(36,8)|] 
-
+    
                 ///https://paizo.com/paizo/faq/v5748nruor1fm#v5748eaic9t3f
                 let getSizeChange reCalcWeapon (startS: int) (modifiedS: int) =
                     let snowFlakeIncrease numberofdice (die: int) =
@@ -529,9 +530,9 @@ module FullRoundAttackAction =
                                              else reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
                     let adjustedDieNum = fst adjustedDie
                     let adjustedDietype = snd adjustedDie
-
+    
                     let rec loopResizeWeapon (n:int) (nDice:int) (die:int) = 
-
+    
                         let stepIncrease = if startS + (int decInc*n) < 5 || (nDice * die) < 6 
                                            then 1
                                            else 2
@@ -555,12 +556,12 @@ module FullRoundAttackAction =
                                               | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error2"
                                          else failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error3"
                              |> fun (nDie,die) -> loopResizeWeapon (n+1) nDie die
-
+    
                     loopResizeWeapon 0 adjustedDieNum adjustedDietype
                     |> fun (n,die) -> createDamage n die reCalcWeapon.Damage.DamageType
-
+    
                 getSizeChange weapon startSize effectiveSize
-
+    
             let addWeaponDamage = 
                 let rec getRandRoll listOfRolls=
                     (getRndArrElement (getDamageRolls sizeAdjustedWeaponDamage.Die) )::listOfRolls
@@ -598,7 +599,7 @@ module FullRoundAttackAction =
                                         |> fun (bonus,str) -> Array.append [|bonus,sizeAdjustedWeaponDamage.DamageType,str|] extraDmg
                                    else extraDmg
                 |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0,Untyped) && (bonus,dType) <> (0,VitalStrikeDamage) )
-
+    
             //
             let getExtraDamageOnCrit = 
                 let rec getRandRoll listOfRolls die number =
@@ -641,10 +642,10 @@ module FullRoundAttackAction =
                 if getExtraDamageOnCrit = [||]
                 then getExtraDamageOnHit
                 else Array.map2 (fun onHit onCrit -> (getValue onHit) + (getValue onCrit), getDmgType onHit, getName onHit) getExtraDamageOnHit getExtraDamageOnCrit
-
-                ///
-            let extraDamageToString = 
-                extraDamageCombined
+    
+            ///
+            let extraDamageToString extraDmgArr= 
+                extraDmgArr
                 |> Array.map (fun (value,dType,name) -> "+" + (string value) + " " + (string dType) + " " + "damage" + " (" + name + ")" + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
                 |> fun x -> x.TrimEnd [|' ';','|]       
@@ -676,14 +677,15 @@ module FullRoundAttackAction =
                 addDamageMod + addWeaponDamage + addDamageBoni
                 |> fun x -> if x <= 0 then 1 else x
     
-            if (Array.contains attackRoll weapon.CriticalRange) = false && getExtraDamageOnHit = [||]
+            if (Array.contains attackRoll weapon.CriticalRange) = false && extraDamageCombined = [||]
                 then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage!" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType
-            elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamageOnHit = [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (crit * %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier
-            elif (Array.contains attackRoll weapon.CriticalRange) && getExtraDamageOnHit <> [||]
-                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage %s !" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType extraDamageToString
-            elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamageOnHit <> [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage %s (crit * %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
+            elif (Array.contains attackRoll weapon.CriticalRange) = true && extraDamageCombined = [||] 
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (x %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier
+            elif (Array.contains attackRoll weapon.CriticalRange) = false && extraDamageCombined <> [||]
+                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage %s !" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType (extraDamageToString extraDamageCombined)
+            elif (Array.contains attackRoll weapon.CriticalRange) = true && extraDamageCombined <> [||] 
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (x %i)(%s on a crit) / (%s when not confirmed) !" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier (extraDamageToString extraDamageCombined) (extraDamageToString getExtraDamageOnHit) 
+                else printfn "You should not see this message, please open an issue with your input as a bug report"
      
         addAllWeaponTypeSpecificModifications
         |> Array.map (fun (w,wType,modi,modArr) -> getOneAttack w wType modi modArr)

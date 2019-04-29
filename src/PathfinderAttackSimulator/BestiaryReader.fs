@@ -4,8 +4,10 @@ open System
 open System.Net
 open Library.AuxLibFunctions
 
+/// This module contains helper functions for the d20pfsrd/Archives of Nethys bestiary reader and the reader function "getMonsterInformation"
 module BestiaryReader =
     
+    /// Module of helper functions for the d20pfsrd/Archives of Nethys bestiary reader
     module AuxFunctions = 
 
         type AttackVariant = 

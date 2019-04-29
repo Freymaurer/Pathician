@@ -2,9 +2,10 @@
 
 open System
 
+/// This module is made from several sub moduls containing necessary types to create characters, weapons and modifications, as well as librarys for each of those classes.
 module Library =
 
-    /// This module contains all necessary types and create functions to operate the StandardAttack and Full-RoundAttack module
+    /// This module contains all necessary types and create functions to operate the StandardAttack and Full-RoundAttack module.
     module AuxLibFunctions =
 
         type SizeType =
@@ -301,7 +302,7 @@ module Library =
             CasterLevel2 = 0
             }
 
-    /// library for all pre-written weapons; this is mostly for personal use or meant as an example
+    /// Library for all pre-written weapons; this is mostly for personal use or meant as an example
     module Weapons =
 
         open AuxLibFunctions
@@ -898,7 +899,8 @@ module Library =
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
-      
+    
+    /// This part is still under construction, come back later.
     module Server = 
 
         open Modifications

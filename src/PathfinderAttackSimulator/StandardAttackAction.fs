@@ -5,11 +5,10 @@ open PathfinderAttackSimulator.Library
 open PathfinderAttackSimulator.Library.AuxLibFunctions
 open PathfinderAttackSimulator.Library.Modifications
 
-
+/// This module contains some smaller helper functions for all attack calculator functions and also the calculator for standard attack actions "myStandardAttack"
 module StandardAttackAction =
-    ///Pathfinder Standard Attack Action////
 
-    ////All dice generators////
+    /// Attack calculator helper functions
     module AuxFunctions =
 
         let rollDice count (diceSides:int) =
@@ -24,6 +23,8 @@ module StandardAttackAction =
     
     open AuxFunctions
     
+
+    /// This function returns the output of a standard attack action based on the used character stats, weapons and modifications.
     let myStandardAttack (char: CharacterStats) (size: SizeType) (weapon: Weapon) (modifications: AttackModification []) =
     
         let calculatedSize =
@@ -373,11 +374,11 @@ module StandardAttackAction =
             else Array.map2 (fun onHit onCrit -> (getValue onHit) + (getValue onCrit), getDmgType onHit, getName onHit) getExtraDamageOnHit getExtraDamageOnCrit
 
         ///
-        let extraDamageToString = 
-            extraDamageCombined
+        let extraDamageToString extraDmgArr= 
+            extraDmgArr
             |> Array.map (fun (value,dType,name) -> "+" + (string value) + " " + (string dType) + " " + "damage" + " (" + name + ")" + ", ")
             |> Array.fold (fun strArr x -> strArr + x) "" 
-            |> fun x -> x.TrimEnd [|' ';','|]         
+            |> fun x -> x.TrimEnd [|' ';','|]          
 
         ///
         let addDamageBoni =
@@ -404,13 +405,13 @@ module StandardAttackAction =
             addDamageMod + addWeaponDamage + addDamageBoni
             |> fun x -> if x <= 0 then 1 else x
 
-
-        ///
-        if (Array.contains attackRoll weapon.CriticalRange) = false && getExtraDamageOnHit = [||]
-            then printfn "You hit the enemy with a %i (rolled %i) for %i %A damage!" totalAttackBonus attackRoll getDamage weapon.Damage.DamageType
-        elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamageOnHit = [||] 
-            then printfn "You (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A Damage (crit * %i)!" totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier
-        elif (Array.contains attackRoll weapon.CriticalRange) = false && getExtraDamageOnHit <> [||]
-            then printfn "You hit the enemy with a %i (rolled %i) for %i %A damage %s !" totalAttackBonus attackRoll getDamage weapon.Damage.DamageType extraDamageToString
-        elif (Array.contains attackRoll weapon.CriticalRange) = true && getExtraDamageOnHit <> [||] 
-            then printfn ("You (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage %s (crit * %i)!") totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType extraDamageToString weapon.CriticalModifier
+        /////
+        if (Array.contains attackRoll weapon.CriticalRange) = false && extraDamageCombined = [||]
+            then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage!" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType
+        elif (Array.contains attackRoll weapon.CriticalRange) = true && extraDamageCombined = [||] 
+            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (x %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier
+        elif (Array.contains attackRoll weapon.CriticalRange) = false && extraDamageCombined <> [||]
+            then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage %s !" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType (extraDamageToString extraDamageCombined)
+        elif (Array.contains attackRoll weapon.CriticalRange) = true && extraDamageCombined <> [||] 
+            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (x %i)(%s on a crit) / (%s when not confirmed) !" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier (extraDamageToString extraDamageCombined) (extraDamageToString getExtraDamageOnHit) 
+            else printfn "You should not see this message, please open an issue with your input as a bug report"

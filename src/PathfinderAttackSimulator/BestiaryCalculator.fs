@@ -4,6 +4,7 @@ open System
 open Library
 open Library.AuxLibFunctions
 
+/// This module contains both bestiary calculator functions for standard attacks "calculateStandardAttack" and full-round attacks "calculateFullAttack"
 module BestiaryCalculator =
     
     open BestiaryReader.AuxFunctions
@@ -381,26 +382,26 @@ module BestiaryCalculator =
                 |> Array.append [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
                 |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 ) 
 
-        let extraDamageToString = 
-            extraDamageCombined
-            |> Array.map (fun (value,dmgType) -> "+" + (string value) + " " + (string dmgType) + " " + "damage" + ", ")
+        let extraDamageToString extraDmgArr= 
+            extraDmgArr
+            |> Array.map (fun (value,dType) -> "+" + (string value) + " " + (string dType) + " " + "damage"  + ", ")
             |> Array.fold (fun strArr x -> strArr + x) "" 
-            |> fun x -> x.TrimEnd [|' ';','|]
+            |> fun x -> x.TrimEnd [|' ';','|]    
     
         let additionalInfoString =
             if wantedAttack.AdditionalEffects = ""
             then ""
             else "plus " + wantedAttack.AdditionalEffects
     
-        ////
         if (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageCombined = [||]
             then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageCombined = [||] 
-            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
+            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (x %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageCombined <> [||]
-            then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
+            then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage (extraDamageToString extraDamageCombined) additionalInfoString
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageCombined <> [||] 
-            then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage extraDamageToString wantedAttack.CriticalModifier additionalInfoString
+            then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage (x %i) %s (%s on a crit) / (%s when not confirmed) !") wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit)  
+            else printfn "You should not see this message, please open an issue with your input as a bug report"
 
     /// This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
     /// attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
@@ -767,11 +768,11 @@ module BestiaryCalculator =
                     |> Array.append [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
                     |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 ) 
 
-            let extraDamageToString = 
-                extraDamageCombined
-                |> Array.map (fun (value,dmgType) -> "+" + (string value) + " " + (string dmgType) + " " + "damage" + ", ")
+            let extraDamageToString extraDmgArr= 
+                extraDmgArr
+                |> Array.map (fun (value,dType) -> "+" + (string value) + " " + (string dType) + " " + "damage"  + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
-                |> fun x -> x.TrimEnd [|' ';','|]
+                |> fun x -> x.TrimEnd [|' ';','|]    
     
             let additionalInfoString =
                 if urlAttack.AdditionalEffects = ""
@@ -782,11 +783,11 @@ module BestiaryCalculator =
             if (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageCombined = [||]
                 then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
             elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageCombined = [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (x %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
             elif (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageCombined <> [||]
-                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
+                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage (extraDamageToString extraDamageCombined) additionalInfoString
             elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageCombined <> [||] 
-                then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage extraDamageToString urlAttack.CriticalModifier additionalInfoString
-        
+                then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage (x %i) %s (%s on a crit) / (%s when not confirmed) !") urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit)  
+                else printfn "You should not see this message, please open an issue with your input as a bug report"
         attackArr
         |> Array.mapi (fun i (attackBonus,attack) -> calculateOneAttack attackBonus attack modificationsCombined.[i])
