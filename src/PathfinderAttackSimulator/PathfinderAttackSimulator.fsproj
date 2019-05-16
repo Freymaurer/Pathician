@@ -20,8 +20,9 @@
     <Compile Include="PathfinderLib.fs" />
     <Compile Include="StandardAttackAction.fs" />
     <Compile Include="FullRoundAttackAction.fs" />
-    <Compile Include="d20BestiaryReader.fs" />
-    <Compile Include="d20BestiaryCalculator.fs" />
+    <Compile Include="BestiaryReader.fs" />
+    <Compile Include="BestiaryCalculator.fs" />
+    <Compile Include="DPRCalculator.fs" />
     <None Include="paket.references" />
     <None Include="paket.template" />
   </ItemGroup>

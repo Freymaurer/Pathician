@@ -21,13 +21,13 @@ open Library.AuxLibFunctions
 
 let myMagus =  {
     CharacterName = "Best Character Name Ever"
-    BAB = 5
-    Strength = 1
-    Dexterity = 5
-    Constitution = 0
-    Intelligence = 3
-    Wisdom = 0
-    Charisma = -2
+    BAB = 4
+    Strength = 12
+    Dexterity = 20
+    Constitution = 10
+    Intelligence = 16
+    Wisdom = 10
+    Charisma = 5
     CasterLevel1 = 6
     CasterLevel2 = 0
     }
@@ -36,17 +36,18 @@ let myMagus =  {
 >
 
 Now we need to decide for a weapon. Like every magus we decide to use a Scimitar.
+Importan will be that we want to hit with dexterity but want our damage calculated based on our strength.
 *)
 
 let Scimitar = {
         Name                    = "Scimitar"
         Damage                  = createDamage 1 6 Slashing
         DamageBonus             = 0
-        ExtraDamage             = createDamage 0 0 Untyped
+        ExtraDamage             = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
         BonusAttackRolls        = 0
         CriticalRange           = [|18 .. 20|] 
         CriticalModifier        = 2
-        Modifier                = createUsedModifier Dexterity Strength OneHanded 1.
+        Modifier                = createUsedModifier Dexterity Strength OneHanded 1. //hit with dexterity but damage with strength
         ManufacturedOrNatural   = Manufactured
         Description             = "Normal Scimitar"
         }
@@ -57,13 +58,15 @@ and also a new one: The modification for an intensified, empowered Shocking Gras
 So how do we create this modification, which is a quite complex modification if we want it to be flexibel.
 *)
 
-let ShockingGraspEmpowered casterLevel metalTF = {
+let ShockingGraspIntensifiedEmpowered casterLevel metalTF = {
     Name = "Intensified Empowered Shocking Grasp"
     BonusAttacks = createBonusAttacks 0 NoBA All
-    BonusAttackRoll = createBonus (if metalTF = true then 3 else 0) Flat
+    BonusAttackRoll = createAttackBoniHitAndCrit (if metalTF = true then 3 else 0) Flat 0 Flat
     BonusDamage = createBonus 0 Flat
-    ExtraDamage = createDamage ((if casterLevel > 10 then 10 else casterLevel) 
-                               |> fun x -> x + int (float x * 0.5) ) 6 Electricity
+    ExtraDamage = createDamageHitAndCrit ((if casterLevel > 10 then 10 else casterLevel) 
+                                         |> fun x -> x + int (float x * 0.5) ) 6 Electricity
+                                         ((if casterLevel > 10 then 10 else casterLevel) 
+                                         |> fun x -> x + int (float x * 0.5) ) 6 Electricity
     AppliedTo = [|All|], 1
     StatChanges = [||]
     SizeChanges = createSizechange 0 Flat false
@@ -84,7 +87,7 @@ As we only use one weapon we can use Weapon Focus as a modification.
 open StandardAttackAction
 open Library.Modifications
 
-myStandardAttack myMagus Medium Scimitar [|ShockingGraspEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|]
+myStandardAttack myMagus Medium Scimitar [|ShockingGraspIntensifiedEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|]
 
 (** 
 > You hit the enemy with a 21 (rolled 6) for 7 Slashing damage +27 Electricity damage (Intensified Empowered Shocking Grasp) !
@@ -112,9 +115,9 @@ Because this is difficult to explain let me first show you the difference betwee
 open FullRoundAttackAction
 
 /// This is the previous standard attack action
-myStandardAttack myMagus Medium Scimitar [|ShockingGraspEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|]
+myStandardAttack myMagus Medium Scimitar [|ShockingGraspIntensifiedEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|]
 
-myFullAttack myMagus Medium [|Scimitar,PrimaryMain|] [|ShockingGraspEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|] 
+myFullAttack myMagus Medium [|Scimitar,PrimaryMain|] [|ShockingGraspIntensifiedEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|] 
 
 (**
 As you can see the difference is an (weapon * WeaponType) array instead of simply a weapon.
@@ -132,12 +135,12 @@ Now let us skip some level and look at our Magus at a level 16
 let myMagus2 =  {
     CharacterName = "Best Character Name Ever^2"
     BAB = 12
-    Strength = 3
-    Dexterity = 7
-    Constitution = 0
-    Intelligence = 6
-    Wisdom = 0
-    Charisma = -2
+    Strength = 16
+    Dexterity = 24
+    Constitution = 10
+    Intelligence = 22
+    Wisdom = 10
+    Charisma = 5
     CasterLevel1 = 16
     CasterLevel2 = 0
     }
@@ -146,7 +149,7 @@ let ShinyBlingBlingScimitar = {
     Name                = "Really Shiny +5 Flaming Keen Ghost Touch Scimitar"
     Damage              = createDamage 1 6 Slashing
     DamageBonus         = 5
-    ExtraDamage         = createDamage 1 6 Fire
+    ExtraDamage         = createDamageHitAndCrit 1 6 Fire 0 0 Untyped
     BonusAttackRolls    = 6
     CriticalRange       = [|15 .. 20|] 
     CriticalModifier    = 2
@@ -164,7 +167,7 @@ let Tentacle = {
     Name                = "Huge Tentacle"
     Damage              = createDamage 3 8 Bludgeoning
     DamageBonus         = 0
-    ExtraDamage         = createDamage 1 6 Cold
+    ExtraDamage         = createDamageHitAndCrit 1 6 Cold 2 10 Cold
     BonusAttackRolls    = 0
     CriticalRange       = [|20|] 
     CriticalModifier    = 3
@@ -177,7 +180,7 @@ myFullAttack myMagus2 Medium [| ShinyBlingBlingScimitar,PrimaryMain;
                                 Tentacle,Secondary;
                                 Tentacle,Secondary |] 
 
-                             [| ShockingGraspEmpowered myMagus.CasterLevel1 true; 
+                             [| ShockingGraspIntensifiedEmpowered myMagus.CasterLevel1 true; 
                                 Haste; 
                                 EnlargePerson; 
                                 PowerAttack myMagus2.BAB; 

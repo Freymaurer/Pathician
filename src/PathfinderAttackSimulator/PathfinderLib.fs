@@ -2,9 +2,10 @@
 
 open System
 
+/// This module is made from several sub moduls containing necessary types to create characters, weapons and modifications, as well as librarys for each of those classes.
 module Library =
 
-    /// This module contains all necessary types and create functions to operate the StandardAttack and Full-RoundAttack module
+    /// This module contains all necessary types and create functions to operate the StandardAttack and Full-RoundAttack module.
     module AuxLibFunctions =
 
         type SizeType =
@@ -90,6 +91,11 @@ module Library =
             DamageType : DamageTypes
             }
 
+        type DamageHitAndCrit = {
+            OnHit : Damage
+            OnCrit : Damage
+            }
+
         type WeaponDamageMultiplicator = {
             Hand : WeaponHanded
             Multiplicator : float     
@@ -122,6 +128,11 @@ module Library =
             SizeChangeValue : int
             SizeChangeBonustype : BonusTypes
             EffectiveSizeChange : bool
+            }
+
+        type AttackBonusHitAndCrit = {
+            OnHit   : Bonus
+            OnCrit  : Bonus
             }
 
         /// NoAS 0 Flat if no StatChange, or leave array empty
@@ -157,7 +168,7 @@ module Library =
             Damage.DamageType = dType
             }
 
-        /// hitting = Modifier used for hitting; damage = Modifier used for damage calculation; multiplicator = how often is damage modifier added; 1.5 means that power attack is also increased
+        /// hitting = Modifier used for hitting; damage = Modifier used for damage calculation; handling referrs to onehanded twohanded etc. necessary to calculate power attack; multiplicator = how often is damage modifier added
         let createUsedModifier hitting damage handling multiplicator = {
             ToHit = hitting
             ToDmg = damage
@@ -180,6 +191,19 @@ module Library =
             SizeModifier = modifier
             SizeId = id
             Size = sizeType
+            }
+
+        // the OnHit bonus is applied to all attacks crit or not, whereas the OnCrit bonus is applied to crits IN ADDITION to the OnHit Bonus.
+        let createAttackBoniHitAndCrit hitValue hitValueType critValue critValueType = {
+            OnHit = createBonus hitValue hitValueType
+            OnCrit = createBonus critValue critValueType
+            }
+
+        /// first 3 variables are number of for extra damage on normal hits, (1d6 Fire damage = 1 6 Fire).
+        /// The latter 3 are used for dmg only(!) applied on crits! (Flaming burst = createDamageHitAndCrit 1 6 Fire 2 10 Fire)
+        let createDamageHitAndCrit numberOfDieoOnHit dieOnHit dmgTypeOnHit numberOfDieOnCrit dieOnCrit dmgTypeOnCrit = {
+            DamageHitAndCrit.OnHit = createDamage numberOfDieoOnHit dieOnHit dmgTypeOnHit
+            DamageHitAndCrit.OnCrit = createDamage numberOfDieOnCrit dieOnCrit dmgTypeOnCrit
             }
 
         let findSizes = [1,createSizeAttributes 8 1 Fine;
@@ -211,7 +235,7 @@ module Library =
             Name                    : string
             Damage                  : Damage
             DamageBonus             : int
-            ExtraDamage             : Damage
+            ExtraDamage             : DamageHitAndCrit
             BonusAttackRolls        : int
             CriticalRange           : int []
             CriticalModifier        : int
@@ -223,9 +247,9 @@ module Library =
         type AttackModification = {
             Name                : string
             BonusAttacks        : BonusAttacks
-            BonusAttackRoll     : Bonus
+            BonusAttackRoll     : AttackBonusHitAndCrit
             BonusDamage         : Bonus
-            ExtraDamage         : Damage
+            ExtraDamage         : DamageHitAndCrit
             AppliedTo           : WeaponType [] * int
             StatChanges         : StatChange []
             SizeChanges         : SizeChange
@@ -241,12 +265,12 @@ module Library =
         let myParrn = {
             CharacterName = "Parrn"
             BAB = 6
-            Strength = 6
-            Dexterity = 0
-            Constitution = 0
-            Intelligence = 0
-            Wisdom = 0
-            Charisma = 0
+            Strength = 22
+            Dexterity = 10
+            Constitution = 10
+            Intelligence = 10
+            Wisdom = 10
+            Charisma = 10
             CasterLevel1 = 0
             CasterLevel2 = 0
             }
@@ -255,12 +279,12 @@ module Library =
         let myTumor = {
             CharacterName = "Stephano"
             BAB = 6
-            Strength = -2
-            Dexterity = 1
-            Constitution = 0
-            Intelligence = 0
-            Wisdom = 0
-            Charisma = 0
+            Strength = 6
+            Dexterity = 12
+            Constitution = 10
+            Intelligence = 10
+            Wisdom = 10
+            Charisma = 10
             CasterLevel1 = 0
             CasterLevel2 = 0
             }
@@ -268,26 +292,26 @@ module Library =
         let myElemental = {
             CharacterName = "Michelangelo"
             BAB = 6
-            Strength = 1
-            Dexterity = 2
-            Constitution = 1
-            Intelligence = 0
-            Wisdom = 0
-            Charisma = 0
+            Strength = 12
+            Dexterity = 14
+            Constitution = 12
+            Intelligence = 10
+            Wisdom = 10
+            Charisma = 10
             CasterLevel1 = 0
             CasterLevel2 = 0
             }
 
-    /// library for all pre-written weapons; this is mostly for personal use or meant as an example
+    /// Library for all pre-written weapons; this is mostly for personal use or meant as an example
     module Weapons =
 
         open AuxLibFunctions
 
-        let glaiveGuisarmePlus1Flaming =  {
+        let glaiveGuisarmePlus1FlamingBurst =  {
             Name                = "Glaive-Guisarme +1 flaming"
             Damage              = createDamage 1 10 Slashing
             DamageBonus         = 1
-            ExtraDamage         = createDamage 1 6 Fire
+            ExtraDamage         = createDamageHitAndCrit 1 6 Fire 2 10 Fire
             BonusAttackRolls    = 1
             CriticalRange       = [|20|]
             CriticalModifier    = 3
@@ -300,7 +324,7 @@ module Library =
             Name                = "Large +1 Keen Greatsword"
             Damage              = createDamage 3 6 Slashing
             DamageBonus         = 1
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 1
             CriticalRange       = [|17;18;19;20|]
             CriticalModifier    = 2
@@ -313,7 +337,7 @@ module Library =
             Name                = "Masterwork Sap"
             Damage              = createDamage 1 8 Bludgeoning
             DamageBonus         = 0
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 1
             CriticalRange       = [|20|]
             CriticalModifier    = 2
@@ -326,7 +350,7 @@ module Library =
             Name                = "Masterwork Sap, huge"
             Damage              = createDamage 2 6 Bludgeoning
             DamageBonus         = 0
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 1
             CriticalRange       = [|20|]
             CriticalModifier    = 2
@@ -339,7 +363,7 @@ module Library =
             Name                = "Butchers Axe"
             Damage              = createDamage 3 6 Slashing
             DamageBonus         = 0
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 0
             CriticalRange       = [|20|]
             CriticalModifier    = 3
@@ -352,7 +376,7 @@ module Library =
             Name                = "Mwk Rapier"
             Damage              = createDamage 1 6 Piercing
             DamageBonus         = 0
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 1
             CriticalRange       = [|18;19;20|]
             CriticalModifier    = 2
@@ -365,7 +389,7 @@ module Library =
             Name                = "+1 Longsword"
             Damage              = createDamage 1 6 Slashing
             DamageBonus         = 1
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 1
             CriticalRange       = [|19;20|]
             CriticalModifier    = 2
@@ -378,7 +402,7 @@ module Library =
             Name                = "Talons"
             Damage              = createDamage 1 3 Piercing
             DamageBonus         = 0
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 0
             CriticalRange       = [|20|]
             CriticalModifier    = 2
@@ -391,7 +415,7 @@ module Library =
             Name                = "Huge +1 Keen Greatsword"
             Damage              = createDamage 4 6 Slashing
             DamageBonus         = 1
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 1
             CriticalRange       = [|17;18;19;20|]
             CriticalModifier    = 2
@@ -404,7 +428,7 @@ module Library =
             Name                = "Mwk Longbow"
             Damage              = createDamage 1 8 Piercing
             DamageBonus         = 0
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 1
             CriticalRange       = [|20|]
             CriticalModifier    = 3
@@ -417,7 +441,7 @@ module Library =
             Name                = "Bite"
             Damage              = createDamage 1 6 BludgeoningOrPiercingOrSlashing
             DamageBonus         = 0
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 0
             CriticalRange       = [|20|]
             CriticalModifier    = 2
@@ -430,7 +454,7 @@ module Library =
             Name                = "Slam"
             Damage              = createDamage 1 4 Bludgeoning
             DamageBonus         = 0
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 0
             CriticalRange       = [|20|]
             CriticalModifier    = 2
@@ -443,7 +467,7 @@ module Library =
             Name                = "Claw"
             Damage              = createDamage 1 6 Slashing
             DamageBonus         = 0
-            ExtraDamage         = createDamage 0 0 Untyped
+            ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             BonusAttackRolls    = 0
             CriticalRange       = [|20|]
             CriticalModifier    = 2
@@ -460,9 +484,9 @@ module Library =
         let AidAnother = {
             Name = "Aid Another"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], 1
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -472,9 +496,9 @@ module Library =
         let BlessingOfFervorAttackBonus = {
             Name = "Blessing of Fervor"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 2 Flat 0 Flat
             BonusDamage = createBonus 2 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -485,9 +509,9 @@ module Library =
         let BonusAttackDamage attack damage= {
             Name = "Blessing of Fervor"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus attack Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit attack Flat 0 Flat
             BonusDamage = createBonus damage Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -497,21 +521,33 @@ module Library =
         let Charging = {
             Name = "Charge-Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 BonusTypes.Flat
-            BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            BonusAttackRoll = createAttackBoniHitAndCrit 2 Flat 0 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
 
+        let CriticalFocus = {
+            Name = "Critical Focus"
+            BonusAttacks = createBonusAttacks 0 NoBA All
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 4 Flat
+            BonusDamage = createBonus 0 Flat
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
+            AppliedTo = [|All|], -20
+            StatChanges = [||]
+            SizeChanges = createSizechange 0 Flat false
+            Description = "Applies +4 to all crits not, as its not able to separate weapons"
+            }
+
         let DivineFavor = {
             Name = "Divine Favor"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 1 Luck
+            BonusAttackRoll = createAttackBoniHitAndCrit 1 Luck 0 Flat
             BonusDamage = createBonus 1 Luck
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -521,11 +557,11 @@ module Library =
         let EnlargePerson = {
             Name = "Enlarge Person"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
-            StatChanges = [|(createStatChange Strength 1 Size);(createStatChange Dexterity -1 Size)|]
+            StatChanges = [|(createStatChange Strength 2 Size);(createStatChange Dexterity -2 Size)|]
             SizeChanges = createSizechange 1 Polymorph false
             Description = ""
             }
@@ -533,11 +569,11 @@ module Library =
         let Fatigued = {
             Name = "Fatigued"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
-            StatChanges = [||]
+            StatChanges = [|(createStatChange Strength -2 Flat); (createStatChange Dexterity -2 Size)|]
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
@@ -545,9 +581,9 @@ module Library =
         let Flanking = {
             Name = "Flanking"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 BonusTypes.Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 2 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -557,9 +593,9 @@ module Library =
         let FlurryOfBlows = {
             Name = "Flurry Of Blows"
             BonusAttacks = createBonusAttacks 1 NoBA PrimaryMain
-            BonusAttackRoll = createBonus 0 BonusTypes.Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -569,9 +605,9 @@ module Library =
         let FuriousFocus bab = {
             Name = "Furious Focus"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (int(floor (float bab/4. + 1.))) BonusTypes.Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit (int(floor (float bab/4. + 1.))) BonusTypes.Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|PrimaryMain|], 1
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -581,9 +617,9 @@ module Library =
         let Haste = {
             Name = "Haste"
             BonusAttacks = createBonusAttacks 1 HasteLike PrimaryMain
-            BonusAttackRoll = createBonus 1 BonusTypes.Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 1 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -599,9 +635,9 @@ module Library =
             {
             Name = "Inspire Courage"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus bonusValue Competence
+            BonusAttackRoll = createAttackBoniHitAndCrit bonusValue Competence 0 Flat
             BonusDamage = createBonus bonusValue Competence
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -611,9 +647,9 @@ module Library =
         let Invisibility = {
             Name = "Invisibility"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 2 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 2 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -623,9 +659,9 @@ module Library =
         let Multiattack =  {
             Name = "Multiattack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 3 BonusTypes.Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 3 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|Secondary|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -635,11 +671,11 @@ module Library =
         let MutagenStrength = {
             Name = "Strength Mutagen"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
-            StatChanges = [|(createStatChange Strength 2 Alchemical); (createStatChange Intelligence -1 Alchemical)|]
+            StatChanges = [|(createStatChange Strength 4 Alchemical); (createStatChange Intelligence -2 Alchemical)|]
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
@@ -649,9 +685,9 @@ module Library =
             {
             Name = "Planar Focus"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage NumberOfExtraDie 6 Fire
+            ExtraDamage = createDamageHitAndCrit NumberOfExtraDie 6 Fire 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -661,9 +697,9 @@ module Library =
         let PowerAttack bab = {
             Name = "Power Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (int( - (floor (float bab/4. + 1.)) )) BonusTypes.Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit (int( - (floor (float bab/4. + 1.)) )) Flat 0 Flat
             BonusDamage = createBonus (int( (floor (float bab/4.) * 2.) + 2. )) BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -673,13 +709,13 @@ module Library =
         let PowerAttackURL (handed:WeaponHanded) bab= {
             Name = "Power Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (int( - (floor (float bab/4. + 1.)) )) Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit (int( - (floor (float bab/4. + 1.)) )) Flat 0 Flat
             BonusDamage = (floor (float bab/4.) * 2.) + 2. 
                           |> fun x -> match handed with
                                       | TwoHanded -> createBonus (int (x * 1.5)) Flat
                                       | OneHanded -> createBonus (int x) Flat
                                       | OffHand -> createBonus (int (x * 0.5)) Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -689,9 +725,9 @@ module Library =
         let Shaken = {
             Name = "Shaken"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus -2 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit -2 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -701,22 +737,24 @@ module Library =
         let ShockingGrasp casterLevel metalTF = {
             Name = "Intensified Empowered Shocking Grasp"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (if metalTF = true then 3 else 0) Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit (if metalTF = true then 3 else 0) Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage (if casterLevel > 5 then 5 else casterLevel) 6 Electricity
+            ExtraDamage = createDamageHitAndCrit (if casterLevel > 5 then 5 else casterLevel) 6 Electricity (if casterLevel > 5 then 5 else casterLevel) 6 Electricity
             AppliedTo = [|All|], 1
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
             Description = "Shocking Grasp deals 1d6 / level electricity damage up to a maximum of 5d6."
             }
 
-        let ShockingGraspEmpowered casterLevel metalTF = {
+        let ShockingGraspIntensifiedEmpowered casterLevel metalTF = {
             Name = "Intensified Empowered Shocking Grasp"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus (if metalTF = true then 3 else 0) Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit (if metalTF = true then 3 else 0) Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage ((if casterLevel > 10 then 10 else casterLevel) 
-                                       |> fun x -> x + int (float x * 0.5) ) 6 Electricity
+            ExtraDamage = createDamageHitAndCrit ((if casterLevel > 10 then 10 else casterLevel) 
+                                                 |> fun x -> x + int (float x * 0.5) ) 6 Electricity
+                                                 ((if casterLevel > 10 then 10 else casterLevel) 
+                                                 |> fun x -> x + int (float x * 0.5) ) 6 Electricity
             AppliedTo = [|All|], 1
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -726,9 +764,9 @@ module Library =
         let SneakAttack (rogueLevel:int) = {
             Name = "Sneak Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
+            ExtraDamage = createDamageHitAndCrit (int (ceil (float rogueLevel/2.))) 6 Precision 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -738,9 +776,9 @@ module Library =
         let SneakAttackOnce rogueLevel = {
             Name = "Sneak Attack"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 BonusTypes.Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage (int (ceil (float rogueLevel/2.))) 6 Precision
+            ExtraDamage = createDamageHitAndCrit (int (ceil (float rogueLevel/2.))) 6 Precision 0 0 Untyped
             AppliedTo = [|All|], 1        
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -751,9 +789,9 @@ module Library =
         let TwoWeaponFighting = {
             Name = "Two-Weapon-Fighting"
             BonusAttacks = createBonusAttacks 1 TWFLike Primary
-            BonusAttackRoll = createBonus -2 TwoWeaponFightingMalus
+            BonusAttackRoll = createAttackBoniHitAndCrit -2 TwoWeaponFightingMalus 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|Primary; PrimaryMain|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -764,45 +802,48 @@ module Library =
         let TwoWeaponFightingImproved = {
             Name = "Improved Two-Weapon-Fighting"
             BonusAttacks = createBonusAttacks 2 TWFLike Primary
-            BonusAttackRoll = createBonus -2 BonusTypes.TwoWeaponFightingMalus
+            BonusAttackRoll = createAttackBoniHitAndCrit -2 TwoWeaponFightingMalus 0 Flat
             BonusDamage = createBonus 0 BonusTypes.Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|Primary; PrimaryMain|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
 
+        /// This modification is hardcoded, so it does not follow normal modification rules
         let VitalStrike = {
             Name = "Vital Strike"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 1 0 VitalStrikeDamage
+            ExtraDamage = createDamageHitAndCrit 1 0 VitalStrikeDamage 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
             Description = "These extra weapon damage dice are not multiplied on a critical hit, but are added to the total"
             }
             
+        /// This modification is hardcoded, so it does not follow normal modification rules
         let VitalStrikeImproved = {
             Name = "Improved Vital Strike"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 2 0 VitalStrikeDamage
+            ExtraDamage = createDamageHitAndCrit 2 0 VitalStrikeDamage 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
             Description = "These extra weapon damage dice are not multiplied on a critical hit, but are added to the total"
             }
 
+        /// This modification is hardcoded, so it does not follow normal modification rules
         let VitalStrikeGreater = {
             Name = "Vital Strike"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 3 0 VitalStrikeDamage
+            ExtraDamage = createDamageHitAndCrit 3 0 VitalStrikeDamage 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -812,9 +853,9 @@ module Library =
         let WeaponFocus = {
             Name = "Weapon Focus"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 1 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 1 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -824,9 +865,9 @@ module Library =
         let WeaponSpecialization ={
             Name = "WeaponSpecialization"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 2 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -836,9 +877,9 @@ module Library =
         let Wrath = {
             Name = "Wrath"
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 1 Moral
+            BonusAttackRoll = createAttackBoniHitAndCrit 1 Moral 0 Flat
             BonusDamage = createBonus 1 Moral
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
@@ -850,15 +891,16 @@ module Library =
         let ZeroMod = {
             Name = ""
             BonusAttacks = createBonusAttacks 0 NoBA All
-            BonusAttackRoll = createBonus 0 Flat
+            BonusAttackRoll = createAttackBoniHitAndCrit 0 Flat 0 Flat
             BonusDamage = createBonus 0 Flat
-            ExtraDamage = createDamage 0 0 Untyped
+            ExtraDamage = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
             AppliedTo = [|All|], -20
             StatChanges = [||]
             SizeChanges = createSizechange 0 Flat false
             Description = ""
             }
-      
+    
+    /// This part is still under construction, come back later.
     module Server = 
 
         open Modifications
@@ -873,14 +915,14 @@ module Library =
             | rdyStr when rdyStr = "MODIFICATIONS" -> [|
                                                         Multiattack;SneakAttackOnce 0;TwoWeaponFighting;TwoWeaponFightingImproved;Haste;FlurryOfBlows;Shaken;WeaponFocus;EnlargePerson;MutagenStrength;
                                                         Invisibility;PlanarFocusFire 0;SneakAttack 0;Wrath;DivineFavor;FuriousFocus 0;PowerAttack 0;Flanking;Charging;WeaponSpecialization;Fatigued;
-                                                        AidAnother;VitalStrike;VitalStrikeImproved;VitalStrikeGreater;InspireCourage 0; ShockingGrasp 0 true; ShockingGraspEmpowered 0 true; PowerAttackURL OffHand 0;
+                                                        AidAnother;VitalStrike;VitalStrikeImproved;VitalStrikeGreater;InspireCourage 0; ShockingGrasp 0 true; ShockingGraspIntensifiedEmpowered 0 true; PowerAttackURL OffHand 0;
                                                         BlessingOfFervorAttackBonus; BonusAttackDamage 0 0;
                                                       |]
                                                       |> Array.map (fun x -> x.Name)
                                                       |> Array.sortBy (fun x -> x)
             | rdyStr when rdyStr = "WEAPONS" -> [|
                                                     claw;slamElemental;bite;mwkLongbow;greatswordParrnHuge;talonsTumor;enchantedLongswordElemental;
-                                                    mwkRapier;butchersAxe;mwkSapHuge;mwkSapLarge;greatswordParrn;glaiveGuisarmePlus1Flaming
+                                                    mwkRapier;butchersAxe;mwkSapHuge;mwkSapLarge;greatswordParrn;glaiveGuisarmePlus1FlamingBurst
                                                 |]
                                                 |> Array.map (fun x -> x.Name)
                                                 |> Array.sortBy (fun x -> x)
@@ -896,7 +938,7 @@ module Library =
                 Name                = "Test"
                 Damage              = createDamage 1 6 Slashing
                 DamageBonus         = 0
-                ExtraDamage         = createDamage 0 0 Untyped
+                ExtraDamage         = createDamageHitAndCrit 0 0 Untyped 0 0 Untyped
                 BonusAttackRolls    = 0
                 CriticalRange       = [|20|]
                 CriticalModifier    = 2

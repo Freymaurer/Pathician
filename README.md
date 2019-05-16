@@ -11,6 +11,7 @@ Below you can find a list of the currently supported features.
 
 - Standard attack action and full-round attack action calculator.
 - Calculator for d20pfsrd bestiary entries.
+- Damage per round calculator
 
 For in depth information on how to use these features please see [here](https://freymaurer.github.io/PathfinderAttackSimulator/)
 

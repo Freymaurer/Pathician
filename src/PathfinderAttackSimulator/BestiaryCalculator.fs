@@ -4,15 +4,16 @@ open System
 open Library
 open Library.AuxLibFunctions
 
-module D20pfsrdCalculator =
+/// This module contains both bestiary calculator functions for standard attacks "calculateStandardAttack" and full-round attacks "calculateFullAttack"
+module BestiaryCalculator =
     
-    open D20pfsrdReader.AuxFunctions
+    open BestiaryReader.AuxFunctions
 
     let private testForNaturalAttack (str:string) =
         let regexNaturalAttack = System.Text.RegularExpressions.Regex("(claw|vine|tentacle|bite|gore|hoof|wing|pincers|tail\sslap|slam|sting|talon|tongue)")
         regexNaturalAttack.IsMatch(str)
 
-    /// This function returns the calculated attack rolls of a d20pfsrd bestiary entry.
+    /// This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
     /// attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
     /// attackNumber = the exact attack variant that should be calculated, starting at 1
     /// modifications = array of attackmodifications (StatChanges will not work for this function)
@@ -108,7 +109,7 @@ module D20pfsrdCalculator =
 
         let attackBoniModifications = 
             modifications 
-            |> Array.map (fun x -> x.BonusAttackRoll)
+            |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
             |> Array.groupBy (fun x -> x.BonusType)
             |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
                                                    then bonusArr
@@ -157,6 +158,25 @@ module D20pfsrdCalculator =
     
         let totalAttackBonus =
             attackRoll + combinedAttackBoni
+
+        let totalAttackCritBonus =
+            let critSpecificBonus =
+                modifications
+                |> Array.map (fun x -> x.BonusAttackRoll.OnCrit)
+                |> Array.groupBy (fun x -> x.BonusType)
+                |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
+                                                       then bonusArr
+                                                            |> Array.sortByDescending (fun x -> x.Value) 
+                                                            |> fun x -> Array.head x
+                                                            |> fun x -> x.Value
+                                                       elif header = BonusTypes.Flat
+                                                       then bonusArr
+                                                            |> Array.map (fun x -> x.Value)
+                                                            |> Array.sum
+                                                       else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'"
+                              )
+                |> Array.sum
+            critConfirmationRoll + combinedAttackBoni + critSpecificBonus
     
         /////End attack boni/Start damage boni/////
     
@@ -284,15 +304,15 @@ module D20pfsrdCalculator =
             damageRolls + sizeAdjustedWeaponDamage.BonusDamage + modificationDamageBoni
             |> fun x -> if x <= 0 then 1 else x
     
-        let extraDamage =
+        let extraDamageOnHit =
             let getDamageRolls numberOfDie die=
                 let rolledDice = rollDice 1000 die
                 [|for i=1 to numberOfDie do
                     yield getRndArrElement rolledDice|]
                 |> Array.sum
             let extraDamageModifications =
-                modifications
-                |> Array.map (fun x -> x.ExtraDamage,x.Name) 
+                modifications 
+                |> Array.map (fun x -> x.ExtraDamage.OnHit,x.Name)
                 |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
                                                     , extraDmg.DamageType, str
                              )
@@ -301,10 +321,10 @@ module D20pfsrdCalculator =
                                                                  || modi = Modifications.VitalStrikeImproved
                                                                  || modi = Modifications.VitalStrikeGreater) modifications 
                                       ) = true
-                                   then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.DamageType = VitalStrikeDamage) modifications
-                                        |> Array.sortByDescending (fun x -> x.ExtraDamage.NumberOfDie)
+                                   then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                        |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
                                         |> Array.head
-                                        |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.NumberOfDie do
+                                        |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
                                                             yield getDamageRolls sizeAdjustedWeaponDamage.NumberOfDie sizeAdjustedWeaponDamage.Die|], vitalS.Name
                                         |> fun x -> x
                                         |> fun (intList,str) -> Array.sum intList, str
@@ -312,32 +332,78 @@ module D20pfsrdCalculator =
                                    else extraDmg
                 |> Array.map (fun (bonusValue,dmgType,modificationName) -> bonusValue,(string dmgType))
             //add weapon extra dmg (e.g. shocking enchantment) to modification extra dmg
-            [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
-            |> Array.append extraDamageModifications
+            extraDamageModifications
             |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
     
-        let extraDamageToString = 
-            extraDamage
-            |> Array.map (fun (value,dmgType) -> "+" + (string value) + " " + (string dmgType) + " " + "damage" + ", ")
+        let extraDamageOnCrit =
+            let getDamageRolls numberOfDie die=
+                let rolledDice = rollDice 1000 die
+                [|for i=1 to numberOfDie do
+                    yield getRndArrElement rolledDice|]
+                |> Array.sum
+            let extraDamageModifications =
+                if (Array.contains attackRoll wantedAttack.CriticalRange) = false
+                then [||]
+                else modifications 
+                     |> Array.map (fun x -> x.ExtraDamage.OnCrit,x.Name)
+                     |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
+                                                         , extraDmg.DamageType, str
+                                  )
+                     ///Vital Strike hardcode
+                     |> fun extraDmg -> if (Array.exists (fun modi -> modi = Modifications.VitalStrike
+                                                                      || modi = Modifications.VitalStrikeImproved
+                                                                      || modi = Modifications.VitalStrikeGreater) modifications 
+                                           ) = true
+                                        then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                             |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
+                                             |> Array.head
+                                             |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
+                                                                 yield getDamageRolls sizeAdjustedWeaponDamage.NumberOfDie sizeAdjustedWeaponDamage.Die|], vitalS.Name
+                                             |> fun x -> x
+                                             |> fun (intList,str) -> Array.sum intList, str
+                                             |> fun (bonus,str) -> Array.append [|bonus,VitalStrikeDamage,str|] extraDmg
+                                        else extraDmg
+                     |> Array.map (fun (bonusValue,dmgType,modificationName) -> bonusValue,(string dmgType))
+            //add weapon extra dmg (e.g. shocking enchantment) to modification extra dmg
+            extraDamageModifications
+            |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+
+        let extraDamageCombined =
+            let getDamageRolls numberOfDie die=
+                let rolledDice = rollDice 1000 die
+                [|for i=1 to numberOfDie do
+                    yield getRndArrElement rolledDice|]
+                |> Array.sum
+            if extraDamageOnCrit = [||]
+            then extraDamageOnHit
+                |> Array.append [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
+                |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+            else Array.map2 (fun (onHit:(int*string)) (onCrit:(int*string)) -> (fst onHit) + (fst onCrit), snd onHit) extraDamageOnHit extraDamageOnCrit
+                |> Array.append [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
+                |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 ) 
+
+        let extraDamageToString extraDmgArr= 
+            extraDmgArr
+            |> Array.map (fun (value,dType) -> "+" + (string value) + " " + (string dType) + " " + "damage"  + ", ")
             |> Array.fold (fun strArr x -> strArr + x) "" 
-            |> fun x -> x.TrimEnd [|' ';','|]
+            |> fun x -> x.TrimEnd [|' ';','|]    
     
         let additionalInfoString =
             if wantedAttack.AdditionalEffects = ""
             then ""
             else "plus " + wantedAttack.AdditionalEffects
     
-        ////
-        if (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamage = [||]
+        if (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageCombined = [||]
             then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
-        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamage = [||] 
-            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
-        elif (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamage <> [||]
-            then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
-        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamage <> [||] 
-            then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") wantedAttack.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage extraDamageToString wantedAttack.CriticalModifier additionalInfoString
+        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageCombined = [||] 
+            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (x %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
+        elif (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageCombined <> [||]
+            then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage (extraDamageToString extraDamageCombined) additionalInfoString
+        elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageCombined <> [||] 
+            then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage (x %i) %s (%s on a crit) / (%s when not confirmed) !") wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit)  
+            else printfn "You should not see this message, please open an issue with your input as a bug report"
 
-    /// This function returns the calculated attack rolls of a d20pfsrd bestiary entry.
+    /// This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
     /// attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
     /// attackNumber = the exact attack variant that should be calculated, starting at 1
     /// modifications = array of attackmodifications (StatChanges will not work for this function)
@@ -457,7 +523,7 @@ module D20pfsrdCalculator =
             //Start adding up attack boni
             let AttackBoniModifications = 
                 modificationArr 
-                |> Array.map (fun x -> x.BonusAttackRoll)
+                |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
                 |> Array.groupBy (fun x -> x.BonusType)
                 |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
                                                        then bonusArr
@@ -476,6 +542,26 @@ module D20pfsrdCalculator =
     
             let totalAttackBonus =
                 attackRoll + combinedAttackBoni
+
+            let totalAttackCritBonus =
+
+                let critSpecificBonus =
+                    modifications
+                    |> Array.map (fun x -> x.BonusAttackRoll.OnCrit)
+                    |> Array.groupBy (fun x -> x.BonusType)
+                    |> Array.map (fun (header,bonusArr) -> if header <> BonusTypes.Flat 
+                                                           then bonusArr
+                                                                |> Array.sortByDescending (fun x -> x.Value) 
+                                                                |> fun x -> Array.head x
+                                                                |> fun x -> x.Value
+                                                           elif header = BonusTypes.Flat
+                                                           then bonusArr
+                                                                |> Array.map (fun x -> x.Value)
+                                                                |> Array.sum
+                                                           else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'"
+                                  )
+                    |> Array.sum
+                critConfirmationRoll + combinedAttackBoni + critSpecificBonus
     
             /////End attack boni/Start damage boni/////
     
@@ -604,7 +690,7 @@ module D20pfsrdCalculator =
                 //the next line sets a minimum dmg of 1 for all attacks. the additional "(urlAttack.WeaponDamage.NumberOfDie <> 0)" circumvents a 1 dmg attack, if the attack is not meant to deal any attack.
                 |> fun x -> if (x <= 0) && (urlAttack.WeaponDamage.NumberOfDie <> 0) then 1 else x
     
-            let extraDamage =
+            let extraDamageOnHit =
                 let getDamageRolls numberOfDie die=
                     let rolledDice = rollDice 1000 die
                     [|for i=1 to numberOfDie do
@@ -612,7 +698,7 @@ module D20pfsrdCalculator =
                     |> Array.sum
                 let extraDamageModifications =
                     modificationArr 
-                    |> Array.map (fun x -> x.ExtraDamage,x.Name) 
+                    |> Array.map (fun x -> x.ExtraDamage.OnHit,x.Name)
                     |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
                                                         , extraDmg.DamageType, str
                                  )
@@ -621,10 +707,10 @@ module D20pfsrdCalculator =
                                                                      || modi = Modifications.VitalStrikeImproved
                                                                      || modi = Modifications.VitalStrikeGreater) modifications 
                                           ) = true
-                                       then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.DamageType = VitalStrikeDamage) modifications
-                                            |> Array.sortByDescending (fun x -> x.ExtraDamage.NumberOfDie)
+                                       then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                            |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
                                             |> Array.head
-                                            |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.NumberOfDie do
+                                            |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
                                                                 yield getDamageRolls sizeAdjustedWeaponDamage.NumberOfDie sizeAdjustedWeaponDamage.Die|], vitalS.Name
                                             |> fun x -> x
                                             |> fun (intList,str) -> Array.sum intList, str
@@ -632,15 +718,61 @@ module D20pfsrdCalculator =
                                        else extraDmg
                     |> Array.map (fun (bonusValue,dmgType,modificationName) -> bonusValue,(string dmgType))
                 //add weapon extra dmg (e.g. shocking enchantment) to modification extra dmg
-                [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
-                |> Array.append extraDamageModifications
+                extraDamageModifications
                 |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
     
-            let extraDamageToString = 
-                extraDamage
-                |> Array.map (fun (value,dmgType) -> "+" + (string value) + " " + (string dmgType) + " " + "damage" + ", ")
+            let extraDamageOnCrit =
+                let getDamageRolls numberOfDie die=
+                    let rolledDice = rollDice 1000 die
+                    [|for i=1 to numberOfDie do
+                        yield getRndArrElement rolledDice|]
+                    |> Array.sum
+                let extraDamageModifications =
+                    if (Array.contains attackRoll urlAttack.CriticalRange) = false
+                    then [||]
+                    else modificationArr 
+                         |> Array.map (fun x -> x.ExtraDamage.OnCrit,x.Name)
+                         |> Array.map (fun (extraDmg,str) -> getDamageRolls extraDmg.NumberOfDie extraDmg.Die
+                                                             , extraDmg.DamageType, str
+                                      )
+                         ///Vital Strike hardcode
+                         |> fun extraDmg -> if (Array.exists (fun modi -> modi = Modifications.VitalStrike
+                                                                          || modi = Modifications.VitalStrikeImproved
+                                                                          || modi = Modifications.VitalStrikeGreater) modifications 
+                                               ) = true
+                                            then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
+                                                 |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
+                                                 |> Array.head
+                                                 |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
+                                                                     yield getDamageRolls sizeAdjustedWeaponDamage.NumberOfDie sizeAdjustedWeaponDamage.Die|], vitalS.Name
+                                                 |> fun x -> x
+                                                 |> fun (intList,str) -> Array.sum intList, str
+                                                 |> fun (bonus,str) -> Array.append [|bonus,VitalStrikeDamage,str|] extraDmg
+                                            else extraDmg
+                         |> Array.map (fun (bonusValue,dmgType,modificationName) -> bonusValue,(string dmgType))
+                //add weapon extra dmg (e.g. shocking enchantment) to modification extra dmg
+                extraDamageModifications
+                |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+
+            let extraDamageCombined =
+                let getDamageRolls numberOfDie die=
+                    let rolledDice = rollDice 1000 die
+                    [|for i=1 to numberOfDie do
+                        yield getRndArrElement rolledDice|]
+                    |> Array.sum
+                if extraDamageOnCrit = [||]
+                then extraDamageOnHit
+                    |> Array.append [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
+                    |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
+                else Array.map2 (fun (onHit:(int*string)) (onCrit:(int*string)) -> (fst onHit) + (fst onCrit), snd onHit) extraDamageOnHit extraDamageOnCrit
+                    |> Array.append [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
+                    |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 ) 
+
+            let extraDamageToString extraDmgArr= 
+                extraDmgArr
+                |> Array.map (fun (value,dType) -> "+" + (string value) + " " + (string dType) + " " + "damage"  + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
-                |> fun x -> x.TrimEnd [|' ';','|]
+                |> fun x -> x.TrimEnd [|' ';','|]    
     
             let additionalInfoString =
                 if urlAttack.AdditionalEffects = ""
@@ -648,14 +780,14 @@ module D20pfsrdCalculator =
                 else "plus " + urlAttack.AdditionalEffects
     
             ////
-            if (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamage = [||]
+            if (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageCombined = [||]
                 then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
-            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamage = [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (crit * %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
-            elif (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamage <> [||]
-                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage extraDamageToString additionalInfoString
-            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamage <> [||] 
-                then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage %s (crit * %i) %s!") urlAttack.WeaponName totalAttackBonus attackRoll (critConfirmationRoll+combinedAttackBoni) critConfirmationRoll totalDamage extraDamageToString urlAttack.CriticalModifier additionalInfoString
-        
+            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageCombined = [||] 
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (x %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
+            elif (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageCombined <> [||]
+                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage (extraDamageToString extraDamageCombined) additionalInfoString
+            elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageCombined <> [||] 
+                then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage (x %i) %s (%s on a crit) / (%s when not confirmed) !") urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit)  
+                else printfn "You should not see this message, please open an issue with your input as a bug report"
         attackArr
         |> Array.mapi (fun i (attackBonus,attack) -> calculateOneAttack attackBonus attack modificationsCombined.[i])

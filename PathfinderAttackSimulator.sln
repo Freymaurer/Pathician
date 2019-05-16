@@ -33,6 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{8E6D
 		docsrc\content\CreateModification.fsx = docsrc\content\CreateModification.fsx
 		docsrc\content\CreateWeapon.fsx = docsrc\content\CreateWeapon.fsx
 		docsrc\content\d20pfsrdBestiaryReader.fsx = docsrc\content\d20pfsrdBestiaryReader.fsx
+		docsrc\content\DamagePerRoundCalculator.fsx = docsrc\content\DamagePerRoundCalculator.fsx
 		docsrc\content\index.fsx = docsrc\content\index.fsx
 	EndProjectSection
 EndProject
@@ -66,6 +67,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "PathfinderAttackSimulatorCo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AAFAFA4B-BA90-4CF6-94BC-6D16255D1921}"
 	ProjectSection(SolutionItems) = preProject
+		Pathfinder Bestiary with Statistics - Statistics.tsv = Pathfinder Bestiary with Statistics - Statistics.tsv
 		PathfinderCalculator.fsx = PathfinderCalculator.fsx
 	EndProjectSection
 EndProject

@@ -4,8 +4,10 @@ open System
 open System.Net
 open Library.AuxLibFunctions
 
-module D20pfsrdReader =
+/// This module contains helper functions for the d20pfsrd/Archives of Nethys bestiary reader and the reader function "getMonsterInformation"
+module BestiaryReader =
     
+    /// Module of helper functions for the d20pfsrd/Archives of Nethys bestiary reader
     module AuxFunctions = 
 
         type AttackVariant = 
@@ -93,7 +95,7 @@ module D20pfsrdReader =
 
     open AuxFunctions
 
-    // after extracting the html styled string from the d20pfsrd bestiary the most complex part is the extraction of the attack information.
+    // after extracting the html styled string from the d20pfsrd/Archives of nethys bestiary the most complex part is the extraction of the attack information.
     // this is done in the following function.
     let private createAttackFromString (str:string) =
         
@@ -240,7 +242,7 @@ module D20pfsrdReader =
     /// This function returns all necessary information of a pathfinder bestiary monster/NPC by exctracting the information from the d20pfsrd entry via regex pattern matching.
     let getMonsterInformation url = 
     
-        let regexFindMonsterStats = System.Text.RegularExpressions.Regex("(?s)(?=article-content)(.*?)((?=<div id=\"comments\" class=\"comments\">)|(?=section15)|(?=ECOLOGY))")
+        let regexFindMonsterStats = System.Text.RegularExpressions.Regex("(?s)((?=article-content)|(?=MainContent))(.*?)((?=<div id=\"comments\" class=\"comments\">)|(?=section15)|(?=ECOLOGY)|(?=footer))")
         let regexFindMeleeStats (meleeOrRanged:AttackVariant)= System.Text.RegularExpressions.Regex( sprintf "(?s)(?=%A)(.*?)((?=<br>)|(?=</p>)|(?=<br />))" meleeOrRanged)
         let regexFindHTMLTags = System.Text.RegularExpressions.Regex("\<(.*?)\>")
         let regexCommaOutsideBrackets = System.Text.RegularExpressions.Regex(",(?![^(]*\))")
@@ -248,7 +250,7 @@ module D20pfsrdReader =
         let regexMatchScore (str:string) = System.Text.RegularExpressions.Regex(("(?s)(?<=STATISTICS.*"+str+"\s)\d+"))
         let regexBAB = System.Text.RegularExpressions.Regex("(?s)(?<=Base Atk.)(\+\d+)(?=.*Skills)")
         let regexGetSpecialFeats = System.Text.RegularExpressions.Regex("(?s)(?<=Feats.*)(\w+\s)?(Two\WWeapon\sFighting|Power\sAttack|Rapid\sShot|Deadly\sAim)(?=.*Skills)")
-        let regexSize = System.Text.RegularExpressions.Regex("(?s)(?<=XP.*)(Fine|Diminuitive|Tiny|Small|Medium|Large|Huge|Gargantuan|Colossal)(?!=.*DEFENSE)")
+        let regexSize = System.Text.RegularExpressions.Regex("(?s)(Fine|Diminuitive|Tiny|Small|Medium|Large|Huge|Gargantuan|Colossal)(?!=.*DEFENSE)") //(?<=XP.*) removed after XP pattern match, because of monsters without xp
     
         // writes html code of webpage to string
         let baseString = fetchUrl2 url

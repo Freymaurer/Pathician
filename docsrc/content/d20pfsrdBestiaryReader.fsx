@@ -4,14 +4,14 @@
 #I "../../src/PathfinderAttackSimulator/bin/Release/netstandard2.0"
 
 (**
-d20pfsrd Bestiary Reader/Calculator
+Bestiary Reader/Calculator
 ======================
 
-Read d20pfsrd Bestiary Entries
+Read d20pfsrd/Archives of Nethys Bestiary Entries
 -------
 
 This tool is meant to help gamemasters when having to manage huge fights with lots of different enemy types.
-It reads in the [d20pfsrd bestiary](https://www.d20pfsrd.com/bestiary/) entry and uses regex pattern matching to extract the necessary 
+It reads in the [d20pfsrd bestiary](https://www.d20pfsrd.com/bestiary/)/[Archives of Nethys bestiary](https://aonprd.com/Monsters.aspx) entry and uses regex pattern matching to extract the necessary 
 information from it. This is based on certain writing patterns, so a 3rd party entry that does not follow these specific patterns will not work with this function.
 
 ### Example Lunar Dragon
@@ -20,14 +20,14 @@ As a example we will use the [Ancient Lunar Dragon](https://www.d20pfsrd.com/bes
 *)
 #r "PathfinderAttackSimulator.dll"
 open PathfinderAttackSimulator
-open D20pfsrdReader
+open BestiaryReader
 
 let ancientLunarDragon = getMonsterInformation "https://www.d20pfsrd.com/bestiary/monster-listings/dragons/dragon-outer/outer-dragon-lunar/lunar-dragon-ancient/"
 (**
 This function extracts the necessary information from the bestiary entry. We can now give this information to the calculator function.
 *)
-open D20pfsrdReader.AuxFunctions
-open D20pfsrdCalculator
+open BestiaryReader.AuxFunctions
+open BestiaryCalculator
 open PathfinderAttackSimulator.Library
 
 calculateFullAttack ancientLunarDragon Melee 1 [||]
@@ -143,4 +143,20 @@ calculateFullAttack krytonEremiteOverlord Melee 1 [|Modifications.EnlargePerson;
 
 So the enemy got enlarged (automatically resizes used weapons) and got a lvl 15 bard-like character at his side. 
 Naturally, despite his buffs, he is still shaken, as he knows he does not stand a chance against a well organized party ;).
+
+### Achaekek, the Mantis God
+
+Last is an example for an Archives of Nethys bestiary entry, click [here](https://aonprd.com/MonsterDisplay.aspx?ItemName=Achaekek,%20the%20Mantis%20God) for the link.
+*)
+
+let mantisGod = getMonsterInformation "https://aonprd.com/MonsterDisplay.aspx?ItemName=Achaekek,%20the%20Mantis%20God"
+
+calculateFullAttack mantisGod Ranged 1 [||]
+
+(**
+> You attack with a spikes and hit with a 47 (rolled 8) for 21 damage plus poison!
+> 
+> You attack with a spikes and hit with a 56 (rolled 17) for 29 damage plus poison!
+>
+
 *)

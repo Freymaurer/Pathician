@@ -24,12 +24,12 @@ open PathfinderAttackSimulator.Library.AuxLibFunctions
 let myCharacter =  {
     CharacterName = "Best Character Name Ever"
     BAB = 6
-    Strength = 7
-    Dexterity = 3
-    Constitution = 2
-    Intelligence = -3
-    Wisdom = 0
-    Charisma = -3
+    Strength = 24
+    Dexterity = 16
+    Constitution = 14
+    Intelligence = 5
+    Wisdom = 10
+    Charisma = 5
     CasterLevel1 = 0
     CasterLevel2 = 0
     }
@@ -37,7 +37,7 @@ let myCharacter =  {
 (**
 > Without any doubt we have a nice and optimized fighter with "de inteligenz to crash samfing".
 
-* Abilitie Scores: = The numbers given for the abilities are the modifier and not the score numbers (obviously).
-* BAB = base attack bonus 
-* CasteLevel = can be used for e.g. Magus Spellstrike with Shocking grasp
+* Abilitie Scores: = The ability scores.
+* BAB = Base attack bonus.
+* CasteLevel = Can be used for e.g. Magus Spellstrike with Shocking grasp.
 *)
