@@ -3,15 +3,20 @@
 // it to define helpers that you do not want to show in the documentation.
 #I "../../src/PathfinderAttackSimulator/bin/Release/netstandard2.0"
 
-
 (**
 Web Application for PathfinderAttackSimulator
-======================
+---------------------------------------------------------
 
-Calculate Damage Per Round
+					 > This Area is still under construction! < 
+
+Most people i play with do not have any experience in programming, thats why they shy away from using this toolbox.
+So i started working on a web application so everyone can easily use all tools without having to download a code editor.
+The web application is not yet finished, but i want to present you the progress so far. If you have feedback or just feel 
+like i have no idea what i am doing, feel free to open an issue [here](https://github.com/Freymaurer/PathfinderWebApp/issues).
 -------
 
 ![PathfinderAppOverview](C:\Users\Freym\source\repos\Freymaurer\PathfinderAttackSimulator\docsrc\files\img\PathfinderWebApp1.PNG)
-This tool is meant to help players compare different builds in their damage output per round.
+
+Above you can see the general layout
 
 *)
