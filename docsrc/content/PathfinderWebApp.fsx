@@ -7,7 +7,13 @@
 Web Application for PathfinderAttackSimulator
 ---------------------------------------------------------
 
-					 > This Area is still under construction! < 
+<div class="row">
+  <div class="span1"></div>
+  <div class="span6">
+      > This area is still under construction! <
+  </div>
+  <div class="span1"></div>
+</div>
 
 Most people i play with do not have any experience in programming, thats why they shy away from using this toolbox.
 So i started working on a web application so everyone can easily use all tools without having to download a code editor.

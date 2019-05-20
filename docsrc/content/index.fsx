@@ -84,9 +84,9 @@ myFullAttack myParrn Medium [|greatswordParrn,PrimaryMain;
 Next will be a short example for the d20pfsrd bestiary entry reader.
 This will be shown with the help of [Kyton Eremite Overlord](https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord).
 *)
-open D20pfsrdReader
-open D20pfsrdReader.AuxFunctions
-open D20pfsrdCalculator
+open BestiaryReader
+open AuxFunctions
+open BestiaryCalculator
 
 let kytonEremiteOverlord = getMonsterInformation "https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord"
 
