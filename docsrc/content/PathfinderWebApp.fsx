@@ -20,23 +20,31 @@ So i started working on a web application so everyone can easily use all tools w
 The web application is not yet finished, but i want to present you the progress so far. If you have feedback or just feel 
 like i have no idea what i am doing, feel free to open an issue [here](https://github.com/Freymaurer/PathfinderWebApp/issues).
 
-
+<br>
 ![PathfinderAppOverview](img\PathfinderWebApp1.PNG)
+<br>
+
 
 Above you can see the general layout. A click on "Open new Attack Calculator tab"(1) will add a new "Attack Calculator"(2) element to the page.
 A click on the "hide/show"(3) button will open up the attack calculator tab.
 
+<br>
 ![PathfinderAppAttackCalculatorTabOverview](img\PathfinderWebApp2.PNG)
+<br>
 
 In the area of number 4 will be a display of your selected character,weapons, size and modifications. But to see something there you'll need to first select everything. 
 You can do this using the buttons at the bottom (5). This will open up a searchbar and a result table from which you can choose.
 
+<br>
 ![PathfinderAppAttackCalculatorSearchBar](img\PathfinderWebApp3.PNG)
+<br>
 
 To the right of every search result you can then find a button to add the character to the area 4. In the same manner one can search for weapons and modifications.
 In the end it will look like this: 
 
+<br>
 ![PathfinderAppAttackCalculatorSearchBar](img\PathfinderWebApp4.PNG)
+<br>
 
 There are still several points i need to adress until i will host this:
 
