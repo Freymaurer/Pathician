@@ -1,6 +1,7 @@
-#r @"PathfinderAttackSimulator.dll"
+#r @"src\PathfinderAttackSimulator.dll"
 #r "netstandard"
 
+open System.IO
 open PathfinderAttackSimulator
 open Library.AuxLibFunctions
 open Library.Modifications
@@ -11,6 +12,12 @@ open BestiaryReader.AuxFunctions
 open BestiaryCalculator
 open DamagePerRound
 open DamagePerRound.AuxDPRFunctions
+
+//ignore this part as it contains helper functions for the dpr calculator
+let baseDirectory = __SOURCE_DIRECTORY__
+let fileName = "src\Pathfinder Bestiary with Statistics - Statistics.tsv"
+let filePath = Path.Combine(baseDirectory, fileName)
+////////////////////////////////////////////////////////////////////////
 
 //     Hello,
 // below are some "empty" templates for modifications, weapons and characters 
@@ -70,9 +77,9 @@ myFullAttack characterTemplate Medium [|weaponTemplate,PrimaryMain;weaponTemplat
 
 // next a small example for damage per round calculation with the above examples
 
-myStandardAttackDPR characterTemplate Medium weaponTemplate [|Flanking|] 1 ArmorClass Mean
+myStandardAttackDPR characterTemplate Medium weaponTemplate [|Flanking|] 1 ArmorClass Mean filePath
 
-myFullAttackDPR characterTemplate Medium [|weaponTemplate,PrimaryMain|] [|Flanking|] 1 ArmorClass Mean
+myFullAttackDPR characterTemplate Medium [|weaponTemplate,PrimaryMain|] [|Flanking|] 1 ArmorClass Mean filePath
 
 // now for real beginners ;)
 // at the beginning you should mark all with Strg + a and then execute it in Interactive by pressing alt + enter
