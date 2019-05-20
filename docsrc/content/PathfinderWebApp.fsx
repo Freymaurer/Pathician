@@ -23,6 +23,11 @@ like i have no idea what i am doing, feel free to open an issue [here](https://g
 
 ![PathfinderAppOverview](C:\Users\Freym\source\repos\Freymaurer\PathfinderAttackSimulator\docsrc\files\img\PathfinderWebApp1.PNG)
 
-Above you can see the general layout
+Above you can see the general layout. A click on "Open new Attack Calculator tab"(1) will add a new "Attack Calculator"(2) element to the page.
+A click on the "hide/show"(3) button will open up the attack calculator tab.
+
+![PathfinderAppAttackCalculatorTabOverview](C:\Users\Freym\source\repos\Freymaurer\PathfinderAttackSimulator\docsrc\files\img\PathfinderWebApp2.PNG)
+
+
 
 *)
