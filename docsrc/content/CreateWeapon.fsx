@@ -48,7 +48,7 @@ Now to explain the different categories:
 * Modifier = The modifier used to hit something, to calculate damage, either OneHanded or TwoHanded and the multiplicator for dmg. 
     These variables are shown above in this order.
 * ManufacturedOrNatural = Either Manufactured or Natural, this is necessary for a correct full-round attack action.
-* Description = Whatever you want to take note of. For special weapon you can copy pase additional effects in here. 
+* Description = Whatever you want to take note of. For special weapons you can copy paste additional effects in here. 
     Or you might want to take note that the weapon has weapon focus applied to it.
 
 *)

@@ -36,7 +36,7 @@ let myMagus =  {
 >
 
 Now we need to decide for a weapon. Like every magus we decide to use a Scimitar.
-Importan will be that we want to hit with dexterity but want our damage calculated based on our strength.
+Important will be that we want to hit with dexterity but want our damage calculated based on our strength.
 *)
 
 let Scimitar = {
@@ -73,7 +73,7 @@ let ShockingGraspIntensifiedEmpowered casterLevel metalTF = {
     Description = "Shocking Grasp deals 1d6 / level electricity damage up to a maximum of 10d6 for this intensified version. Empowered increases the number of all rolled dice by 50%"
     }
 (** 
-Now This is the most flexible version. It calculates the amount of d6 electricity damage depending on the caster level up to a maximum of 10d6
+Now this is the most flexible version. It calculates the amount of d6 electricity damage depending on the caster level up to a maximum of 10d6
 and also has asks wether or not the modification is used against someone with a metal armor/weapon.
 
 The other modifications we will use are: Haste and Weapon Focus 
@@ -122,7 +122,7 @@ myFullAttack myMagus Medium [|Scimitar,PrimaryMain|] [|ShockingGraspIntensifiedE
 (**
 As you can see the difference is an (weapon * WeaponType) array instead of simply a weapon.
 This is necessary for the calculator to know which weapon is should be used for additional attacks, e.g. Haste, Two Weapon Fighting.
-Here are some example for this:
+Here are some examples for this:
 
 - Haste/FlurryOfBlows adds an additional attack to the _PrimaryMain_ weapon.
 - Two-Weapon-Fighting has a _PrimaryMain_ weapon for e.g. Haste and the other Weapon needs to be classified as a _Primary_ weapon.
@@ -160,7 +160,7 @@ let ShinyBlingBlingScimitar = {
 
 (**
 But not only our character and his weapon changed but also the amount of modification that we have. And not only the modification that we have, but also our group's buffs.
-We Somehow also got some nice Tentacles because why not.
+We also grew some nice Tentacles ..somehow... because why not.
 *)
 
 let Tentacle = {
