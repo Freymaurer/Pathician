@@ -49,6 +49,7 @@ myFullAttackDPR myParrn
                 8                              // Used against the average statistics for Cr 8 monsters.
                 AuxDPRFunctions.ArmorClass     // Defines the target armor, can be either ArmorClass, FlatFootedArmor or TouchArmor.
                 AuxDPRFunctions.Mean           // Determines which statistical value should be used, can be either Mean, Median or Mode
+                
 (**
 > You hit the enemy for an average of 34.35 damage (15 = attack roll bonus; 22.275 damage from normal hits; 2.025 damage from threatened crits; 10.05 damage from confirmed crits (10.5 Precision damage (Sneak Attack))) !
 >

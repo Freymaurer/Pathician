@@ -87,16 +87,16 @@ module DamagePerRound =
     open AuxDPRFunctions
     open System.IO
 
-    let myStandardAttackDPR (char: CharacterStats) (size: SizeType) (weapon: Weapon) (modifications: AttackModification []) (cr:int) (targetedArmorType:ArmorClassTypes) (statisticType: StatisticalAverages) =
+    let myStandardAttackDPR (char: CharacterStats) (size: SizeType) (weapon: Weapon) (modifications: AttackModification []) (cr:int) (targetedArmorType:ArmorClassTypes) (statisticType: StatisticalAverages) filePath=
         
     
         let crRelatedMonsterInfo = 
-            let baseDirectory = __SOURCE_DIRECTORY__
-            let baseDirectory' = Directory.GetParent(baseDirectory)
-            let baseDirectory'' = Directory.GetParent(baseDirectory'.FullName)
-            let filePath = "Pathfinder Bestiary with Statistics - Statistics.tsv"
-            let fullPath = Path.Combine(baseDirectory''.FullName, filePath)
-            let file = File.ReadAllLines(fullPath)
+            //let baseDirectory = __SOURCE_DIRECTORY__
+            //let baseDirectory' = Directory.GetParent(baseDirectory)
+            //let baseDirectory'' = Directory.GetParent(baseDirectory'.FullName)
+            //let filePath = "Pathfinder Bestiary with Statistics - Statistics.tsv"
+            //let fullPath = Path.Combine(baseDirectory''.FullName, filePath)
+            let file = File.ReadAllLines(filePath)
             let make2D = file 
                          |> Array.map (fun x -> x.Split('\t'))
             let armor = make2D.[5..34]
@@ -536,15 +536,15 @@ module DamagePerRound =
 
     ///This function returns the output of a full round attack action based on the used character stats, weapons and modifications.
     ///Weapons need an additional WeaponType: PrimaryMain for the weapon which should be used with things like haste, Primary for Primary natural attacks or two weapon fighting, and Secondary for secondary natural attacks.
-    let myFullAttackDPR (char: CharacterStats) (size :SizeType) (weapons: (Weapon * WeaponType) []) (modifications: AttackModification []) (cr:int) (targetedArmorType:ArmorClassTypes) (statisticType: StatisticalAverages) =
+    let myFullAttackDPR (char: CharacterStats) (size :SizeType) (weapons: (Weapon * WeaponType) []) (modifications: AttackModification []) (cr:int) (targetedArmorType:ArmorClassTypes) (statisticType: StatisticalAverages) filePath=
     
         let crRelatedMonsterInfo = 
-            let baseDirectory = __SOURCE_DIRECTORY__
-            let baseDirectory' = Directory.GetParent(baseDirectory)
-            let baseDirectory'' = Directory.GetParent(baseDirectory'.FullName)
-            let filePath = "Pathfinder Bestiary with Statistics - Statistics.tsv"
-            let fullPath = Path.Combine(baseDirectory''.FullName, filePath)
-            let file = File.ReadAllLines(fullPath)
+            //let baseDirectory = __SOURCE_DIRECTORY__
+            //let baseDirectory' = Directory.GetParent(baseDirectory)
+            //let baseDirectory'' = Directory.GetParent(baseDirectory'.FullName)
+            //let filePath = "Pathfinder Bestiary with Statistics - Statistics.tsv"
+            //let fullPath = Path.Combine(baseDirectory''.FullName, filePath)
+            let file = File.ReadAllLines(filePath)
             let make2D = file 
                          |> Array.map (fun x -> x.Split('\t'))
             let armor = make2D.[5..34]
