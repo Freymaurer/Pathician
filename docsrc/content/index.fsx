@@ -9,17 +9,6 @@ PathfinderAttackSimulator
 
 Documentation
 
-<div class="row">
-  <div class="span1"></div>
-  <div class="span6">
-    <div class="well well-small" id="nuget">
-      The PathfinderAttackSimulator library can be <a href="https://nuget.org/packages/PathfinderAttackSimulator">installed from NuGet</a>:
-      <pre>PM> Install-Package PathfinderAttackSimulator</pre>
-    </div>
-  </div>
-  <div class="span1"></div>
-</div>
-
 Pathfinder is, and that is a great part of why i like it so much, very free in character design and allows for a variety of different options.
 But with great freedom in character design comes great complexity and especially a attack calculation that can get quite complex.
 Of course you can calculate all different options beforehand and write them down separatly ... but then the bard starts with his Inspire Courage,
