@@ -10,7 +10,7 @@ Web Application for PathfinderAttackSimulator
 <div class="row">
   <div class="span1"></div>
   <div class="span6">
-      > This area is still under construction! <
+      <pre> This area is still under construction! </pre>
   </div>
   <div class="span1"></div>
 </div>
