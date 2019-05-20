@@ -11,6 +11,7 @@ Web Application for PathfinderAttackSimulator
 Calculate Damage Per Round
 -------
 
+![PathfinderAppOverview](C:\Users\Freym\source\repos\Freymaurer\PathfinderAttackSimulator\docs\content\img\PathfinderWebApp1.PNG)
 This tool is meant to help players compare different builds in their damage output per round.
 
 *)
