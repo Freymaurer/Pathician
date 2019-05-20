@@ -79,7 +79,7 @@ calculateFullAttack bladeLord Melee 1 [||]
 > You attack with a frost short sword and hit the enemy with a 20 (rolled 10) for 6 damage +3 cold damage  !
 >
 
-If we now change the given "1" in the function above to "2" we get his second attack scheme ("or +2 brilliant energy longsword +21/+16/+11 (1d8+5/19–20)")
+If we now change the given "1" in the function above to "2" we get his second attack scheme ("or +2 brilliant energy longsword +21/+16/+11 (1d8+5/19-20)")
 and so on.
 ...But wait... isn't this a bit _weak_ for a CR 19 npc? Well, then let us add his lvl 20 sneak attack ability to the AttackModificationArray.
 *)

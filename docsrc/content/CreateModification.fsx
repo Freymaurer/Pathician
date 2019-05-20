@@ -47,6 +47,7 @@ So how does this work:
 * BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack.
 
 > Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.
+
 * BonusAttackRoll = The first two variables are the bonus to the attack role and its type. The last two variables are added boni for critical hit confirmation rolls (used for e.g. [Critical Focus](https://www.d20pfsrd.com/feats/combat-feats/critical-focus-combat/))
     These values are added in addition to the first variables! so Critical Focus would be "createAttackBoniHitAndCrit 0 Flat 4 Flat".
 * BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).

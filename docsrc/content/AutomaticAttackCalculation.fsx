@@ -94,7 +94,7 @@ myStandardAttack myMagus Medium Scimitar [|ShockingGraspIntensifiedEmpowered myM
 >
 
 
-For this attack we assume the target has some metal so we add the "true" parameter to ShockingGraspEmpowered (otherwise false). 
+For this attack we assume the target has some metal so we add the "true" parameter to ShockingGraspIntensifiedEmpowered (otherwise false). 
 If modifications change or our weapon/character "upgrades" we simply need to update the related types or add new modifications to the modification array.
 
 This gives high flexibility and a fast calculation of all relevant boni!
