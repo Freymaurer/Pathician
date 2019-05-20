@@ -140,16 +140,16 @@ This will be shown with the help of <a href="https://www.d20pfsrd.com/bestiary/u
 <span class="l">18: </span>
 <span class="l">19: </span>
 </pre></td>
-<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span class="id">D20pfsrdReader</span>
-<span class="k">open</span> <span class="id">D20pfsrdReader</span><span class="pn">.</span><span class="id">AuxFunctions</span>
-<span class="k">open</span> <span class="id">D20pfsrdCalculator</span>
+<td class="snippet"><pre class="fssnip highlighted"><code lang="fsharp"><span class="k">open</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="id">BestiaryReader</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs22', 31)" onmouseover="showTip(event, 'fs22', 31)" class="id">AuxFunctions</span>
+<span class="k">open</span> <span onmouseout="hideTip(event, 'fs23', 32)" onmouseover="showTip(event, 'fs23', 32)" class="id">BestiaryCalculator</span>
 
-<span class="k">let</span> <span onmouseout="hideTip(event, 'fs21', 30)" onmouseover="showTip(event, 'fs21', 30)" class="id">kytonEremiteOverlord</span> <span class="o">=</span> <span class="id">getMonsterInformation</span> <span class="s">&quot;https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord&quot;</span>
+<span class="k">let</span> <span onmouseout="hideTip(event, 'fs24', 33)" onmouseover="showTip(event, 'fs24', 33)" class="id">kytonEremiteOverlord</span> <span class="o">=</span> <span onmouseout="hideTip(event, 'fs25', 34)" onmouseover="showTip(event, 'fs25', 34)" class="fn">getMonsterInformation</span> <span class="s">&quot;https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord&quot;</span>
 
-<span class="id">calculateStandardAttack</span> <span onmouseout="hideTip(event, 'fs21', 31)" onmouseover="showTip(event, 'fs21', 31)" class="id">kytonEremiteOverlord</span> <span class="id">Melee</span> <span class="n">1</span> <span class="pn">[|</span><span class="pn">|]</span>
+<span onmouseout="hideTip(event, 'fs26', 35)" onmouseover="showTip(event, 'fs26', 35)" class="fn">calculateStandardAttack</span> <span onmouseout="hideTip(event, 'fs24', 36)" onmouseover="showTip(event, 'fs24', 36)" class="id">kytonEremiteOverlord</span> <span onmouseout="hideTip(event, 'fs27', 37)" onmouseover="showTip(event, 'fs27', 37)" class="uc">Melee</span> <span class="n">1</span> <span class="pn">[|</span><span class="pn">|]</span>
 <span class="c">// &gt; You attack with a bite and hit with a 53 (rolled 16) for 24 damage plus pain!</span>
 
-<span class="id">calculateFullAttack</span> <span onmouseout="hideTip(event, 'fs21', 32)" onmouseover="showTip(event, 'fs21', 32)" class="id">kytonEremiteOverlord</span> <span class="id">Melee</span> <span class="n">1</span> <span class="pn">[|</span><span class="pn">|]</span>
+<span onmouseout="hideTip(event, 'fs28', 38)" onmouseover="showTip(event, 'fs28', 38)" class="fn">calculateFullAttack</span> <span onmouseout="hideTip(event, 'fs24', 39)" onmouseover="showTip(event, 'fs24', 39)" class="id">kytonEremiteOverlord</span> <span onmouseout="hideTip(event, 'fs27', 40)" onmouseover="showTip(event, 'fs27', 40)" class="uc">Melee</span> <span class="n">1</span> <span class="pn">[|</span><span class="pn">|]</span>
 <span class="c">// &gt; You attack with a bite and hit with a 41 (rolled 4) for 23 damage plus pain!</span>
 <span class="c">// &gt; You attack with a claws and hit with a 43 (rolled 6) for 21 damage plus pain!</span>
 <span class="c">// &gt; You attack with a claws and hit with a 55 (rolled 18) for 24 damage plus pain!</span>
@@ -203,7 +203,14 @@ redistribution for both commercial and non-commercial purposes. For more informa
 <div class="tip" id="fs18">val MutagenStrength : AttackModification</div>
 <div class="tip" id="fs19">val Haste : AttackModification</div>
 <div class="tip" id="fs20">val TwoWeaponFighting : AttackModification</div>
-<div class="tip" id="fs21">val kytonEremiteOverlord : obj</div>
+<div class="tip" id="fs21">module BestiaryReader<br /><br />from PathfinderAttackSimulator</div>
+<div class="tip" id="fs22">module AuxFunctions<br /><br />from PathfinderAttackSimulator.BestiaryReader</div>
+<div class="tip" id="fs23">module BestiaryCalculator<br /><br />from PathfinderAttackSimulator</div>
+<div class="tip" id="fs24">val kytonEremiteOverlord : URLMonsterAttacks []</div>
+<div class="tip" id="fs25">val getMonsterInformation : url:string -&gt; URLMonsterAttacks []</div>
+<div class="tip" id="fs26">val calculateStandardAttack : attackInfo:URLMonsterAttacks [] -&gt; attackVariant:AttackVariant -&gt; attackNumber:int -&gt; modifications:AttackModification [] -&gt; unit</div>
+<div class="tip" id="fs27">union case AttackVariant.Melee: AttackVariant</div>
+<div class="tip" id="fs28">val calculateFullAttack : attackInfo:URLMonsterAttacks [] -&gt; attackVariant:AttackVariant -&gt; attackNumber:int -&gt; modifications:AttackModification [] -&gt; unit []</div>
 
         </div>
         <div class="span3">
@@ -224,6 +231,7 @@ redistribution for both commercial and non-commercial purposes. For more informa
               <li><a href="/PathfinderAttackSimulator/AutomaticAttackCalculation.html">Automatic Attack Calculation</a></li>
               <li><a href="/PathfinderAttackSimulator/d20pfsrdBestiaryReader.html">Bestiary Reader/Calculator</a></li>
               <li><a href="/PathfinderAttackSimulator/DamagePerRoundCalculator.html">Damage Per Round Calculator</a></li>
+              <li><a href="/PathfinderAttackSimulator/PathfinderWebApp.html">Web Application for PathfinderAttackSimulator</a></li>
               <li class="nav-header">Documentation</li>
               <li><a href="/PathfinderAttackSimulator/reference/index.html">API Reference</a></li>
           </ul>
