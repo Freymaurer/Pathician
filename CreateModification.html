@@ -86,18 +86,26 @@ flat bonus to all attack rolls, and also some non - attack related boni.</p>
 <li>BonusAttacks = the number of bonus attacks granted by the modification and which WeaponType should be used for the extra attack.</li>
 </ul>
 <blockquote>
-<p>Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.
-<em> BonusAttackRoll = The first two variables are the bonus to the attack role and its type. The last two variables are added boni for critical hit confirmation rolls (used for e.g. <a href="https://www.d20pfsrd.com/feats/combat-feats/critical-focus-combat/">Critical Focus</a>)
-These values are added in addition to the first variables! so Critical Focus would be "createAttackBoniHitAndCrit 0 Flat 4 Flat".
-</em> BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).
-<em> ExtraDamage = This field contains damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
-The first 3 variables are used on non crit attacks, the latter 3 variables are used in addition to the first values but only(!) for critical hits.
-</em> AppliedTo = Apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
-<em> StatChanges = Represents ability score changes due to this modification, e.g. the alchemist's mutagen (createStatChange Strength 4 Alchemical). Can be left empty if no stat change applies.
-</em> SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
-Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Attack).
-* Description = A short Description for additional information. Not used in the script right now.</p>
+<p>Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.</p>
 </blockquote>
+<ul>
+<li>
+BonusAttackRoll = The first two variables are the bonus to the attack role and its type. The last two variables are added boni for critical hit confirmation rolls (used for e.g. <a href="https://www.d20pfsrd.com/feats/combat-feats/critical-focus-combat/">Critical Focus</a>)
+These values are added in addition to the first variables! so Critical Focus would be "createAttackBoniHitAndCrit 0 Flat 4 Flat".
+</li>
+<li>BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).</li>
+<li>
+ExtraDamage = This field contains damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
+The first 3 variables are used on non crit attacks, the latter 3 variables are used in addition to the first values but only(!) for critical hits.
+</li>
+<li>AppliedTo = Apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.</li>
+<li>StatChanges = Represents ability score changes due to this modification, e.g. the alchemist's mutagen (createStatChange Strength 4 Alchemical). Can be left empty if no stat change applies.</li>
+<li>
+SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
+Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Attack).
+</li>
+<li>Description = A short Description for additional information. Not used in the script right now.</li>
+</ul>
 <p>Some further Examples:</p>
 <h3><a name="Alchemist-s-Strength-Mutagen" class="anchor" href="#Alchemist-s-Strength-Mutagen">Alchemist's Strength Mutagen</a></h3>
 <p>This is a nice example to showcase the StatChanges attribute.</p>
