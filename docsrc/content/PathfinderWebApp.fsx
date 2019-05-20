@@ -28,6 +28,24 @@ A click on the "hide/show"(3) button will open up the attack calculator tab.
 
 ![PathfinderAppAttackCalculatorTabOverview](C:\Users\Freym\source\repos\Freymaurer\PathfinderAttackSimulator\docsrc\files\img\PathfinderWebApp2.PNG)
 
+In the area of number 4 will be a display of your selected character,weapons, size and modifications. But to see something there you'll need to first select everything. 
+You can do this using the buttons at the bottom (5). This will open up a searchbar and a result table from which you can choose.
+
+![PathfinderAppAttackCalculatorSearchBar](C:\Users\Freym\source\repos\Freymaurer\PathfinderAttackSimulator\docsrc\files\img\PathfinderWebApp3.PNG)
+
+To the right of every search result you can then find a button to add the character to the area 4. In the same manner one can search for weapons and modifications.
+In the end it will look like this: 
+
+![PathfinderAppAttackCalculatorSearchBar](C:\Users\Freym\source\repos\Freymaurer\PathfinderAttackSimulator\docsrc\files\img\PathfinderWebApp4.PNG)
+
+There are still several points i need to adress until i will host this:
+
+* Enable the use of modifications that need additional variables
+* Enable the option to add own characters, weapons, modifications
+* Add the remaining toolbox features
+* Enable the option to download a .txt document with all additionally added characters, weapons and modifications,
+which can then be uploaded to the application to automatically load all previously created characters, weapons and modifications.
+
 
 
 *)
