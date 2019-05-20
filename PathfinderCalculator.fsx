@@ -1,6 +1,7 @@
 #r @"src/PathfinderAttackSimulator/bin/Release/netstandard2.0/PathfinderAttackSimulator.dll"
 #r "netstandard"
 
+open System.IO
 open PathfinderAttackSimulator
 open Library.AuxLibFunctions
 open Library.Modifications
@@ -9,6 +10,15 @@ open FullRoundAttackAction
 open BestiaryReader
 open BestiaryReader.AuxFunctions
 open BestiaryCalculator
+open PathfinderAttackSimulator.DamagePerRound
+open AuxDPRFunctions
+
+//ignore this part as it contains helper functions for the dpr calculator
+let baseDirectory = __SOURCE_DIRECTORY__
+let fileName = "Pathfinder Bestiary with Statistics - Statistics.tsv"
+let filePath = Path.Combine(baseDirectory, fileName)
+////////////////////////////////////////////////////////////////////////
+
 
 //     Hello,
 // below are some "empty" templates for modifications, weapons and characters 
@@ -57,14 +67,20 @@ let weaponTemplate = {
 let importantMonster = getMonsterInformation "https://www.d20pfsrd.com/bestiary/monster-listings/animals/rat/rat-common/"
 
 calculateFullAttack importantMonster Melee 1 [|Flanking|]
-calculateStandardAttack importantMonster Melee 1 [|Flanking|]
 
+calculateStandardAttack importantMonster Melee 1 [|Flanking|]
 
 // below you can find the attack calculator
 
 myStandardAttack characterTemplate Medium weaponTemplate [|Flanking|]
 
 myFullAttack characterTemplate Medium [|weaponTemplate,PrimaryMain;weaponTemplate,Primary|] [|Flanking;TwoWeaponFighting|]
+
+// next a small example for damage per round calculation with the above examples
+
+myStandardAttackDPR characterTemplate Medium weaponTemplate [|Flanking|] 1 ArmorClass Mean fileName
+
+myFullAttackDPR characterTemplate Medium [|weaponTemplate,PrimaryMain|] [|Flanking|] 1 ArmorClass Mean filePath
 
 // now for real beginners ;)
 // at the beginning you should mark all with Strg + a and then execute it in Interactive by pressing alt + enter

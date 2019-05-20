@@ -2,7 +2,13 @@
 // This block of code is omitted in the generated HTML documentation. Use 
 // it to define helpers that you do not want to show in the documentation.
 #I "../../src/PathfinderAttackSimulator/bin/Release/netstandard2.0"
+open System.IO
 
+let baseDirectory = __SOURCE_DIRECTORY__
+let baseDirectory' = Directory.GetParent(baseDirectory)
+let baseDirectory'' = Directory.GetParent(baseDirectory'.FullName)
+let fileName = "Pathfinder Bestiary with Statistics - Statistics.tsv"
+let filePath = Path.Combine(baseDirectory''.FullName, fileName)
 (**
 Damage Per Round Calculator
 ======================
@@ -35,6 +41,7 @@ myStandardAttackDPR myParrn
                     8                              // Used against the average statistics for Cr 8 monsters.
                     AuxDPRFunctions.ArmorClass     // Defines the target armor, can be either ArmorClass, FlatFootedArmor or TouchArmor.
                     AuxDPRFunctions.Mean           // Determines which statistical value should be used, can be either Mean, Median or Mode
+                    filePath                       // Here you need to write the path to "Pathfinder Bestiary with Statistics - Statistics.tsv"
 
 (**
 > You hit the enemy for an average of 34.35 damage, the average enemy has 96 hp (15 = attack roll bonus; 22.275 damage from normal hits; 2.025 damage from threatened crits; 10.05 damage from confirmed crits (10.5 Precision damage (Sneak Attack))) !
@@ -49,7 +56,8 @@ myFullAttackDPR myParrn
                 8                              // Used against the average statistics for Cr 8 monsters.
                 AuxDPRFunctions.ArmorClass     // Defines the target armor, can be either ArmorClass, FlatFootedArmor or TouchArmor.
                 AuxDPRFunctions.Mean           // Determines which statistical value should be used, can be either Mean, Median or Mode
-                
+                filePath                       // Here you need to write the path to "Pathfinder Bestiary with Statistics - Statistics.tsv"
+
 (**
 > You hit the enemy for an average of 34.35 damage (15 = attack roll bonus; 22.275 damage from normal hits; 2.025 damage from threatened crits; 10.05 damage from confirmed crits (10.5 Precision damage (Sneak Attack))) !
 >
