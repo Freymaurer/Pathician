@@ -46,7 +46,7 @@ calculateFullAttack ancientLunarDragon Melee 1 [||]
 >
 
 This is fast and easily calculated, without the gm juggling several dozen links/pages and die while also trying to tell a story.
-Altough it is obviously not perfect, as you can see in the last calculated attack, in which a " Space ft." sneaked into the weapon name, hinting at a important detail reliant on an x-amount of feet.
+Although it is obviously not perfect, as you can see in the last calculated attack, in which a " Space ft." sneaked into the weapon name, hinting at a important detail reliant on an x-amount of feet.
 After looking it up on the bestiary entry we can see that this was part of "tail slap +30 (2d8+18) Space 20 ft.", meaning... well i am actually not sure about this one.
 This could either be 20 ft reach or that this attack hits everyone in a 20 ft space. Anyhow let's move to some better examples.
 *)
@@ -79,7 +79,7 @@ calculateFullAttack bladeLord Melee 1 [||]
 > You attack with a frost short sword and hit the enemy with a 20 (rolled 10) for 6 damage +3 cold damage  !
 >
 
-If we now change the given "1" in the function above to "2" we get his second attack scheme ("or +2 brilliant energy longsword +21/+16/+11 (1d8+5/19–20)")
+If we now change the given "1" in the function above to "2" we get his second attack scheme ("or +2 brilliant energy longsword +21/+16/+11 (1d8+5/19-20)")
 and so on.
 ...But wait... isn't this a bit _weak_ for a CR 19 npc? Well, then let us add his lvl 20 sneak attack ability to the AttackModificationArray.
 *)

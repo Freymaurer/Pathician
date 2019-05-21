@@ -21,6 +21,7 @@ module BestiaryReader =
             DamageType : string
             }
         
+        /// 
         let createURLDamage nOfDie die bonusDmg damageType= {
             NumberOfDie = nOfDie
             Die         = die
@@ -38,6 +39,7 @@ module BestiaryReader =
             AdditionalEffects : string
             }
         
+        /// 
         let createURLAttack attackBonus weaponName weaponDamage extraDamage criticalRange criticalModifer additionalEffects = {
             AttackBonus         = attackBonus
             WeaponName          = weaponName
@@ -56,6 +58,7 @@ module BestiaryReader =
             Size: SizeType
             }
         
+        ///
         let createURLMonsterStats bab str dex feats size = {
             BAB = bab
             Str = str 

@@ -7,32 +7,22 @@
 PathfinderAttackSimulator
 ======================
 
-Documentation
-
-<div class="row">
-  <div class="span1"></div>
-  <div class="span6">
-    <div class="well well-small" id="nuget">
-      The PathfinderAttackSimulator library can be <a href="https://nuget.org/packages/PathfinderAttackSimulator">installed from NuGet</a>:
-      <pre>PM> Install-Package PathfinderAttackSimulator</pre>
-    </div>
-  </div>
-  <div class="span1"></div>
-</div>
-
 Pathfinder is, and that is a great part of why i like it so much, very free in character design and allows for a variety of different options.
-But with great freedom in character design comes great complexity and especially a attack calculation that can get quite complex.
+But with great freedom in character design comes great complexity and especially an attack calculation that can get quite complex.
 Of course you can calculate all different options beforehand and write them down separatly ... but then the bard starts with his Inspire Courage,
-the cleric adds Blessing of Fervor, arcane casters start throwing around Haste and Enlarge Person and .. yes you can prepare for that and write down each and every option
-(although it is already getting out of hand) but then comes a nasty poison or conditions and calculating attack rolls really are a mess and take a lot of time.
-That is why i wrote this this Attack Action Calculator to ease down all of this complexity and free up some brainpower for the story, strategy and roleplaying.
+the cleric adds Blessing of Fervor, arcane casters start throwing around Haste and Enlarge Person and, and, and ... . Yes you can prepare for that and write down each and every option
+(although it is already getting out of hand), but then comes a nasty poison or conditions and calculating attack rolls gets really messy and takes a lot of time.
+That is why i wrote this Attack Action Calculator to ease all of this complexity and free up some brainpower for the story, strategy, and roleplaying.
 
 This is my first coding project, so there will be lots of style errors and inefficient functions. If you notice something like this, please feel free to open an [issue](https://github.com/Freymaurer/PathfinderAttackSimulator/issues) and i will gladly fix it.
-The function itself should work without errors, but if you encounter any please (again) open an [issue](https://github.com/Freymaurer/PathfinderAttackSimulator/issues) and let me know.
+The functions itself should work without errors, but if you encounter any please (again) open an [issue](https://github.com/Freymaurer/PathfinderAttackSimulator/issues) and let me know.
 
-The current version also features an d20pfsrd bestiary entry reader and a calculator for these bestiary entries. Allowing gamemasters more easily to fill a board with lots of nice and deadly minions.
+The current version also features:
 
-Example for a automatic calculated full round attack action.
+* A d20pfsrd/Archives of Nethys bestiary entry reader and a calculator for those bestiary entries, allowing gamemasters more easily to fill a board with lots of nice and deadly minions.
+* A damage per round calculator.
+
+Example for a automatic calculated full round attack action
 -------
 
 This example demonstrates the full round attack action calculater, which is able to calculate automatically: 
@@ -42,13 +32,13 @@ This example demonstrates the full round attack action calculater, which is able
 * crits and confirmation rolls
 * damage rolls
 * which boni stack and which not
-* calculate the size depending on size modifiers e.g. from enlarger person or improved natural attack
+* calculate the size depending on size modifiers e.g. from Enlarge Person or improved natural attack
 * resize the used weapons depending on the size change
 
 to just list a few of the implemented options.
 
 > Parrn is one of my characters, i currently play. He is a half-giant rogue with 20 strength (_please don't judge_) and likes to hit like a truck with his greatsword.
-> And because he has some familiars that attack with him, using such a script is a nice option for me, because it frees up some mindpower for roleplaying and strategy, without having to worry about
+> Because he has some familiars that attack with him, using such a script is a nice option for me, because it frees up some mindpower for roleplaying and strategy, without having to worry about
 > missing some modifiers or calculating everything wrong.
 
 *)
@@ -81,12 +71,12 @@ myFullAttack myParrn Medium [|greatswordParrn,PrimaryMain;
 > You attack with a Bite and hit the enemy with a 30 (rolled 18) for 10 BludgeoningOrPiercingOrSlashing damage +10 Precision Schaden !
 >
 
-Next will be a short example for the d20pfsrd bestiary entry reader.
+Next will be a short example for the d20pfsrd/Archives of Nethys bestiary entry reader.
 This will be shown with the help of [Kyton Eremite Overlord](https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord).
 *)
-open D20pfsrdReader
-open D20pfsrdReader.AuxFunctions
-open D20pfsrdCalculator
+open BestiaryReader
+open AuxFunctions
+open BestiaryCalculator
 
 let kytonEremiteOverlord = getMonsterInformation "https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord"
 

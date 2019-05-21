@@ -46,12 +46,13 @@ module BestiaryCalculator =
             |> fun x -> x.AttackScheme.[0]
 
     
-        //attack roll for this exact attack
+        /// rolls two dice; one for the regular hit and one for a possible crit confirmation roll
         let (attackRoll,critConfirmationRoll) = 
             let getAttackRolls =
                     rollDice 10000 20
             getRndArrElement getAttackRolls,getRndArrElement getAttackRolls
-        //
+
+        //defines an id for each possible size the monster could have
         let startSize =
             match monsterStats.Size with
             | Fine          -> 1
@@ -64,7 +65,7 @@ module BestiaryCalculator =
             | Gargantuan    -> 8
             | Colossal      -> 9
 
-        //
+        // calculates the new size, if any modifications would change it
         let calculatedSize =
     
             let changeSizeBy =
@@ -95,7 +96,7 @@ module BestiaryCalculator =
             wantedAttack
             |> fun x -> Array.max x.AttackBonus
 
-        //
+        /// calculates size bonus to attack rolls (eg. +1 for small)
         let attackBoniSize =
             let sizeModifierNew =
                 calculatedSize
@@ -107,6 +108,7 @@ module BestiaryCalculator =
                 |> fun x -> x.SizeModifier
             sizeModifierNew - sizeModifierOld
 
+        /// calculates all boni to attack rolls from modifications and checks if they stack or not
         let attackBoniModifications = 
             modifications 
             |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
@@ -123,6 +125,7 @@ module BestiaryCalculator =
                           )
             |> Array.sum
     
+        /// tries to remove possible mali from feats that only apply to fullround attack actions
         let attackBoniWithoutFullRoundFeats =
             let regexTwoWeaponFighting = System.Text.RegularExpressions.Regex("Two\WWeapon\sFighting")
             let regexRapidShot = System.Text.RegularExpressions.Regex("Rapid\sShot")
@@ -153,12 +156,15 @@ module BestiaryCalculator =
                 | NoRapidShot -> 0
             balanceTwoWeaponMalus + balanceRapidShotMalus
 
+        /// Sums up all different boni to attack rolls
         let combinedAttackBoni =
             attackBonus + attackBoniModifications + attackBoniSize + attackBoniWithoutFullRoundFeats
     
+        /// complete bonus on attack = dice roll + Sum of all boni (getBonusToAttack) 
         let totalAttackBonus =
             attackRoll + combinedAttackBoni
 
+        /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
         let totalAttackCritBonus =
             let critSpecificBonus =
                 modifications
@@ -180,6 +186,7 @@ module BestiaryCalculator =
     
         /////End attack boni/Start damage boni/////
     
+        /// calculates size change and resizes weapon damage dice.
         let sizeAdjustedWeaponDamage =
     
             let effectiveSize =
@@ -279,6 +286,7 @@ module BestiaryCalculator =
     
             getSizeChange wantedAttack.WeaponDamage startSize effectiveSize
     
+        /// rolls dice for weapon
         let damageRolls =
             let getDamageRolls =
                 rollDice 1000 sizeAdjustedWeaponDamage.Die
@@ -286,6 +294,7 @@ module BestiaryCalculator =
                 yield getRndArrElement getDamageRolls|]
             |> Array.sum
     
+        /// calculates bonus on damage rolls due to the ability score used by the weapon and the related multiplied
         let modificationDamageBoni =
             modifications
             |> Array.map (fun x -> x.BonusDamage)
@@ -300,10 +309,12 @@ module BestiaryCalculator =
                           )
             |> Array.sum
     
+        /// Sums up all different boni to damage
         let totalDamage =
             damageRolls + sizeAdjustedWeaponDamage.BonusDamage + modificationDamageBoni
             |> fun x -> if x <= 0 then 1 else x
     
+        /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
         let extraDamageOnHit =
             let getDamageRolls numberOfDie die=
                 let rolledDice = rollDice 1000 die
@@ -335,6 +346,7 @@ module BestiaryCalculator =
             extraDamageModifications
             |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
     
+        /// Calculates extra damage which is multiplied or changed on crits (think Shocking Grasp or flaming burst)
         let extraDamageOnCrit =
             let getDamageRolls numberOfDie die=
                 let rolledDice = rollDice 1000 die
@@ -368,6 +380,7 @@ module BestiaryCalculator =
             extraDamageModifications
             |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
 
+        /// combines the extra damage and the extra damage on crit
         let extraDamageCombined =
             let getDamageRolls numberOfDie die=
                 let rolledDice = rollDice 1000 die
@@ -382,12 +395,14 @@ module BestiaryCalculator =
                 |> Array.append [|(getDamageRolls wantedAttack.ExtraDamage.NumberOfDie wantedAttack.ExtraDamage.Die, wantedAttack.ExtraDamage.DamageType)|]
                 |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 ) 
 
+        /// Folds the damage values to a string to print as result. This allows to separate different damage types should a creature be immune to something
         let extraDamageToString extraDmgArr= 
             extraDmgArr
             |> Array.map (fun (value,dType) -> "+" + (string value) + " " + (string dType) + " " + "damage"  + ", ")
             |> Array.fold (fun strArr x -> strArr + x) "" 
             |> fun x -> x.TrimEnd [|' ';','|]    
     
+        /// this adds information to the result: stuff like grab, poison, etc.
         let additionalInfoString =
             if wantedAttack.AdditionalEffects = ""
             then ""
@@ -463,7 +478,7 @@ module BestiaryCalculator =
     
         let calculateOneAttack attackBonus (urlAttack: URLAttack) (modificationArr: AttackModification []) =
             
-            //attack roll for this exact attack
+            /// rolls two dice; one for the regular hit and one for a possible crit confirmation roll
             let (attackRoll,critConfirmationRoll) = 
                 let getAttackRolls =
                         rollDice 10000 20
@@ -482,7 +497,7 @@ module BestiaryCalculator =
                 | Gargantuan    -> 8
                 | Colossal      -> 9
 
-            //
+            /// calculates size changes due to modifications and applies them to the start size
             let calculatedSize =
     
                 let changeSizeBy =
@@ -508,7 +523,7 @@ module BestiaryCalculator =
                             elif x < 1 then 1
                             else x
 
-            ///
+            /// calculates size bonus to attack rolls (eg. +1 for small)
             let attackBoniSize =
                 let sizeModifierNew =
                     calculatedSize
@@ -537,12 +552,15 @@ module BestiaryCalculator =
                               )
                 |> Array.sum
     
+            /// Sums up all different boni to attack rolls
             let combinedAttackBoni =
                 attackBonus + AttackBoniModifications + attackBoniSize
     
+            /// complete bonus on attack = dice roll + Sum of all boni (getBonusToAttack)
             let totalAttackBonus =
                 attackRoll + combinedAttackBoni
 
+            /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
             let totalAttackCritBonus =
 
                 let critSpecificBonus =
@@ -565,6 +583,7 @@ module BestiaryCalculator =
     
             /////End attack boni/Start damage boni/////
     
+            /// calculates size change and resizes weapon damage dice.
             let sizeAdjustedWeaponDamage =
                
                 let effectiveSize =
@@ -664,6 +683,7 @@ module BestiaryCalculator =
     
                 getSizeChange urlAttack.WeaponDamage startSize effectiveSize
     
+            /// rolls dice for weapon
             let damageRolls =
                 let getDamageRolls =
                     rollDice 1000 sizeAdjustedWeaponDamage.Die
@@ -671,6 +691,7 @@ module BestiaryCalculator =
                     yield getRndArrElement getDamageRolls|]
                 |> Array.sum
     
+            /// calculates all boni to damage rolls from modifications and checks if they stack or not
             let modificationDamageBoni =
                 modificationArr
                 |> Array.map (fun x -> x.BonusDamage)
@@ -685,11 +706,13 @@ module BestiaryCalculator =
                               )
                 |> Array.sum
     
+            /// Sums up all different boni to damage
             let totalDamage =
                 damageRolls + sizeAdjustedWeaponDamage.BonusDamage + modificationDamageBoni
                 //the next line sets a minimum dmg of 1 for all attacks. the additional "(urlAttack.WeaponDamage.NumberOfDie <> 0)" circumvents a 1 dmg attack, if the attack is not meant to deal any attack.
                 |> fun x -> if (x <= 0) && (urlAttack.WeaponDamage.NumberOfDie <> 0) then 1 else x
     
+            /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
             let extraDamageOnHit =
                 let getDamageRolls numberOfDie die=
                     let rolledDice = rollDice 1000 die
@@ -720,7 +743,8 @@ module BestiaryCalculator =
                 //add weapon extra dmg (e.g. shocking enchantment) to modification extra dmg
                 extraDamageModifications
                 |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
-    
+            
+            /// Calculates extra damage which is multiplied or changed on crits (think Shocking Grasp or flaming burst)
             let extraDamageOnCrit =
                 let getDamageRolls numberOfDie die=
                     let rolledDice = rollDice 1000 die
@@ -754,6 +778,7 @@ module BestiaryCalculator =
                 extraDamageModifications
                 |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
 
+            /// combines the extra damage and the extra damage on crit
             let extraDamageCombined =
                 let getDamageRolls numberOfDie die=
                     let rolledDice = rollDice 1000 die
@@ -768,12 +793,14 @@ module BestiaryCalculator =
                     |> Array.append [|(getDamageRolls urlAttack.ExtraDamage.NumberOfDie urlAttack.ExtraDamage.Die, urlAttack.ExtraDamage.DamageType)|]
                     |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 ) 
 
+            /// Folds the damage values to a string to print as result. This allows to separate different damage types should a creature be immune to something
             let extraDamageToString extraDmgArr= 
                 extraDmgArr
                 |> Array.map (fun (value,dType) -> "+" + (string value) + " " + (string dType) + " " + "damage"  + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
                 |> fun x -> x.TrimEnd [|' ';','|]    
     
+            /// Sums up all different boni to damage
             let additionalInfoString =
                 if urlAttack.AdditionalEffects = ""
                 then ""

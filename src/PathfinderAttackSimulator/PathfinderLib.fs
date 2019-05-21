@@ -142,6 +142,8 @@ module Library =
             Bonustype = bType
             }
 
+        /// defines OneHanded/TwoHanded for power attack, but also the multiplicator for the bonus damage
+        /// from the attribute (think dragon style).
         let createWeaponDamageMultiplicator handling multiplicator = {
             Hand = handling
             Multiplicator = multiplicator
@@ -175,6 +177,8 @@ module Library =
             MultiplicatorOnDamage = createWeaponDamageMultiplicator handling multiplicator
             }
 
+        ///The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
+        ///Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Attack).
         let createSizechange value bonusType effectiveSizeChange = {
             SizeChangeValue = value
             SizeChangeBonustype = bonusType
@@ -186,7 +190,7 @@ module Library =
             inputString
             |> String.map (fun x -> Char.ToUpper x)
 
-
+        /// Represents ability score changes; e.g. the alchemist's mutagen (createStatChange Strength 4 Alchemical).
         let createSizeAttributes modifier id sizeType = {
             SizeModifier = modifier
             SizeId = id
