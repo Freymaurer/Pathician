@@ -205,9 +205,6 @@ myFullAttack myMagus2 Medium [| ShinyBlingBlingScimitar,PrimaryMain;
 
 Such a calculation could easily take 5 minutes, which can be reduced to several seconds with this script.
 
-</br>
-
 [Attack Simulator Repository](https://github.com/Freymaurer/PathfinderAttackSimulator)
 
-<br>
 *)

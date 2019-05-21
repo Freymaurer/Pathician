@@ -14,7 +14,7 @@ A character needs certain informations for a correct calculation.
 Right now this is not hand-held at all, but might get better in a future version.
 
 This is most likely the easiest of the information types and really self-explanatory.
-The first example is a fighter lvl 6 that wants to use bow and melee weapons.
+The first example is a fighter level 6 that wants to use bow and melee weapons.
 
 ### The Fighter
 *)
@@ -37,7 +37,8 @@ let myCharacter =  {
 (**
 > Without any doubt we have a nice and optimized fighter with "de inteligenz to crash samfing".
 
-* Abilitie Scores: = The ability scores.
+* Ability Scores = The ability scores.
 * BAB = Base attack bonus.
-* CasteLevel = Can be used for e.g. Magus Spellstrike with Shocking grasp.
+* CasterLevel = Can be used for e.g. Magus Spellstrike with Shocking grasp.
+
 *)

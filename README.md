@@ -13,7 +13,7 @@ Below you can find a list of the currently supported features.
 - Calculator for d20pfsrd bestiary entries.
 - Damage per round calculator
 
-For in depth information on how to use these features please see [here](https://freymaurer.github.io/PathfinderAttackSimulator/)
+For in depth information on how to use these features please see [here](https://freymaurer.github.io/PathfinderAttackSimulator/).
 
 ## How To Contribute
 
@@ -23,6 +23,8 @@ If you are not sure about opening an issue you can also E-Mail me directly (Frey
 ## Installation
 
 Below you can find two installation types. For most users the Quick Start variant will easily be enough to use.
+If you are looking for more information about FSharp and on how to use it you can also look [here](https://fsharp.org/) and click on "USE"
+in the NavBar on top.
 
 ### Quick Start
 

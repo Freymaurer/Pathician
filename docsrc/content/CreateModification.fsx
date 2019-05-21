@@ -48,14 +48,14 @@ So how does this work:
 
 > Imagine a dual-wielding fighter with a silver,PrimaryMain and an cold iron sword,Primary fighting against a fae creature.
 
-* BonusAttackRoll = The first two variables are the bonus to the attack role and its type. The last two variables are added boni for critical hit confirmation rolls (used for e.g. [Critical Focus](https://www.d20pfsrd.com/feats/combat-feats/critical-focus-combat/))
-    These values are added in addition to the first variables! so Critical Focus would be "createAttackBoniHitAndCrit 0 Flat 4 Flat".
+* BonusAttackRoll = The first two variables are the bonus to the attack roll and its type. The last two variables are added boni for critical hit confirmation rolls (used for e.g. [Critical Focus](https://www.d20pfsrd.com/feats/combat-feats/critical-focus-combat/))
+    These values are added in addition to the first variables! Hence Critical Focus would be "createAttackBoniHitAndCrit 0 Flat 4 Flat".
 * BonusDamage = Bonus damage that is added to the weapon damage and the bonus type (think: Prayer or InspireCourage).
 * ExtraDamage = This field contains damage that will be calculated and displayed separately, e.g. Sneak Attack from rogue.
     The first 3 variables are used on non crit attacks, the latter 3 variables are used in addition to the first values but only(!) for critical hits.
 * AppliedTo = Apply this modification to the WeaponTypes specified here and how often. "-20" is currently used as a placeholder for "to all attacks". Here you could use 1 for Spellstrike-ShockingGrasp.
 * StatChanges = Represents ability score changes due to this modification, e.g. the alchemist's mutagen (createStatChange Strength 4 Alchemical). Can be left empty if no stat change applies.
-* SizeChanges = The first value represents number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
+* SizeChanges = The first value represents the number of size changes and the direction, e.g. -1 = shrink by 1 size category. Next Value will be mostly "Polymorph" or Flat as the type of size change.
 Last is a false/true question, whether this size change is an actual size change or an effective size change: Write "true" if it is just an effective size change (Improved Natural Attack).
 * Description = A short Description for additional information. Not used in the script right now.
 

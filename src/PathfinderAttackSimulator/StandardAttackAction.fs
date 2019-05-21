@@ -10,13 +10,15 @@ module StandardAttackAction =
 
     /// Attack calculator helper functions
     module AuxFunctions =
-
+        
+        /// This function returns "count" randomized values from 1 to "diceSides"
         let rollDice count (diceSides:int) =
             let rnd = System.Random()
             if diceSides = 0 
             then [|0|]
             else Array.init count (fun _ -> rnd.Next (1, diceSides+1))
         
+        /// This function picks a random value from an array; used as an additional layer of "randomn" for the dice rolls.
         let getRndArrElement =
             let rnd = Random()
             fun (arr : int[]) -> arr.[rnd.Next(arr.Length)]
@@ -24,9 +26,10 @@ module StandardAttackAction =
     open AuxFunctions
     
 
-    /// This function returns the output of a standard attack action based on the used character stats, weapons and modifications.
+    /// This function returns the output of a standard attack action based on the used character stats, size, weapons and modifications.
     let myStandardAttack (char: CharacterStats) (size: SizeType) (weapon: Weapon) (modifications: AttackModification []) =
     
+        /// calculates size changes due to modifications and applies them to the start size
         let calculatedSize =
 
             let startSize =
@@ -63,7 +66,7 @@ module StandardAttackAction =
                         elif x < 1 then 1
                         else x
 
-        ///
+        /// calculates bonus on attack rolls due to the ability score used by the weapon
         let getUsedModifierToHit =
 
             let getStatChangesToHit =
@@ -93,7 +96,7 @@ module StandardAttackAction =
             |> floor |> int
     
     
-        ///
+        /// calculates all boni to attack rolls from modifications and checks if they stack or not
         let addBoniToAttack = 
             modifications 
             |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
@@ -111,24 +114,27 @@ module StandardAttackAction =
                           )
             |> Array.sum
         
-        ///
+        /// calculates size bonus to attack rolls (eg. +1 for small)
         let addSizeBonus =
             calculatedSize
             |> fun x -> Map.find x findSizes
             |> fun x -> x.SizeModifier
         
-        ///
+        /// Sums up all different boni to attack rolls
         let getBonusToAttack =
             char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + addBoniToAttack + addSizeBonus
    
+        /// rolls two dice; one for the regular hit and one for a possible crit confirmation roll
         let (attackRoll,critConfirmationRoll) = 
             let getAttackRolls =
                     rollDice 10000 20
             getRndArrElement getAttackRolls,getRndArrElement getAttackRolls
-
+    
+        /// complete bonus on attack = dice roll + Sum of all boni (getBonusToAttack)
         let totalAttackBonus =
             attackRoll + getBonusToAttack
 
+        /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
         let totalAttackCritBonus =
             let critSpecificBonus =
                 modifications
@@ -148,11 +154,11 @@ module StandardAttackAction =
                 |> Array.sum
             critConfirmationRoll + getBonusToAttack + critSpecificBonus
     
-        ///
+        /// rolls dice for weapon
         let getDamageRolls die =
             rollDice 100000 die
     
-        ///
+        /// calculates stat changes due to modifications
         let getStatChangesToDmg =
             modifications
             |> Array.collect (fun x -> x.StatChanges)
@@ -165,7 +171,7 @@ module StandardAttackAction =
             |> Array.sum
             |> float
             
-        ///
+        /// calculates bonus on damage rolls due to the ability score used by the weapon and the related multiplied
         let addDamageMod =
             match weapon.Modifier.ToDmg with
                 | Strength      -> char.Strength
@@ -179,6 +185,7 @@ module StandardAttackAction =
             |> fun x -> (x-10.)/2.
             |> fun x -> x * weapon.Modifier.MultiplicatorOnDamage.Multiplicator |> floor |> int
     
+        /// calculates size change and resizes weapon damage dice.
         let sizeAdjustedWeaponDamage =
             
             let startSize =
@@ -291,7 +298,7 @@ module StandardAttackAction =
 
             getSizeChange weapon startSize effectiveSize
 
-        ///
+        /// Rolls dice for resized weapon damage dice
         let addWeaponDamage = 
             let rec getRandRoll listOfRolls =
                 (getRndArrElement (getDamageRolls sizeAdjustedWeaponDamage.Die) )::listOfRolls
@@ -301,7 +308,7 @@ module StandardAttackAction =
             getRandRoll [] |> List.toArray |> Array.sum
             |> fun damageDice -> damageDice + weapon.DamageBonus
     
-        //
+        /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
         let getExtraDamageOnHit = 
             let rec getRandRoll listOfRolls die number =
                 (getRndArrElement (getDamageRolls die))::listOfRolls
@@ -330,7 +337,7 @@ module StandardAttackAction =
                                else extraDmg
             |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0,Untyped) && (bonus,dType) <> (0,VitalStrikeDamage) )
 
-        //
+        /// Calculates extra damage which is multiplied or changed on crits (think Shocking Grasp or flaming burst) 
         let getExtraDamageOnCrit = 
             let rec getRandRoll listOfRolls die number =
                 (getRndArrElement (getDamageRolls die))::listOfRolls
@@ -362,6 +369,7 @@ module StandardAttackAction =
                                     else extraDmg
                  |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0,Untyped) && (bonus,dType) <> (0,VitalStrikeDamage) )
         
+        /// combines the extra damage and the extra damage on crit
         let extraDamageCombined =
             let getValue (triple:(int*DamageTypes*string)) = 
                 triple |> fun (value,dType,string) -> value
@@ -373,14 +381,14 @@ module StandardAttackAction =
             then getExtraDamageOnHit
             else Array.map2 (fun onHit onCrit -> (getValue onHit) + (getValue onCrit), getDmgType onHit, getName onHit) getExtraDamageOnHit getExtraDamageOnCrit
 
-        ///
+        /// Folds the damage values to a string to print as result. This allows to separate different damage types should a creature be immune to something
         let extraDamageToString extraDmgArr= 
             extraDmgArr
             |> Array.map (fun (value,dType,name) -> "+" + (string value) + " " + (string dType) + " " + "damage" + " (" + name + ")" + ", ")
             |> Array.fold (fun strArr x -> strArr + x) "" 
             |> fun x -> x.TrimEnd [|' ';','|]          
 
-        ///
+        /// calculates all boni to damage rolls from modifications and checks if they stack or not
         let addDamageBoni =
             modifications
             |> Array.map (fun x -> x.BonusDamage)
@@ -400,7 +408,8 @@ module StandardAttackAction =
                             then float bonus + ((float (PowerAttack char.BAB).BonusDamage.Value) * 0.5) 
                                  |> int
                             else bonus
-        ///
+
+        /// Sums up all different boni to damage
         let getDamage = 
             addDamageMod + addWeaponDamage + addDamageBoni
             |> fun x -> if x <= 0 then 1 else x

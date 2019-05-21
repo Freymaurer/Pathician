@@ -22,7 +22,7 @@ information to calculate a players average damage per round against a given cr a
 
 ### Example 1
 
-As a example we will use a simple character from the library.
+As an example we will use a simple character from the library.
 > Parrn is a lvl 8 rouge/vivisectionist so his BAB is 6 and he has full sneak attack progression. He also has 22 Strength and wields a large greatsword. 
 >
 *)

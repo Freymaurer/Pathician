@@ -49,6 +49,7 @@ module DamagePerRound =
             NumberOfEntrys      = nOfEntrys
             }
         
+        /// Gets information from .tsv file. Should be redone with deedle framework!
         let getCrData (armor: string [][]) (hitpoints: string [][]) (cr:int) = 
             let tryParseIntOrReplace (str:string)=
                 let parsedString = System.Int32.TryParse str
@@ -89,7 +90,7 @@ module DamagePerRound =
 
     let myStandardAttackDPR (char: CharacterStats) (size: SizeType) (weapon: Weapon) (modifications: AttackModification []) (cr:int) (targetedArmorType:ArmorClassTypes) (statisticType: StatisticalAverages) filePath=
         
-    
+        /// normally should use relative path directly injected in function below, but then QuickStart users would have problems
         let crRelatedMonsterInfo = 
             //let baseDirectory = __SOURCE_DIRECTORY__
             //let baseDirectory' = Directory.GetParent(baseDirectory)
@@ -105,6 +106,7 @@ module DamagePerRound =
             //let saves = make2D.[71..100]
             getCrData armor perceptionHitDieHitPoints cr
     
+        /// gets information about monster hp
         let hpInfo =
             crRelatedMonsterInfo.AverageHitPoints
             |> fun x -> match statisticType with 
@@ -112,6 +114,7 @@ module DamagePerRound =
                         | Median    -> x.Median
                         | Mode      -> x.Mode
     
+        /// gets information about monster ac
         let armorInfo =
             crRelatedMonsterInfo
             |> fun x -> if x.CR <> cr then failwith "Found cr does not match wanted cr, pls open an issue with your input and this error message."
@@ -124,6 +127,7 @@ module DamagePerRound =
                         | Median    -> x.Median
                         | Mode      -> x.Mode
     
+        /// calculates size changes due to modifications and applies them to the start size
         let calculatedSize =
         
             let startSize =
@@ -160,7 +164,7 @@ module DamagePerRound =
                         elif x < 1 then 1
                         else x
         
-        ///
+        /// calculates bonus on attack rolls due to the ability score used by the weapon
         let getUsedModifierToHit =
         
             let getStatChangesToHit =
@@ -190,7 +194,7 @@ module DamagePerRound =
             |> floor |> int
         
         
-        ///
+        /// calculates all boni to attack rolls from modifications and checks if they stack or not
         let addBoniToAttack = 
             modifications 
             |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
@@ -208,19 +212,21 @@ module DamagePerRound =
                           )
             |> Array.sum
         
-        ///
+        /// calculates size bonus to attack rolls (eg. +1 for small)
         let addSizeBonus =
             calculatedSize
             |> fun x -> Map.find x findSizes
             |> fun x -> x.SizeModifier
         
-        ///
+        /// Sums up all different boni to attack rolls
         let getBonusToAttack =
             char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + addBoniToAttack + addSizeBonus
         
+        /// Not necessary but kept for simplicity and overview reasons
         let totalAttackBonus =
             float getBonusToAttack
         
+        /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
         let totalAttackCritBonus =
             let critSpecificBonus =
                 modifications
@@ -240,6 +246,7 @@ module DamagePerRound =
                 |> Array.sum
             float (getBonusToAttack + critSpecificBonus)
         
+        /// Calculation of all propabilites for hits/crits/threatened crits
         let (propabilityToHit,propabilitytoCrit,propabilityToConfirmCrit) =
             let critConfirmChance =
                 // 1 always misses and 20 always hits, so for the missing 20 here, later there will be an unconditional +1 for hits
@@ -263,7 +270,7 @@ module DamagePerRound =
                 |> fun x -> (float x.Length)/20.
             hitChance,critChance,critConfirmChance
     
-        ///
+        /// calculates stat changes due to modifications
         let getStatChangesToDmg =
             modifications
             |> Array.collect (fun x -> x.StatChanges)
@@ -276,7 +283,7 @@ module DamagePerRound =
             |> Array.sum
             |> float
             
-        ///
+        /// calculates bonus on damage rolls due to the ability score used by the weapon and the related multiplied
         let addDamageMod =
             match weapon.Modifier.ToDmg with
                 | Strength      -> char.Strength
@@ -290,6 +297,7 @@ module DamagePerRound =
             |> fun x -> (x-10.)/2.
             |> fun x -> x * weapon.Modifier.MultiplicatorOnDamage.Multiplicator |> floor |> int
         
+        /// calculates size change and resizes weapon damage dice.
         let sizeAdjustedWeaponDamage =
             
             let startSize =
@@ -402,12 +410,12 @@ module DamagePerRound =
         
             getSizeChange weapon startSize effectiveSize
         
-        ///
+        /// Rolls dice for resized weapon damage dice
         let addWeaponDamage = 
             float sizeAdjustedWeaponDamage.NumberOfDie * ((float sizeAdjustedWeaponDamage.Die+1.)/2.)
             |> fun damageDice -> damageDice + float weapon.DamageBonus
         
-        ///getRandRoll is not so good; try find something better
+        /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
         let extraDamageOnHit = 
             let getAvgDmg die number =
                 float number * ((float die+1.)/2.)
@@ -431,7 +439,7 @@ module DamagePerRound =
                                     |> fun (bonus,str) -> Array.append [|bonus,sizeAdjustedWeaponDamage.DamageType,str|] extraDmg
                                else extraDmg
     
-        ///getRandRoll is not so good; try find something better
+        /// Calculates extra damage which is multiplied or changed on crits (think Shocking Grasp or flaming burst) 
         let extraDamageOnCrit = 
             let getAvgDmg die number =
                 float number * ((float die+1.)/2.)
@@ -477,14 +485,14 @@ module DamagePerRound =
         let extraDmgCombined =
             Array.map3 (fun x y z -> getValue x + getValue y + getValue z, getDmgType x, getName x) avgExtraDmgOnHit avgExtraDmgOnThreatenedCrit avgExtraDmgOnConfirmedCrit
     
-        ///
+        /// Folds the damage values to a string to print as result. This allows to separate different damage types should a creature be immune to something 
         let extraDamageToString = 
             extraDmgCombined
             |> Array.map (fun (value,dType,name) -> (string value) + " " + (string dType) + " " + "damage" + " (" + name + ")" + ", ")
             |> Array.fold (fun strArr x -> strArr + x) "" 
             |> fun x -> x.TrimEnd [|' ';','|]         
         
-        ///
+        /// calculates all boni to damage rolls from modifications and checks if they stack or not
         let addDamageBoni =
             modifications
             |> Array.map (fun x -> x.BonusDamage)
@@ -504,7 +512,7 @@ module DamagePerRound =
                             then float bonus + ((float (PowerAttack char.BAB).BonusDamage.Value) * 0.5) 
                                  |> int
                             else bonus
-        ///
+        /// Sums up all different boni to damage
         let getDamage = 
             float addDamageMod + addWeaponDamage + float addDamageBoni
             |> fun x -> if x <= 0. then 1. else x
@@ -516,6 +524,7 @@ module DamagePerRound =
             |> Array.map (fun (x,_,_) -> x)
             |> Array.sum
     
+        /// adds up damage values with propabilites to hit, separated in on hit, on crit, on threatened but not confirmed crit
         let (dmgFromHit, dmgFromThreatenedCrit, dmgFromConfirmedCrit) = 
             let dmgFromHit = (propabilityToHit * getDamage) 
                              + extraDmgValue avgExtraDmgOnHit
@@ -538,6 +547,7 @@ module DamagePerRound =
     ///Weapons need an additional WeaponType: PrimaryMain for the weapon which should be used with things like haste, Primary for Primary natural attacks or two weapon fighting, and Secondary for secondary natural attacks.
     let myFullAttackDPR (char: CharacterStats) (size :SizeType) (weapons: (Weapon * WeaponType) []) (modifications: AttackModification []) (cr:int) (targetedArmorType:ArmorClassTypes) (statisticType: StatisticalAverages) filePath=
     
+        /// normally should use relative path directly injected in function below, but then QuickStart users would have problems
         let crRelatedMonsterInfo = 
             //let baseDirectory = __SOURCE_DIRECTORY__
             //let baseDirectory' = Directory.GetParent(baseDirectory)
@@ -553,6 +563,7 @@ module DamagePerRound =
             //let saves = make2D.[71..100]
             getCrData armor perceptionHitDieHitPoints cr
     
+        /// gets information about monster hp
         let hpInfo =
             crRelatedMonsterInfo.AverageHitPoints
             |> fun x -> match statisticType with 
@@ -560,6 +571,7 @@ module DamagePerRound =
                         | Median    -> x.Median
                         | Mode      -> x.Mode
     
+        /// gets information about monster ac
         let armorInfo =
             crRelatedMonsterInfo
             |> fun x -> if x.CR <> cr then failwith "Found cr does not match wanted cr, pls open an issue with your input and this error message."
@@ -572,7 +584,7 @@ module DamagePerRound =
                         | Median    -> x.Median
                         | Mode      -> x.Mode
     
-        // erzeugt extra Angriffe durch BAB und gibt Array mit extra attacks als boni von 0, 5, 10 wieder
+        /// creates bonus attacks due to BAB and yields them in an array of boni of 0, 5, 10
         let calculateBabExtraAttacks =
             floor ( (float char.BAB - 1.)/5. )
             |> int
@@ -842,10 +854,10 @@ module DamagePerRound =
                          )
             |> Array.concat
     
-        ///get One Attack per Attack Array
+        ///get One Attack per Attack Array, this is really similiar to the standard attack action!
         let getOneAttack (weapon: Weapon) (wType: WeaponType) (iterativeModifier: int) (modifications: AttackModification []) =
     
-            ///
+            /// calculates size changes due to modifications and applies them to the start size
             let calculatedSize =
     
                 let startSize =
@@ -882,7 +894,7 @@ module DamagePerRound =
                             elif x < 1 then 1
                             else x
     
-            ///
+            /// calculates bonus on attack rolls due to the ability score used by the weapon
             let getUsedModifierToHit =
     
                 let getStatChangesToHit =
@@ -911,7 +923,7 @@ module DamagePerRound =
                 |> fun x -> (float x-10.)/2.
                 |> floor |> int
     
-            ///
+            /// calculates all boni to attack rolls from modifications and checks if they stack or not
             let addBoniToAttack = 
                 modifications 
                 |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
@@ -929,19 +941,21 @@ module DamagePerRound =
                               )
                 |> Array.sum
     
-            ///
+            /// calculates size bonus to attack rolls (eg. +1 for small)
             let addSizeBonus =
                 calculatedSize
                 |> fun x -> Map.find x findSizes
                 |> fun x -> x.SizeModifier
     
-            ///
+            /// Sums up all different boni to attack rolls
             let getBonusToAttack =
                 char.BAB + weapon.BonusAttackRolls + getUsedModifierToHit + addBoniToAttack + addSizeBonus + iterativeModifier
     
+
             let totalAttackBonus =
                 float getBonusToAttack
     
+            /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
             let totalAttackCritBonus =
                 let critSpecificBonus =
                     modifications
@@ -961,7 +975,7 @@ module DamagePerRound =
                     |> Array.sum
                 float (getBonusToAttack + critSpecificBonus)
     
-            ///
+            /// Calculation of all propabilites for hits/crits/threatened crits
             let (propabilityToHit,propabilitytoCrit,propabilityToConfirmCrit) =
                 let critConfirmChance =
                     // 1 always misses and 20 always hits, so for the missing 20 here, later there will be an unconditional +1 for hits
@@ -986,7 +1000,7 @@ module DamagePerRound =
                 hitChance,critChance,critConfirmChance
     
     
-            ///
+            /// calculates stat changes due to modifications
             let getStatChangesToDmg =
                 modifications
                 |> Array.collect (fun x -> x.StatChanges)
@@ -999,7 +1013,7 @@ module DamagePerRound =
                 |> Array.sum
                 |> float
     
-            //
+            /// calculates size change and resizes weapon damage dice.
             let addDamageMod =
                 (match weapon.Modifier.ToDmg with
                 | Strength     -> char.Strength
@@ -1022,7 +1036,7 @@ module DamagePerRound =
                                         && wType = Primary
                                    then (modifier * weapon.Modifier.MultiplicatorOnDamage.Multiplicator) |> floor |> int
                                    else failwith "Unknown Weapon Combination to know if off-hand or not"
-                    
+            /// calculates size change and resizes weapon damage dice.     
             let sizeAdjustedWeaponDamage =
                 
                 let startSize =
@@ -1135,11 +1149,12 @@ module DamagePerRound =
     
                 getSizeChange weapon startSize effectiveSize
     
+            /// takes average for weapon dice rolls for resized weapon damage dice
             let addWeaponDamage = 
                 float sizeAdjustedWeaponDamage.NumberOfDie * ((float sizeAdjustedWeaponDamage.Die+1.)/2.)
                 |> fun damageDice -> damageDice + float weapon.DamageBonus
     
-            ///getRandRoll is not so good; try find something better
+            /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
             let extraDamageOnHit = 
                 let getAvgDmg die number =
                     float number * ((float die+1.)/2.)
@@ -1164,7 +1179,7 @@ module DamagePerRound =
                                    else extraDmg
     
         
-            ///getRandRoll is not so good; try find something better
+            /// Calculates extra damage which is multiplied or changed on crits (think Shocking Grasp or flaming burst) 
             let extraDamageOnCrit = 
                 let getAvgDmg die number =
                     float number * ((float die+1.)/2.)
@@ -1210,13 +1225,14 @@ module DamagePerRound =
             let extraDmgCombined =
                 Array.map3 (fun x y z -> getValue x + getValue y + getValue z, getDmgType x, getName x) avgExtraDmgOnHit avgExtraDmgOnThreatenedCrit avgExtraDmgOnConfirmedCrit
     
-            ///
+            /// Folds the damage values to a string to print as result. This allows to separate different damage types should a creature be immune to something
             let extraDamageToString = 
                 extraDmgCombined
                 |> Array.map (fun (value,dType,name) -> (string value) + " " + (string dType) + " " + "damage" + " (" + name + ")" + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
                 |> fun x -> x.TrimEnd [|' ';','|]       
                 
+            /// calculates all boni to damage rolls from modifications and checks if they stack or not
             let addDamageBoni =
                 modifications
                 |> Array.map (fun x -> x.BonusDamage)
@@ -1240,7 +1256,8 @@ module DamagePerRound =
                                      && (wType = Primary || wType = Secondary)
                                 then float bonus - ((float (PowerAttack char.BAB).BonusDamage.Value) * 0.5) |> int
                                 else bonus
-            ///
+
+            /// Sums up all different boni to damage
             let getDamage = 
                 float addDamageMod + addWeaponDamage + float addDamageBoni
                 |> fun x -> if x <= 0. then 1. else x
@@ -1251,6 +1268,7 @@ module DamagePerRound =
                 |> Array.map (fun (x,_,_) -> x)
                 |> Array.sum
         
+            /// adds up damage values with propabilites to hit, separated in on hit, on crit, on threatened but not confirmed crit
             let (dmgFromHit, dmgFromThreatenedCrit, dmgFromConfirmedCrit) = 
                 let dmgFromHit = (propabilityToHit * getDamage) 
                                  + extraDmgValue avgExtraDmgOnHit
