@@ -81,7 +81,7 @@ For this i will build a lvl 6 elf magus, who will use dexterity to hit the enemy
 <p>This character has 12 Str, 20 dex (17 buy in, +2 racial, +1 from lvl 4 ability score increase) and caster level 6 with BAB 4.</p>
 </blockquote>
 <p>Now we need to decide for a weapon. Like every magus we decide to use a Scimitar.
-Importan will be that we want to hit with dexterity but want our damage calculated based on our strength.</p>
+Important will be that we want to hit with dexterity but want our damage calculated based on our strength.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
 <span class="l"> 3: </span>
@@ -145,7 +145,7 @@ So how do we create this modification, which is a quite complex modification if 
 </code></pre></td>
 </tr>
 </table>
-<p>Now This is the most flexible version. It calculates the amount of d6 electricity damage depending on the caster level up to a maximum of 10d6
+<p>Now this is the most flexible version. It calculates the amount of d6 electricity damage depending on the caster level up to a maximum of 10d6
 and also has asks wether or not the modification is used against someone with a metal armor/weapon.</p>
 <p>The other modifications we will use are: Haste and Weapon Focus</p>
 <blockquote>
@@ -194,7 +194,7 @@ Because this is difficult to explain let me first show you the difference betwee
 </table>
 <p>As you can see the difference is an (weapon * WeaponType) array instead of simply a weapon.
 This is necessary for the calculator to know which weapon is should be used for additional attacks, e.g. Haste, Two Weapon Fighting.
-Here are some example for this:</p>
+Here are some examples for this:</p>
 <ul>
 <li>Haste/FlurryOfBlows adds an additional attack to the <em>PrimaryMain</em> weapon.</li>
 <li>Two-Weapon-Fighting has a <em>PrimaryMain</em> weapon for e.g. Haste and the other Weapon needs to be classified as a <em>Primary</em> weapon.</li>
@@ -257,7 +257,7 @@ Here are some example for this:</p>
 </tr>
 </table>
 <p>But not only our character and his weapon changed but also the amount of modification that we have. And not only the modification that we have, but also our group's buffs.
-We Somehow also got some nice Tentacles because why not.</p>
+We also grew some nice Tentacles ..somehow... because why not.</p>
 <table class="pre"><tr><td class="lines"><pre class="fssnip"><span class="l"> 1: </span>
 <span class="l"> 2: </span>
 <span class="l"> 3: </span>
@@ -319,9 +319,7 @@ We Somehow also got some nice Tentacles because why not.</p>
 <p>You attack with a Huge Tentacle and hit the enemy with a 22 (rolled 8) for 30 Bludgeoning damage +5 Cold damage (Huge Tentacle) !</p>
 </blockquote>
 <p>Such a calculation could easily take 5 minutes, which can be reduced to several seconds with this script.</p>
-</br>
 <p><a href="https://github.com/Freymaurer/PathfinderAttackSimulator">Attack Simulator Repository</a></p>
-<br>
 
 <div class="tip" id="fs1">namespace PathfinderAttackSimulator</div>
 <div class="tip" id="fs2">module Library<br /><br />from PathfinderAttackSimulator</div>
