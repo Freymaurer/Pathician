@@ -18,6 +18,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PathfinderLib.fs" />
+    <Compile Include="PathfinderModificationLib.fs" />
+    <Compile Include="PathfinderCoreFunctions.fs" />
     <Compile Include="StandardAttackAction.fs" />
     <Compile Include="FullRoundAttackAction.fs" />
     <Compile Include="BestiaryReader.fs" />

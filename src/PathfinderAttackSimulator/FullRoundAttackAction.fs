@@ -2,7 +2,7 @@
 
 open Library
 open Library.AuxLibFunctions
-open Library.Modifications
+open ModificationsLibrary
 open StandardAttackAction
 open StandardAttackAction.AuxFunctions
 
@@ -124,6 +124,7 @@ module FullRoundAttackAction =
             modifications
             |> Array.filter (fun x -> Array.contains All (fst x.AppliedTo) && snd x.AppliedTo = -20)
             |> fun x -> x
+
         ///Get all AttackModifications with limited numbers for All weapons
         let getAttackModificationsForAllLimited =
             modifications

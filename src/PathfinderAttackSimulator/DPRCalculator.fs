@@ -3,7 +3,7 @@
 open System
 open PathfinderAttackSimulator.Library
 open PathfinderAttackSimulator.Library.AuxLibFunctions
-open PathfinderAttackSimulator.Library.Modifications
+open PathfinderAttackSimulator.ModificationsLibrary
 
 module DamagePerRound =
 

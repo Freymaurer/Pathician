@@ -4,6 +4,7 @@ open System
 open Library
 open Library.AuxLibFunctions
 
+
 /// This module contains both bestiary calculator functions for standard attacks "calculateStandardAttack" and full-round attacks "calculateFullAttack"
 module BestiaryCalculator =
     
@@ -328,9 +329,9 @@ module BestiaryCalculator =
                                                     , extraDmg.DamageType, str
                              )
                 ///Vital Strike hardcode
-                |> fun extraDmg -> if (Array.exists (fun modi -> modi = Modifications.VitalStrike
-                                                                 || modi = Modifications.VitalStrikeImproved
-                                                                 || modi = Modifications.VitalStrikeGreater) modifications 
+                |> fun extraDmg -> if (Array.exists (fun modi -> modi = ModificationsLibrary.VitalStrike
+                                                                 || modi = ModificationsLibrary.VitalStrikeImproved
+                                                                 || modi = ModificationsLibrary.VitalStrikeGreater) modifications 
                                       ) = true
                                    then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
                                         |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
@@ -362,9 +363,9 @@ module BestiaryCalculator =
                                                          , extraDmg.DamageType, str
                                   )
                      ///Vital Strike hardcode
-                     |> fun extraDmg -> if (Array.exists (fun modi -> modi = Modifications.VitalStrike
-                                                                      || modi = Modifications.VitalStrikeImproved
-                                                                      || modi = Modifications.VitalStrikeGreater) modifications 
+                     |> fun extraDmg -> if (Array.exists (fun modi -> modi = ModificationsLibrary.VitalStrike
+                                                                      || modi = ModificationsLibrary.VitalStrikeImproved
+                                                                      || modi = ModificationsLibrary.VitalStrikeGreater) modifications 
                                            ) = true
                                         then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
                                              |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
@@ -409,14 +410,14 @@ module BestiaryCalculator =
             else "plus " + wantedAttack.AdditionalEffects
     
         if (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageCombined = [||]
-            then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
+        then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageCombined = [||] 
-            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (x %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
+        then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (x %i) %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = false && extraDamageCombined <> [||]
-            then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage (extraDamageToString extraDamageCombined) additionalInfoString
+        then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" wantedAttack.WeaponName totalAttackBonus attackRoll totalDamage (extraDamageToString extraDamageCombined) additionalInfoString
         elif (Array.contains attackRoll wantedAttack.CriticalRange) = true && extraDamageCombined <> [||] 
-            then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage (x %i) %s (%s on a crit) / (%s when not confirmed) !") wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit)  
-            else printfn "You should not see this message, please open an issue with your input as a bug report"
+        then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage (x %i) %s (%s on a crit) / (%s when not confirmed) !") wantedAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage wantedAttack.CriticalModifier additionalInfoString (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit)  
+        else printfn "You should not see this message, please open an issue with your input as a bug report"
 
     /// This function returns the calculated attack rolls of a d20pfsrd/archives of nethys bestiary entry.
     /// attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
@@ -462,10 +463,10 @@ module BestiaryCalculator =
             modifications
             |> Array.filter (fun x -> snd x.AppliedTo <> -20)
             |> fun arr -> if Array.isEmpty arr
-                          then Array.create attackArr.Length Modifications.ZeroMod
+                          then Array.create attackArr.Length ModificationsLibrary.ZeroMod
                                |> Array.mapi (fun i x -> i,x)
                           else Array.collect (fun x -> (Array.create (snd x.AppliedTo) x) 
-                                                       |> fun x -> Array.append x (Array.create (attackArr.Length - x.Length) Modifications.ZeroMod)
+                                                       |> fun x -> Array.append x (Array.create (attackArr.Length - x.Length) ModificationsLibrary.ZeroMod)
                                                        |> Array.mapi (fun i x -> i,x)
                                               ) arr
             |> Array.groupBy (fun (x,y) -> x)
@@ -726,9 +727,9 @@ module BestiaryCalculator =
                                                         , extraDmg.DamageType, str
                                  )
                     ///Vital Strike hardcode
-                    |> fun extraDmg -> if (Array.exists (fun modi -> modi = Modifications.VitalStrike
-                                                                     || modi = Modifications.VitalStrikeImproved
-                                                                     || modi = Modifications.VitalStrikeGreater) modifications 
+                    |> fun extraDmg -> if (Array.exists (fun modi -> modi = ModificationsLibrary.VitalStrike
+                                                                     || modi = ModificationsLibrary.VitalStrikeImproved
+                                                                     || modi = ModificationsLibrary.VitalStrikeGreater) modifications 
                                           ) = true
                                        then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
                                             |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
@@ -760,9 +761,9 @@ module BestiaryCalculator =
                                                              , extraDmg.DamageType, str
                                       )
                          ///Vital Strike hardcode
-                         |> fun extraDmg -> if (Array.exists (fun modi -> modi = Modifications.VitalStrike
-                                                                          || modi = Modifications.VitalStrikeImproved
-                                                                          || modi = Modifications.VitalStrikeGreater) modifications 
+                         |> fun extraDmg -> if (Array.exists (fun modi -> modi = ModificationsLibrary.VitalStrike
+                                                                          || modi = ModificationsLibrary.VitalStrikeImproved
+                                                                          || modi = ModificationsLibrary.VitalStrikeGreater) modifications 
                                                ) = true
                                             then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
                                                  |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
@@ -808,13 +809,13 @@ module BestiaryCalculator =
     
             ////
             if (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageCombined = [||]
-                then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
+            then printfn "You attack with a %s and hit with a %i (rolled %i) for %i damage %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage additionalInfoString
             elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageCombined = [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (x %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
+            then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i Damage (x %i) %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString
             elif (Array.contains attackRoll urlAttack.CriticalRange) = false && extraDamageCombined <> [||]
-                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage (extraDamageToString extraDamageCombined) additionalInfoString
+            then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i damage %s %s!" urlAttack.WeaponName totalAttackBonus attackRoll totalDamage (extraDamageToString extraDamageCombined) additionalInfoString
             elif (Array.contains attackRoll urlAttack.CriticalRange) = true && extraDamageCombined <> [||] 
-                then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage (x %i) %s (%s on a crit) / (%s when not confirmed) !") urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit)  
-                else printfn "You should not see this message, please open an issue with your input as a bug report"
+            then printfn ("You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i damage (x %i) %s (%s on a crit) / (%s when not confirmed) !") urlAttack.WeaponName totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage urlAttack.CriticalModifier additionalInfoString (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit)  
+            else printfn "You should not see this message, please open an issue with your input as a bug report"
         attackArr
         |> Array.mapi (fun i (attackBonus,attack) -> calculateOneAttack attackBonus attack modificationsCombined.[i])

@@ -3,7 +3,7 @@
 open System
 open PathfinderAttackSimulator.Library
 open PathfinderAttackSimulator.Library.AuxLibFunctions
-open PathfinderAttackSimulator.Library.Modifications
+open PathfinderAttackSimulator.ModificationsLibrary
 
 /// This module contains some smaller helper functions for all attack calculator functions and also the calculator for standard attack actions "myStandardAttack"
 module StandardAttackAction =
