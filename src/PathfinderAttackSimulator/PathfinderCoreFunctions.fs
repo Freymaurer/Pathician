@@ -193,7 +193,7 @@ module CoreFunctions =
 
 
             /// calculates size change and resizes weapon damage dice.
-            let adjustWeaponDamage (size: SizeType) (weapon: Weapon) (modifications: AttackModification [])=
+            let adjustWeaponDamage (size: SizeType) (weaponDmgDie: int) (weaponDmgNOfDie:int) (modifications: AttackModification [])=
                 
                 let startSize =
                     match size with
@@ -236,7 +236,7 @@ module CoreFunctions =
                     (4,6);(4,8);(6,6);(6,8);(8,6);(8,8);(12,6);(12,8);(16,6);(16,8);(24,6);(24,8);(36,6);(36,8)|] 
 
                 ///https://paizo.com/paizo/faq/v5748nruor1fm#v5748eaic9t3f
-                let getSizeChange reCalcWeapon (startS: int) (modifiedS: int) =
+                let getSizeChange weaponDmgDie weaponDmgNOfDie (startS: int) (modifiedS: int) =
                     let snowFlakeIncrease numberofdice (die: int) =
                         match numberofdice with 
                         | 1 -> 2,die
@@ -251,26 +251,26 @@ module CoreFunctions =
                     let decInc = if sizeDiff < 0 then (-1.)
                                  elif sizeDiff > 0 then (1.)
                                  else 0.
-                    let adjustedDie = match reCalcWeapon.Damage.Die with
-                                      | 2   -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                      | 3   -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                      | 4   -> match reCalcWeapon.Damage.NumberOfDie with
-                                               | 1                                                       -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                               | odd when isOdd reCalcWeapon.Damage.NumberOfDie = true   -> int (ceil (float reCalcWeapon.Damage.NumberOfDie/2.)), 6
-                                               | even when isEven reCalcWeapon.Damage.NumberOfDie = true -> (reCalcWeapon.Damage.NumberOfDie/2), 8
+                    let adjustedDie = match weaponDmgDie with
+                                      | 2   -> weaponDmgNOfDie, weaponDmgDie
+                                      | 3   -> weaponDmgNOfDie, weaponDmgDie
+                                      | 4   -> match weaponDmgNOfDie with
+                                               | 1                                                       -> weaponDmgNOfDie, weaponDmgDie
+                                               | odd when isOdd weaponDmgNOfDie = true   -> int (ceil (float weaponDmgNOfDie/2.)), 6
+                                               | even when isEven weaponDmgNOfDie = true -> (weaponDmgNOfDie/2), 8
                                                | _                                                       -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error4"
-                                      | 6   -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                      | 8   -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                      | 10  -> reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
-                                      | 12  -> (reCalcWeapon.Damage.NumberOfDie*2), 6
-                                      | 20  -> (reCalcWeapon.Damage.NumberOfDie*2), 10
-                                      | _   -> if reCalcWeapon.Damage.Die % 10 = 0
-                                               then ((reCalcWeapon.Damage.Die / 10) * reCalcWeapon.Damage.NumberOfDie), 10
-                                               elif reCalcWeapon.Damage.Die % 6 = 0
-                                               then ((reCalcWeapon.Damage.Die / 6) * reCalcWeapon.Damage.NumberOfDie), 6
-                                               elif reCalcWeapon.Damage.Die % 4 = 0 
-                                               then ((reCalcWeapon.Damage.Die / 4) * reCalcWeapon.Damage.NumberOfDie), 4
-                                               else reCalcWeapon.Damage.NumberOfDie, reCalcWeapon.Damage.Die
+                                      | 6   -> weaponDmgNOfDie, weaponDmgDie
+                                      | 8   -> weaponDmgNOfDie, weaponDmgDie
+                                      | 10  -> weaponDmgNOfDie, weaponDmgDie
+                                      | 12  -> (weaponDmgNOfDie*2), 6
+                                      | 20  -> (weaponDmgNOfDie*2), 10
+                                      | _   -> if weaponDmgDie % 10 = 0
+                                               then ((weaponDmgDie / 10) * weaponDmgNOfDie), 10
+                                               elif weaponDmgDie % 6 = 0
+                                               then ((weaponDmgDie / 6) * weaponDmgNOfDie), 6
+                                               elif weaponDmgDie % 4 = 0 
+                                               then ((weaponDmgDie / 4) * weaponDmgNOfDie), 4
+                                               else weaponDmgNOfDie, weaponDmgDie
                     let adjustedDieNum = fst adjustedDie
                     let adjustedDietype = snd adjustedDie
 
@@ -301,10 +301,24 @@ module CoreFunctions =
                                  |> fun (nDie,die) -> loopResizeWeapon (n+1) nDie die
 
                     loopResizeWeapon 0 adjustedDieNum adjustedDietype
-                    |> fun (n,die) -> createDamage n die reCalcWeapon.Damage.DamageType
 
-                getSizeChange weapon startSize effectiveSize
+                getSizeChange weaponDmgDie weaponDmgNOfDie startSize effectiveSize
 
+            /// calculates all boni to damage rolls from modifications and checks if they stack or not
+            let addDamageBoni (modifications:AttackModification []) =
+                modifications
+                |> Array.map (fun x -> x.BonusDamage)
+                |> Array.groupBy (fun x -> x.BonusType)
+                |> Array.map (fun (x,bonusArr) -> if x <> BonusTypes.Flat 
+                                                  then bonusArr
+                                                       |> Array.sortByDescending (fun x -> x.Value) 
+                                                       |> fun x -> Array.head x
+                                                       |> fun x -> x.Value
+                                                  else bonusArr
+                                                       |> Array.map (fun x -> x.Value)
+                                                       |> Array.sum                   
+                              )
+                |> Array.sum
 
             /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
             let getExtraDamageOnHit (weapon:Weapon) (modifications:AttackModification []) (resizedWeaponDmg:Damage) = 
@@ -386,20 +400,3 @@ module CoreFunctions =
                 |> Array.fold (fun strArr x -> strArr + x) "" 
                 |> fun x -> x.TrimEnd [|' ';','|]          
 
-            /// calculates all boni to damage rolls from modifications and checks if they stack or not
-            let addDamageBoni (modifications:AttackModification []) =
-                modifications
-                |> Array.map (fun x -> x.BonusDamage)
-                |> Array.groupBy (fun x -> x.BonusType)
-                |> Array.map (fun (x,bonusArr) -> if x <> BonusTypes.Flat 
-                                                  then bonusArr
-                                                       |> Array.sortByDescending (fun x -> x.Value) 
-                                                       |> fun x -> Array.head x
-                                                       |> fun x -> x.Value
-                                                  else bonusArr
-                                                       |> Array.map (fun x -> x.Value)
-                                                       |> Array.sum                   
-                              )
-                |> Array.sum
-
-        

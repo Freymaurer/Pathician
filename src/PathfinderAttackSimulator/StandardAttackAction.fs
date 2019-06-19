@@ -31,7 +31,7 @@ module StandardAttackAction =
             addBoniToAttack modifications
         
         /// Sums up all different boni to attack rolls
-        let bonusToAttack =
+        let combinedAttackBoni =
             char.BAB + weapon.BonusAttackRolls + abilityModBoniToAttack + modBoniToAttack + sizeBonusToAttack
    
         /// rolls two dice; one for the regular hit and one for a possible crit confirmation roll
@@ -42,11 +42,11 @@ module StandardAttackAction =
     
         /// complete bonus on attack = dice roll + Sum of all boni (getBonusToAttack)
         let totalAttackBonus =
-            attackRoll + bonusToAttack
+            attackRoll + combinedAttackBoni
 
         /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
         let totalAttackCritBonus =
-            getTotalAttackCritBonus modifications critConfirmationRoll bonusToAttack
+            getTotalAttackCritBonus modifications critConfirmationRoll combinedAttackBoni
     
 
     //////////////// start with damage calculation ///////////////////////////////////////////////////
@@ -68,7 +68,8 @@ module StandardAttackAction =
     
         /// calculates size change and resizes weapon damage dice.
         let sizeAdjustedWeaponDamage =            
-            adjustWeaponDamage size weapon modifications 
+            adjustWeaponDamage size weapon.Damage.Die weapon.Damage.NumberOfDie modifications
+            |> fun (n,die) -> createDamage n die weapon.Damage.DamageType
 
         /// Rolls dice for resized weapon damage dice
         let addWeaponDamage = 
