@@ -10,7 +10,7 @@ open LibraryModifications
 module CoreFunctions =
 
     /// Attack calculator helper functions
-    module AuxFunctions =
+    module AuxCoreFunctions =
         
         /// This function returns "count" randomized values from 1 to "diceSides"
         let rollDice count (diceSides:int) =
@@ -83,11 +83,11 @@ module CoreFunctions =
 
         module toHit =
 
-            open AuxFunctions
+            open AuxCoreFunctions
 
             /// calculates size bonus to attack rolls (eg. +1 for small)
-            let addSizeBonus (size: SizeType) (modifications: AttackModification [])=
-                calculateSize size modifications
+            let addSizeBonus newSizeInt =
+                newSizeInt
                 |> fun x -> Map.find x findSizes
                 |> fun x -> x.SizeModifier
 
@@ -162,22 +162,23 @@ module CoreFunctions =
         
         module toDmg =
             
-            open AuxFunctions
+            open AuxCoreFunctions
 
             /// calculates bonus on damage rolls due to the ability score used by the weapon and the related multiplied
-            let addDamageMod (char: CharacterStats) (weapon: Weapon) (modifications: AttackModification []) =
-                /// calculates stat changes due to modifications
-                let getStatChangesToDmg =
-                    modifications
-                    |> Array.collect (fun x -> x.StatChanges)
-                    |> Array.filter (fun statChange -> statChange.Attribute = weapon.Modifier.ToDmg)
-                    |> Array.groupBy (fun statChange -> statChange.Bonustype)
-                    |> Array.map (fun (useless,x) -> x)
-                    |> Array.map (fun x -> Array.sortByDescending (fun statChange -> statChange.AttributeChange) x)
-                    |> Array.map (fun x -> Array.head x)
-                    |> Array.map (fun statChange -> statChange.AttributeChange)
-                    |> Array.sum
-                    |> float
+            /// calculates stat changes due to modifications
+            let getStatChangesToDmg (weapon: Weapon) (modifications: AttackModification []) =
+                modifications
+                |> Array.collect (fun x -> x.StatChanges)
+                |> Array.filter (fun statChange -> statChange.Attribute = weapon.Modifier.ToDmg)
+                |> Array.groupBy (fun statChange -> statChange.Bonustype)
+                |> Array.map (fun (useless,x) -> x)
+                |> Array.map (fun x -> Array.sortByDescending (fun statChange -> statChange.AttributeChange) x)
+                |> Array.map (fun x -> Array.head x)
+                |> Array.map (fun statChange -> statChange.AttributeChange)
+                |> Array.sum
+                |> float
+
+            let addDamageMod (char: CharacterStats) (weapon: Weapon) statChangeToDamageAbilityScore =
 
                 match weapon.Modifier.ToDmg with
                     | Strength      -> char.Strength
@@ -187,9 +188,9 @@ module CoreFunctions =
                     | Wisdom        -> char.Wisdom
                     | Charisma      -> char.Charisma
                     | _             -> 0
-                |> fun stat -> float stat + getStatChangesToDmg
+                |> fun stat -> float stat + statChangeToDamageAbilityScore 
                 |> fun x -> (x-10.)/2.
-                |> fun x -> x * weapon.Modifier.MultiplicatorOnDamage.Multiplicator |> floor |> int
+
 
             /// calculates size change and resizes weapon damage dice.
             let adjustWeaponDamage (size: SizeType) (weapon: Weapon) (modifications: AttackModification [])=

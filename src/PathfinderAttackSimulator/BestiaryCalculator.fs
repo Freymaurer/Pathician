@@ -9,6 +9,7 @@ open Library.AuxLibFunctions
 module BestiaryCalculator =
     
     open BestiaryReader.AuxFunctions
+    open CoreFunctions.AuxCoreFunctions
 
     let private testForNaturalAttack (str:string) =
         let regexNaturalAttack = System.Text.RegularExpressions.Regex("(claw|vine|tentacle|bite|gore|hoof|wing|pincers|tail\sslap|slam|sting|talon|tongue)")
@@ -23,16 +24,6 @@ module BestiaryCalculator =
         //check if there is actually the attack wanted by the user
         if attackNumber > attackInfo.Length then failwith "The chosen url does not provide enough different attacks for the attackNumber given. Try giving a smaller number or 1."
         let monsterStats = attackInfo.[0].RelevantMonsterStats
-    
-        let rollDice count (diceSides:int) =
-            let rnd = System.Random()
-            if diceSides = 0 
-            then [|0|]
-            else Array.init count (fun _ -> rnd.Next (1, diceSides+1))
-        
-        let getRndArrElement =
-            let rnd = Random()
-            fun (arr : int[]) -> arr.[rnd.Next(arr.Length)]
     
         //filter for either melee or ranged
         let wantedMonsterAttack =

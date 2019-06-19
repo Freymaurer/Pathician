@@ -4,7 +4,7 @@ open System
 open PathfinderAttackSimulator.Library
 open PathfinderAttackSimulator.Library.AuxLibFunctions
 open PathfinderAttackSimulator.LibraryModifications
-open CoreFunctions.AuxFunctions
+open CoreFunctions.AuxCoreFunctions
 open CoreFunctions.OneAttack.toHit
 open CoreFunctions.OneAttack.toDmg
 
@@ -19,22 +19,20 @@ module StandardAttackAction =
             calculateSize size modifications
 
         /// calculates size bonus to attack rolls (eg. +1 for small)
-        let sizeBonus =    
-            addSizeBonus size modifications
+        let sizeBonusToAttack =    
+            addSizeBonus calculatedSize
 
         /// calculates bonus on attack rolls due to the ability score used by the weapon
-        let usedModifierToHit =
+        let abilityModBoniToAttack =
             getUsedModifierToHit char weapon modifications
     
-    
         /// calculates all boni to attack rolls from modifications and checks if they stack or not
-        let boniToAttack = 
+        let modBoniToAttack = 
             addBoniToAttack modifications
-        
         
         /// Sums up all different boni to attack rolls
         let bonusToAttack =
-            char.BAB + weapon.BonusAttackRolls + usedModifierToHit + boniToAttack + sizeBonus
+            char.BAB + weapon.BonusAttackRolls + abilityModBoniToAttack + modBoniToAttack + sizeBonusToAttack
    
         /// rolls two dice; one for the regular hit and one for a possible crit confirmation roll
         let (attackRoll,critConfirmationRoll) = 
@@ -50,15 +48,23 @@ module StandardAttackAction =
         let totalAttackCritBonus =
             getTotalAttackCritBonus modifications critConfirmationRoll bonusToAttack
     
+
     //////////////// start with damage calculation ///////////////////////////////////////////////////
+
 
         /// rolls dice for weapon
         let getDamageRolls die =
             rollDice 100000 die
     
+        let statChangesToDmg =
+            getStatChangesToDmg weapon modifications
+
         /// calculates stat changes due to modifications
-        let damageMod =
-            addDamageMod char weapon modifications
+        let abilityModBoniToDmg =
+            addDamageMod char weapon statChangesToDmg
+            |> fun x -> x * weapon.Modifier.MultiplicatorOnDamage.Multiplicator 
+            |> floor 
+            |> int
     
         /// calculates size change and resizes weapon damage dice.
         let sizeAdjustedWeaponDamage =            
@@ -88,7 +94,7 @@ module StandardAttackAction =
             combineExtraDamage extraDamageOnHit extraDamageOnCrit
 
         /// calculates all boni to damage rolls from modifications and checks if they stack or not
-        let damageBoni =
+        let modBoniToDmg =
             addDamageBoni modifications
             |> fun bonus -> if (Array.contains (PowerAttack char.BAB) modifications) = true 
                                 && weapon.Modifier.MultiplicatorOnDamage.Hand = TwoHanded
@@ -98,7 +104,7 @@ module StandardAttackAction =
 
         /// Sums up all different boni to damage
         let getDamage = 
-            damageMod + addWeaponDamage + damageBoni
+            abilityModBoniToDmg + addWeaponDamage + modBoniToDmg
             |> fun x -> if x <= 0 then 1 else x
 
         /////
