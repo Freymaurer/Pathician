@@ -5,7 +5,7 @@ open System
 open PathfinderAttackSimulator.Library.AuxLibFunctions
 
 /// Library for all pre-written modifications
-module ModificationsLibrary =
+module LibraryModifications =
 
 
     let AidAnother = {

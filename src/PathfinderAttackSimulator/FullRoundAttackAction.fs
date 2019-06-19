@@ -2,7 +2,7 @@
 
 open Library
 open Library.AuxLibFunctions
-open ModificationsLibrary
+open LibraryModifications
 open StandardAttackAction
 open StandardAttackAction.AuxFunctions
 

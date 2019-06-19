@@ -329,9 +329,9 @@ module BestiaryCalculator =
                                                     , extraDmg.DamageType, str
                              )
                 ///Vital Strike hardcode
-                |> fun extraDmg -> if (Array.exists (fun modi -> modi = ModificationsLibrary.VitalStrike
-                                                                 || modi = ModificationsLibrary.VitalStrikeImproved
-                                                                 || modi = ModificationsLibrary.VitalStrikeGreater) modifications 
+                |> fun extraDmg -> if (Array.exists (fun modi -> modi = LibraryModifications.VitalStrike
+                                                                 || modi = LibraryModifications.VitalStrikeImproved
+                                                                 || modi = LibraryModifications.VitalStrikeGreater) modifications 
                                       ) = true
                                    then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
                                         |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
@@ -363,9 +363,9 @@ module BestiaryCalculator =
                                                          , extraDmg.DamageType, str
                                   )
                      ///Vital Strike hardcode
-                     |> fun extraDmg -> if (Array.exists (fun modi -> modi = ModificationsLibrary.VitalStrike
-                                                                      || modi = ModificationsLibrary.VitalStrikeImproved
-                                                                      || modi = ModificationsLibrary.VitalStrikeGreater) modifications 
+                     |> fun extraDmg -> if (Array.exists (fun modi -> modi = LibraryModifications.VitalStrike
+                                                                      || modi = LibraryModifications.VitalStrikeImproved
+                                                                      || modi = LibraryModifications.VitalStrikeGreater) modifications 
                                            ) = true
                                         then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
                                              |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
@@ -463,10 +463,10 @@ module BestiaryCalculator =
             modifications
             |> Array.filter (fun x -> snd x.AppliedTo <> -20)
             |> fun arr -> if Array.isEmpty arr
-                          then Array.create attackArr.Length ModificationsLibrary.ZeroMod
+                          then Array.create attackArr.Length LibraryModifications.ZeroMod
                                |> Array.mapi (fun i x -> i,x)
                           else Array.collect (fun x -> (Array.create (snd x.AppliedTo) x) 
-                                                       |> fun x -> Array.append x (Array.create (attackArr.Length - x.Length) ModificationsLibrary.ZeroMod)
+                                                       |> fun x -> Array.append x (Array.create (attackArr.Length - x.Length) LibraryModifications.ZeroMod)
                                                        |> Array.mapi (fun i x -> i,x)
                                               ) arr
             |> Array.groupBy (fun (x,y) -> x)
@@ -727,9 +727,9 @@ module BestiaryCalculator =
                                                         , extraDmg.DamageType, str
                                  )
                     ///Vital Strike hardcode
-                    |> fun extraDmg -> if (Array.exists (fun modi -> modi = ModificationsLibrary.VitalStrike
-                                                                     || modi = ModificationsLibrary.VitalStrikeImproved
-                                                                     || modi = ModificationsLibrary.VitalStrikeGreater) modifications 
+                    |> fun extraDmg -> if (Array.exists (fun modi -> modi = LibraryModifications.VitalStrike
+                                                                     || modi = LibraryModifications.VitalStrikeImproved
+                                                                     || modi = LibraryModifications.VitalStrikeGreater) modifications 
                                           ) = true
                                        then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
                                             |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
@@ -761,9 +761,9 @@ module BestiaryCalculator =
                                                              , extraDmg.DamageType, str
                                       )
                          ///Vital Strike hardcode
-                         |> fun extraDmg -> if (Array.exists (fun modi -> modi = ModificationsLibrary.VitalStrike
-                                                                          || modi = ModificationsLibrary.VitalStrikeImproved
-                                                                          || modi = ModificationsLibrary.VitalStrikeGreater) modifications 
+                         |> fun extraDmg -> if (Array.exists (fun modi -> modi = LibraryModifications.VitalStrike
+                                                                          || modi = LibraryModifications.VitalStrikeImproved
+                                                                          || modi = LibraryModifications.VitalStrikeGreater) modifications 
                                                ) = true
                                             then Array.filter (fun (x:AttackModification) -> x.ExtraDamage.OnHit.DamageType = VitalStrikeDamage) modifications
                                                  |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
