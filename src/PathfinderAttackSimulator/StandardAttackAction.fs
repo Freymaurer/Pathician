@@ -46,7 +46,8 @@ module StandardAttackAction =
 
         /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
         let totalAttackCritBonus =
-            getTotalAttackCritBonus modifications critConfirmationRoll combinedAttackBoni
+            getTotalAttackCritBonus modifications combinedAttackBoni
+            |> (+) critConfirmationRoll
     
 
     //////////////// start with damage calculation ///////////////////////////////////////////////////

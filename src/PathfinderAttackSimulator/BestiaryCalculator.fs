@@ -223,7 +223,8 @@ module BestiaryCalculator =
 
         /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
         let totalAttackCritBonus =
-            toHit.getTotalAttackCritBonus modifications critConfirmationRoll combinedAttackBoni
+            toHit.getTotalAttackCritBonus modifications combinedAttackBoni
+            |> (+) critConfirmationRoll
     
         /////End attack boni/Start damage boni/////
     
@@ -373,7 +374,8 @@ module BestiaryCalculator =
 
             /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
             let totalAttackCritBonus =
-                toHit.getTotalAttackCritBonus modifications critConfirmationRoll combinedAttackBoni
+                toHit.getTotalAttackCritBonus modifications combinedAttackBoni
+                |> (+) critConfirmationRoll
     
             /////End attack boni/Start damage boni/////
     

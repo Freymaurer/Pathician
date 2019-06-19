@@ -141,7 +141,7 @@ module CoreFunctions =
                 |> Array.sum
 
             /// complete bonus on crit confirmation attack roll = dice roll + Sum of all boni (getBonusToAttack) + critical hit confirmation roll specific boni
-            let getTotalAttackCritBonus (modifications: AttackModification []) critConfirmationRoll bonusToAttack =
+            let getTotalAttackCritBonus (modifications: AttackModification []) bonusToAttack =
                 let critSpecificBonus =
                     modifications
                     |> Array.map (fun x -> x.BonusAttackRoll.OnCrit)
@@ -158,7 +158,7 @@ module CoreFunctions =
                                                            else failwith "Unrecognized Pattern of attackBoni in 'addBoniToAttack'"
                                   )
                     |> Array.sum
-                critConfirmationRoll + bonusToAttack + critSpecificBonus
+                bonusToAttack + critSpecificBonus
         
         module toDmg =
             
