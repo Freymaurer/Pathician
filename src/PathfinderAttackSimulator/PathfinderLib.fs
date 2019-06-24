@@ -147,10 +147,15 @@ module Library =
                                      | Huge          -> 7
                                      | Gargantuan    -> 8
                                      | Colossal      -> 9
-            member this.SizeID = sizeID
-            member this.Modifier(?id: int) =
-                let id = defaultArg id sizeID
-                match id with
+
+            let mutable sizeID' = sizeID
+
+            member this.SizeID
+                with get () = sizeID'
+                and private set (value) = sizeID' <- value
+
+            member this.Modifier =
+                match this.SizeID with
                 | 1 -> 8
                 | 2 -> 4
                 | 3 -> 2
@@ -160,8 +165,11 @@ module Library =
                 | 7 -> -2
                 | 8 -> -4
                 | 9 -> -8
-                | tooSmall when id < 1 -> 8
-                | tooBig   when id > 9 -> -8
+                | tooSmall when this.SizeID < 1 -> 8
+                | tooBig   when this.SizeID > 9 -> -8
+
+            member this.SizeIncrease(increase: int) =
+                sizeID' <- sizeID' + increase
 
 
         /// NoAS 0 Flat if no StatChange, or leave array empty
