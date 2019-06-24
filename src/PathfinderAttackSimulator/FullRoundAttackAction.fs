@@ -76,14 +76,13 @@ module FullRoundAttackAction =
                      (Array.contains Natural (Array.map (fun ((w: Weapon),wType) -> w.ManufacturedOrNatural) weapons)
                      ) = true
                 then if bonusAttacksForPrimaryMain <> [||]
-                     // Take first weapon in Array
-                     then (arr |> Array.head
-                               // filter for primary weapon && max bab && natural
-                               |> fun (w, wType, modifier) -> if wType = Primary && modifier = 0 && w.ManufacturedOrNatural = Natural
-                                                              then bonusAttacksForPrimaryMain.[0 .. bonusAttacksForPrimaryMain.Length-2]
-                                                                    |> Array.map (fun x -> w,wType, modifier)
-                                                              else [|w,wType,modifier|]
-                          )|> fun x -> Array.append x arr                                       
+                     // filter for primary weapon && max bab && natural && FIRST weapon in arr
+                     then (arr |> Array.mapi (fun i (w, wType, modifier) -> if i = 0 && wType = Primary && modifier = 0 && w.ManufacturedOrNatural = Natural
+                                                                            then bonusAttacksForPrimaryMain |> Array.map (fun x -> w,wType, modifier)
+                                                                            else [|w,wType,modifier|])
+
+                          )
+                          |> Array.concat
                      elif bonusAttacksForPrimaryMain = [||] 
                         then arr
                      else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."

@@ -28,7 +28,7 @@ module CoreFunctions =
         /// rolls dice for weapon
         let getDamageRolls die =
             rollDice 100000 die
-
+           
         let findSizes = [1,createSizeAttributes 8 1 Fine;
                          2,createSizeAttributes 4 2 Diminuitive;
                          3,createSizeAttributes 2 3 Tiny;
@@ -42,7 +42,7 @@ module CoreFunctions =
 
         /// calculates real size changes due to modifications and applies them to the start size.
         /// This function returns an integer representing the new size (The map of size integer to size is "findSizes"
-        let calculateSize (size: SizeType) (modifications: AttackModification [])=
+        let calculateSize (size: SizeType) (modifications: AttackModification []) =
 
             let startSize =
                 match size with
@@ -86,7 +86,7 @@ module CoreFunctions =
             open AuxCoreFunctions
 
             /// calculates size bonus to attack rolls (eg. +1 for small)
-            let addSizeBonus newSizeInt =
+            let addSizeBonus (newSizeInt:int) = 
                 newSizeInt
                 |> fun x -> Map.find x findSizes
                 |> fun x -> x.SizeModifier
