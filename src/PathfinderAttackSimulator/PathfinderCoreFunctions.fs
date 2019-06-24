@@ -30,15 +30,15 @@ module CoreFunctions =
             rollDice 100000 die
 
         let findSizes = [1,createSizeAttributes 8 1 Fine;
-                            2,createSizeAttributes 4 2 Diminuitive;
-                            3,createSizeAttributes 2 3 Tiny;
-                            4,createSizeAttributes 1 4 Small;
-                            5,createSizeAttributes 0 5 Medium;
-                            6,createSizeAttributes -1 6 Large;
-                            7,createSizeAttributes -2 7 Huge;
-                            8,createSizeAttributes -4 8 Gargantuan;
-                            9,createSizeAttributes -8 9 Colossal
-                            ] |> Map.ofSeq
+                         2,createSizeAttributes 4 2 Diminuitive;
+                         3,createSizeAttributes 2 3 Tiny;
+                         4,createSizeAttributes 1 4 Small;
+                         5,createSizeAttributes 0 5 Medium;
+                         6,createSizeAttributes -1 6 Large;
+                         7,createSizeAttributes -2 7 Huge;
+                         8,createSizeAttributes -4 8 Gargantuan;
+                         9,createSizeAttributes -8 9 Colossal
+                         ] |> Map.ofSeq
 
         /// calculates real size changes due to modifications and applies them to the start size.
         /// This function returns an integer representing the new size (The map of size integer to size is "findSizes"
@@ -161,7 +161,7 @@ module CoreFunctions =
                 bonusToAttack + critSpecificBonus
         
         module toDmg =
-            
+
             open AuxCoreFunctions
 
             /// calculates bonus on damage rolls due to the ability score used by the weapon and the related multiplied
@@ -178,34 +178,34 @@ module CoreFunctions =
                 |> Array.sum
                 |> float
 
+            ///
             let addDamageMod (char: CharacterStats) (weapon: Weapon) statChangeToDamageAbilityScore =
 
                 match weapon.Modifier.ToDmg with
-                    | Strength      -> char.Strength
-                    | Dexterity     -> char.Dexterity
-                    | Constitution  -> char.Constitution
-                    | Intelligence  -> char.Intelligence
-                    | Wisdom        -> char.Wisdom
-                    | Charisma      -> char.Charisma
-                    | _             -> 0
+                | Strength      -> char.Strength
+                | Dexterity     -> char.Dexterity
+                | Constitution  -> char.Constitution
+                | Intelligence  -> char.Intelligence
+                | Wisdom        -> char.Wisdom
+                | Charisma      -> char.Charisma
+                | _             -> 0
                 |> fun stat -> float stat + statChangeToDamageAbilityScore 
                 |> fun x -> (x-10.)/2.
 
-
             /// calculates size change and resizes weapon damage dice.
             let adjustWeaponDamage (size: SizeType) (weaponDmgDie: int) (weaponDmgNOfDie:int) (modifications: AttackModification [])=
-                
+
                 let startSize =
                     match size with
-                        | Fine          -> 1
-                        | Diminuitive   -> 2
-                        | Tiny          -> 3
-                        | Small         -> 4
-                        | Medium        -> 5
-                        | Large         -> 6
-                        | Huge          -> 7
-                        | Gargantuan    -> 8
-                        | Colossal      -> 9
+                    | Fine          -> 1
+                    | Diminuitive   -> 2
+                    | Tiny          -> 3
+                    | Small         -> 4
+                    | Medium        -> 5
+                    | Large         -> 6
+                    | Huge          -> 7
+                    | Gargantuan    -> 8
+                    | Colossal      -> 9
 
                 let effectiveSize =
 
@@ -255,10 +255,10 @@ module CoreFunctions =
                                       | 2   -> weaponDmgNOfDie, weaponDmgDie
                                       | 3   -> weaponDmgNOfDie, weaponDmgDie
                                       | 4   -> match weaponDmgNOfDie with
-                                               | 1                                                       -> weaponDmgNOfDie, weaponDmgDie
+                                               | 1                                       -> weaponDmgNOfDie, weaponDmgDie
                                                | odd when isOdd weaponDmgNOfDie = true   -> int (ceil (float weaponDmgNOfDie/2.)), 6
                                                | even when isEven weaponDmgNOfDie = true -> (weaponDmgNOfDie/2), 8
-                                               | _                                                       -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error4"
+                                               | _                                       -> failwith "unknown combination for reCalcWeapon damage dice calculator according to size; Error4"
                                       | 6   -> weaponDmgNOfDie, weaponDmgDie
                                       | 8   -> weaponDmgNOfDie, weaponDmgDie
                                       | 10  -> weaponDmgNOfDie, weaponDmgDie
@@ -285,20 +285,20 @@ module CoreFunctions =
                         let findRowPosition =
                             Array.tryFindIndex (fun (x,y) -> x = nDice && y = die) diceRow
                         if sizeDiff = 0 || n >= abs sizeDiff
-                            then nDice, die
-                            else findRowPosition
-                                 |> fun x -> if (x.IsSome) 
-                                             then match decInc with 
-                                                  | dec when decInc < 0. -> if x.Value < 1 then diceRow.[0] else diceRow.[x.Value - stepDecrease]
-                                                  | inc when decInc > 0. -> if x.Value > (diceRow.Length-3) then (snowFlakeIncrease nDice die) else diceRow.[x.Value + stepIncrease]
-                                                  | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error1"
-                                             elif x.IsSome = false 
-                                             then match decInc with 
-                                                  | dec when decInc < 0. -> snowFlakeDecrease nDice die
-                                                  | inc when decInc > 0. -> snowFlakeIncrease nDice die
-                                                  | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error2"
-                                             else failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error3"
-                                 |> fun (nDie,die) -> loopResizeWeapon (n+1) nDie die
+                        then nDice, die
+                        else findRowPosition
+                             |> fun x -> if (x.IsSome) 
+                                         then match decInc with 
+                                              | dec when decInc < 0. -> if x.Value < 1 then diceRow.[0] else diceRow.[x.Value - stepDecrease]
+                                              | inc when decInc > 0. -> if x.Value > (diceRow.Length-3) then (snowFlakeIncrease nDice die) else diceRow.[x.Value + stepIncrease]
+                                              | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error1"
+                                         elif x.IsSome = false 
+                                         then match decInc with 
+                                              | dec when decInc < 0. -> snowFlakeDecrease nDice die
+                                              | inc when decInc > 0. -> snowFlakeIncrease nDice die
+                                              | _ -> failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error2"
+                                         else failwith "unknown combination for reCalcWeapon damage dice calculator accoringly to size; Error3"
+                             |> fun (nDie,die) -> loopResizeWeapon (n+1) nDie die
 
                     loopResizeWeapon 0 adjustedDieNum adjustedDietype
 

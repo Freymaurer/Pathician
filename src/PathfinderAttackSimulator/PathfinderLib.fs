@@ -210,17 +210,6 @@ module Library =
             DamageHitAndCrit.OnCrit = createDamage numberOfDieOnCrit dieOnCrit dmgTypeOnCrit
             }
 
-        let findSizes = [1,createSizeAttributes 8 1 Fine;
-                        2,createSizeAttributes 4 2 Diminuitive;
-                        3,createSizeAttributes 2 3 Tiny;
-                        4,createSizeAttributes 1 4 Small;
-                        5,createSizeAttributes 0 5 Medium;
-                        6,createSizeAttributes -1 6 Large;
-                        7,createSizeAttributes -2 7 Huge;
-                        8,createSizeAttributes -4 8 Gargantuan;
-                        9,createSizeAttributes -8 9 Colossal
-                        ] |> Map.ofSeq
-
 
         type CharacterStats = {
             CharacterName : string

@@ -30,7 +30,7 @@ module BestiaryCalculator =
         else "plus " + attackAdditionalInfo
 
     /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
-    let private getURLExtraDamageOnHit (modifications:AttackModification []) (sizeAdjustedWeaponDamage:URLDamage)=
+    let private getURLExtraDamageOnHit (modifications:AttackModification []) (sizeAdjustedWeaponDamage:URLDamage) =
         let getDamageRolls numberOfDie die=
             let rolledDice = rollDice 1000 die
             [|for i=1 to numberOfDie do
@@ -160,7 +160,7 @@ module BestiaryCalculator =
         let calculatedSize =
             calculateSize monsterStats.Size modifications
     
-        /// calculates size bonus to attack rolls (eg. +1 for small)
+        /// calculates size bonus to attack rolls (eg. +1 for small); reads previous size and substracts the value from before, as those boni/mali are already calculated into the attacks
         let sizeBonusToAttack =
             let sizeModifierNew =
                 calculatedSize
