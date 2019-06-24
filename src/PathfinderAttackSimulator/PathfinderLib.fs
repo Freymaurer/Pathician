@@ -137,28 +137,18 @@ module Library =
 
         type Size(size: SizeType) =
 
-            let sizeID   = match size with
-                           | Fine          -> 1
-                           | Diminuitive   -> 2
-                           | Tiny          -> 3
-                           | Small         -> 4
-                           | Medium        -> 5
-                           | Large         -> 6
-                           | Huge          -> 7
-                           | Gargantuan    -> 8
-                           | Colossal      -> 9
-            let modifier = match size with
-                           | Fine          -> 8
-                           | Diminuitive   -> 4
-                           | Tiny          -> 2
-                           | Small         -> 1
-                           | Medium        -> 0
-                           | Large         -> -1
-                           | Huge          -> -2
-                           | Gargantuan    -> -4
-                           | Colossal      -> -8
-            member this.SizeID   = sizeID
-            member this.Modifier = modifier
+            let (sizeID, modifier) = match size with
+                                     | Fine          -> 1, 8
+                                     | Diminuitive   -> 2, 4
+                                     | Tiny          -> 3, 2
+                                     | Small         -> 4, 1
+                                     | Medium        -> 5, 0
+                                     | Large         -> 6, -1
+                                     | Huge          -> 7, -2
+                                     | Gargantuan    -> 8, -4
+                                     | Colossal      -> 9, -8
+            member this.SizeID     = sizeID
+            member this.Modifier   = modifier
 
         /// NoAS 0 Flat if no StatChange, or leave array empty
         let createStatChange att attChange bType = {
