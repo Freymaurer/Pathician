@@ -10,8 +10,9 @@ open AuxCoreFunctions
 
 /// This module contains the calculator for full-round attack actions "myFullAttack"
 module FullRoundAttackAction =
-    open CoreFunctions.OneAttack
 
+    open CoreFunctions.OneAttack
+    open CoreFunctions.FullAttack
     
     ///This function returns the output of a full round attack action based on the used character stats, weapons and modifications.
     ///Weapons need an additional WeaponType: PrimaryMain for the weapon which should be used with things like haste, Primary for Primary natural attacks or two weapon fighting, and Secondary for secondary natural attacks.

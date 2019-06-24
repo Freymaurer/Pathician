@@ -399,4 +399,22 @@ module CoreFunctions =
                 |> Array.map (fun (value,dType,name) -> "+" + (string value) + " " + (string dType) + " " + "damage" + " (" + name + ")" + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
                 |> fun x -> x.TrimEnd [|' ';','|]          
+    
+    module FullAttack =
+        
+        let getBonusAttacksFor (modifications:AttackModification []) (weaponType:WeaponType) = 
+            modifications
+            |> Array.map (fun x -> x.BonusAttacks)
+            |> Array.filter (fun bAttacks -> bAttacks.WeaponTypeWithBonusAttacks = weaponType)
+            |> Array.groupBy (fun x -> x.TypeOfBonusAttacks)
+            |> Array.map (fun (bTypes,bAttacks) -> if bTypes <> FlatBA
+                                                   then bAttacks
+                                                        |> Array.sortByDescending (fun x -> x.NumberOfBonusAttacks) 
+                                                        |> fun x -> Array.head x
+                                                        |> fun x -> x.NumberOfBonusAttacks
+                                                   else bAttacks
+                                                        |> Array.map (fun x -> x.NumberOfBonusAttacks)
+                                                        |> Array.sum
+                         )
+            |> Array.sum
 
