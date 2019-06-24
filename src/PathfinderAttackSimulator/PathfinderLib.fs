@@ -137,22 +137,19 @@ module Library =
 
         type Size(size: SizeType) =
 
-            let sizeID = match size with
-                                     | Fine          -> 1
-                                     | Diminuitive   -> 2
-                                     | Tiny          -> 3
-                                     | Small         -> 4
-                                     | Medium        -> 5
-                                     | Large         -> 6
-                                     | Huge          -> 7
-                                     | Gargantuan    -> 8
-                                     | Colossal      -> 9
+            let sizeID = 
+                match size with
+                | Fine          -> 1
+                | Diminuitive   -> 2
+                | Tiny          -> 3
+                | Small         -> 4
+                | Medium        -> 5
+                | Large         -> 6
+                | Huge          -> 7
+                | Gargantuan    -> 8
+                | Colossal      -> 9
 
-            let mutable sizeID' = sizeID
-
-            member this.SizeID
-                with get () = sizeID'
-                and private set (value) = sizeID' <- value
+            member this.SizeID = sizeID
 
             member this.Modifier =
                 match this.SizeID with
@@ -169,8 +166,21 @@ module Library =
                 | tooBig   when this.SizeID > 9 -> -8
 
             member this.SizeIncrease(increase: int) =
-                sizeID' <- sizeID' + increase
-
+                let newID = if sizeID + increase > 9 then 9
+                            elif sizeID + increase < 1 then 1
+                            else sizeID + increase
+                let newSize =
+                    match newID with
+                    | 1 -> Fine
+                    | 2 -> Diminuitive
+                    | 3 -> Tiny
+                    | 4 -> Small
+                    | 5 -> Medium
+                    | 6 -> Large
+                    | 7 -> Huge
+                    | 8 -> Gargantuan
+                    | 9 -> Colossal
+                new Size(newSize)
 
         /// NoAS 0 Flat if no StatChange, or leave array empty
         let createStatChange att attChange bType = {
