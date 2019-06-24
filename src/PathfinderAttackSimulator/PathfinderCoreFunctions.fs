@@ -402,7 +402,7 @@ module CoreFunctions =
     
     module FullAttack =
         
-        let getBonusAttacksFor (modifications:AttackModification []) (weaponType:WeaponType) = 
+        let getBonusAttacksFor (weaponType:WeaponType) (modifications:AttackModification [])  = 
             modifications
             |> Array.map (fun x -> x.BonusAttacks)
             |> Array.filter (fun bAttacks -> bAttacks.WeaponTypeWithBonusAttacks = weaponType)

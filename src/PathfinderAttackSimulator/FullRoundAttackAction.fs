@@ -29,39 +29,13 @@ module FullRoundAttackAction =
         // checks for additional attacks for primaryMain weapon, gives back an array of zero.
         // If there are no additional attacks due to modifications then  an empty array is given back
         // else its an array of x+1 additional attacks (e.g. haste gives [| 0 ; 0 |])
-        let getBonusAttacksForPrimaryMain = 
-            allModifications
-            |> Array.map (fun x -> x.BonusAttacks)
-            |> Array.filter (fun bAttacks -> bAttacks.WeaponTypeWithBonusAttacks = PrimaryMain)
-            |> Array.groupBy (fun x -> x.TypeOfBonusAttacks)
-            |> Array.map (fun (bTypes,bAttacks) -> if bTypes <> FlatBA
-                                                   then bAttacks
-                                                        |> Array.sortByDescending (fun x -> x.NumberOfBonusAttacks) 
-                                                        |> fun x -> Array.head x
-                                                        |> fun x -> x.NumberOfBonusAttacks
-                                                   else bAttacks
-                                                        |> Array.map (fun x -> x.NumberOfBonusAttacks)
-                                                        |> Array.sum
-                         )
-            |> Array.sum
+        let bonusAttacksForPrimaryMain = 
+            getBonusAttacksFor PrimaryMain allModifications
             |> fun x -> if x = 0 then [||] else Array.create (x+1) 0
     
         // is absolutly necessary to produce any attacks with "Primary" weapon. gives back array similiar to extra BAB in the style of x+1 [|0; 5; 10|]
-        let getAttacksForPrimary = 
-            allModifications
-            |> Array.map (fun x -> x.BonusAttacks)
-            |> Array.filter (fun bAttacks -> bAttacks.WeaponTypeWithBonusAttacks = Primary)
-            |> Array.groupBy (fun x -> x.TypeOfBonusAttacks)
-            |> Array.map (fun (bTypes,bAttacks) -> if bTypes <> FlatBA 
-                                                   then bAttacks
-                                                        |> Array.sortByDescending (fun x -> x.NumberOfBonusAttacks) 
-                                                        |> fun x -> Array.head x
-                                                        |> fun x -> x.NumberOfBonusAttacks
-                                                   else bAttacks
-                                                        |> Array.map (fun x -> x.NumberOfBonusAttacks)
-                                                        |> Array.sum 
-                         )
-            |> Array.sum
+        let bonusAttacksForPrimary = 
+            getBonusAttacksFor Primary allModifications
             |> fun x -> if x = 0 then [||] else [|1 .. 1 .. x|]
             |> Array.map (fun x -> int ( (float x-1.) * 5.) )
     
@@ -69,55 +43,61 @@ module FullRoundAttackAction =
         let getAttackArray =
             weapons
             |> Array.groupBy (fun (weap,wType) -> wType)
-            |> Array.map (fun (wType,tuple) -> if wType = Primary || wType = PrimaryMain
-                                               then Array.map ( fun (weap,wType) -> (weap,wType, 0) ) tuple
-                                               elif wType = Secondary
-                                               then Array.map ( fun (weap,wType) -> (weap,wType, -5) ) tuple
-                                               else failwith "Unknown WeaponType-pattern; pls contact support."
+            // give every Primary and PrimaryMain weapon a +0 attack (max bab), and every secondary attack a -5
+            |> Array.collect (fun (wType,tuple) -> if wType = Primary || wType = PrimaryMain
+                                                   then Array.map ( fun (weap,wType) -> (weap,wType, 0) ) tuple
+                                                   elif wType = Secondary
+                                                   then Array.map ( fun (weap,wType) -> (weap,wType, -5) ) tuple
+                                                   else failwith "Unknown WeaponType-pattern; pls contact support."
+                              )
+            // Give the PrimaryMain weapon all extra BAB attacks by substracting the extraBAB values from the 0 given above.
+            // Will result in [|0; -5; -10..|]
+            |> Array.collect (fun (w, wType, modifier) -> if wType = PrimaryMain
+                                                          then calculateBabExtraAttacks |> Array.map (fun x -> w,wType, modifier-x)
+                                                          else [|w,wType,modifier|]
+                             )
+            |> fun x -> x
+            |> fun arr -> 
+                // first check for existing PrimaryMain weapons, if yes then add all Haste-like attacks (all bonusAttacks for primaryMain)
+                if (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons)
+                   ) = true
+                then if bonusAttacksForPrimaryMain <> [||]
+                     then ( Array.collect (fun (w, wType, modifier) -> if wType = PrimaryMain && modifier = 0
+                                                                       then bonusAttacksForPrimaryMain |> Array.map (fun x -> w,wType, modifier)
+                                                                       else [|w,wType,modifier|]
+                                          ) arr 
                           )
-            |> Array.concat
-            |> Array.map (fun (w, wType, modifier) -> if wType = PrimaryMain
-                                                      then calculateBabExtraAttacks |> Array.map (fun x -> w,wType, modifier-x)
-                                                      else [|w,wType,modifier|]
-                         )
-            |> Array.concat
-            |> fun arr -> if (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons)
-                             ) = true
-                          then if getBonusAttacksForPrimaryMain <> [||]
-                               then ( Array.map (fun (w, wType, modifier) -> if wType = PrimaryMain && modifier = 0
-                                                                             then getBonusAttacksForPrimaryMain |> Array.map (fun x -> w,wType, modifier)
-                                                                             else [|w,wType,modifier|]
-                                                ) arr 
-                                    )|> Array.concat
-                               elif getBonusAttacksForPrimaryMain = [||] 
-                               then arr
-                               else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."
-                          elif (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons)
-                               ) = false &&
-                               (Array.contains Natural (Array.map (fun ((w: Weapon),wType) -> w.ManufacturedOrNatural) weapons)
-                               ) = true
-                          then if getBonusAttacksForPrimaryMain <> [||]
-                                        /// filter for primary weapon
-                               then (arr |> Array.head
-                                            |> fun (w, wType, modifier) -> if wType = Primary && modifier = 0 && w.ManufacturedOrNatural = Natural
-                                                                           then getBonusAttacksForPrimaryMain.[0 .. getBonusAttacksForPrimaryMain.Length-2]
-                                                                                 |> Array.map (fun x -> w,wType, modifier)
-                                                                           else [|w,wType,modifier|]
-                                       )|> fun x -> Array.append x arr                                       
-                               elif getBonusAttacksForPrimaryMain = [||] 
-                                  then arr
-                               else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."
-                          else failwith "Unknown Problem related to not having the right WeaponTypes"
-            |> fun arr -> if getAttacksForPrimary <> [||]
+                     elif bonusAttacksForPrimaryMain = [||] 
+                     then arr
+                     else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."
+                // next check if no PrimaryMain weapons are given, if yes and there are Natural Weapons given, add the haste like bonus attacks to the first natural attack.
+                elif (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons)
+                     ) = false &&
+                     (Array.contains Natural (Array.map (fun ((w: Weapon),wType) -> w.ManufacturedOrNatural) weapons)
+                     ) = true
+                then if bonusAttacksForPrimaryMain <> [||]
+                     // Take first weapon in Array
+                     then (arr |> Array.head
+                               // filter for primary weapon && max bab && natural
+                               |> fun (w, wType, modifier) -> if wType = Primary && modifier = 0 && w.ManufacturedOrNatural = Natural
+                                                              then bonusAttacksForPrimaryMain.[0 .. bonusAttacksForPrimaryMain.Length-2]
+                                                                    |> Array.map (fun x -> w,wType, modifier)
+                                                              else [|w,wType,modifier|]
+                          )|> fun x -> Array.append x arr                                       
+                     elif bonusAttacksForPrimaryMain = [||] 
+                        then arr
+                     else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."
+                else failwith "Unknown Problem related to not having the right WeaponTypes"
+            |> fun arr -> if bonusAttacksForPrimary <> [||]
                           then (Array.map (fun (w, wType, modifier) -> if wType = Primary 
-                                                                         then getAttacksForPrimary |> Array.map (fun x -> w,wType, modifier-x)
+                                                                         then bonusAttacksForPrimary |> Array.map (fun x -> w,wType, modifier-x)
                                                                          else [|w,wType,modifier|]
                                             ) arr 
                                  )|> Array.concat
-                          elif getAttacksForPrimary = [||]  
+                          elif bonusAttacksForPrimary = [||]  
                                && (Array.contains Natural (Array.map (fun (x,y) -> x.ManufacturedOrNatural) weapons)) = false
                           then arr |> Array.filter (fun (w,wType,modifier) -> wType <> Primary)
-                          elif getAttacksForPrimary = [||]
+                          elif bonusAttacksForPrimary = [||]
                                && (Array.contains Natural (Array.map (fun (x,y) -> x.ManufacturedOrNatural) weapons)) = true
                           then arr
                           else failwith "Unknown Problem related to Primary Weapons (two-Weapon-Fighting); pls contact support.)"
