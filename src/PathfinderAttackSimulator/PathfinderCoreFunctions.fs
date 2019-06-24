@@ -28,17 +28,6 @@ module CoreFunctions =
         /// rolls dice for weapon
         let getDamageRolls die =
             rollDice 100000 die
-           
-        //let findSizes = [1,createSizeAttributes 8 1 Fine;
-        //                 2,createSizeAttributes 4 2 Diminuitive;
-        //                 3,createSizeAttributes 2 3 Tiny;
-        //                 4,createSizeAttributes 1 4 Small;
-        //                 5,createSizeAttributes 0 5 Medium;
-        //                 6,createSizeAttributes -1 6 Large;
-        //                 7,createSizeAttributes -2 7 Huge;
-        //                 8,createSizeAttributes -4 8 Gargantuan;
-        //                 9,createSizeAttributes -8 9 Colossal
-        //                 ] |> Map.ofSeq
 
         /// calculates real size changes due to modifications and applies them to the start size.
         /// This function returns an integer representing the new size (The map of size integer to size is "findSizes"
@@ -46,16 +35,6 @@ module CoreFunctions =
 
             let startSize =
                 new Size(size)
-                //match size with
-                //| Fine          -> 1
-                //| Diminuitive   -> 2
-                //| Tiny          -> 3
-                //| Small         -> 4
-                //| Medium        -> 5
-                //| Large         -> 6
-                //| Huge          -> 7
-                //| Gargantuan    -> 8
-                //| Colossal      -> 9
 
             let changeSizeBy =
                 modifications
@@ -75,8 +54,7 @@ module CoreFunctions =
                              )
                 |> Array.sum
 
-            let updateSize = startSize.SizeIncrease(changeSizeBy)
-            startSize
+            startSize.SizeIncrease(changeSizeBy)
 
     module OneAttack =
 
@@ -85,11 +63,8 @@ module CoreFunctions =
             open AuxCoreFunctions
 
             /// calculates size bonus to attack rolls (eg. +1 for small)
-            let addSizeBonus (newSizeInt:int) = 
-                newSizeInt
-                |> fun x -> Map.find x findSizes
-                |> fun x -> x.SizeModifier
-
+            let addSizeBonus (newSize:Size) = 
+                newSize.Modifier
             
             /// calculates bonus on attack rolls due to the ability score used by the weapon. 
             /// This function includes changes to these ability score modifiers due to modifications.
@@ -417,3 +392,66 @@ module CoreFunctions =
                          )
             |> Array.sum
 
+        //
+        let getAttackArray weapons babExtraAttacks bonusAttacksForPrimaryMain bonusAttacksForPrimary =
+            weapons
+            |> Array.groupBy (fun (weap,wType) -> wType)
+            // give every Primary and PrimaryMain weapon a +0 attack (max bab), and every secondary attack a -5
+            |> Array.collect (fun (wType,tuple) -> if wType = Primary || wType = PrimaryMain
+                                                   then Array.map ( fun (weap,wType) -> (weap,wType, 0) ) tuple
+                                                   elif wType = Secondary
+                                                   then Array.map ( fun (weap,wType) -> (weap,wType, -5) ) tuple
+                                                   else failwith "Unknown WeaponType-pattern; pls contact support."
+                              )
+            // Give the PrimaryMain weapon all extra BAB attacks by substracting the extraBAB values from the 0 given above.
+            // Will result in [|0; -5; -10..|]
+            |> Array.collect (fun (w, wType, modifier) -> if wType = PrimaryMain
+                                                          then babExtraAttacks |> Array.map (fun x -> w,wType, modifier-x)
+                                                          else [|w,wType,modifier|]
+                             )
+            |> fun x -> x
+            |> fun arr -> 
+                // first check for existing PrimaryMain weapons, if yes then add all Haste-like attacks (all bonusAttacks for primaryMain)
+                if (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons)
+                   ) = true
+                then if bonusAttacksForPrimaryMain <> [||]
+                     then ( Array.collect (fun (w, wType, modifier) -> if wType = PrimaryMain && modifier = 0
+                                                                       then bonusAttacksForPrimaryMain |> Array.map (fun x -> w,wType, modifier)
+                                                                       else [|w,wType,modifier|]
+                                          ) arr 
+                          )
+                     elif bonusAttacksForPrimaryMain = [||] 
+                     then arr
+                     else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."
+                // next check if no PrimaryMain weapons are given, if yes and there are Natural Weapons given, add the haste like bonus attacks to the first natural attack.
+                elif (Array.contains PrimaryMain (Array.map (fun (w,wType) -> wType) weapons)
+                     ) = false &&
+                     (Array.contains Natural (Array.map (fun ((w: Weapon),wType) -> w.ManufacturedOrNatural) weapons)
+                     ) = true
+                then if bonusAttacksForPrimaryMain <> [||]
+                     // filter for primary weapon && max bab && natural && FIRST weapon in arr
+                     then (arr |> Array.mapi (fun i (w, wType, modifier) -> if i = 0 && wType = Primary && modifier = 0 && w.ManufacturedOrNatural = Natural
+                                                                            then bonusAttacksForPrimaryMain |> Array.map (fun x -> w,wType, modifier)
+                                                                            else [|w,wType,modifier|])
+                          )
+                          |> Array.concat
+                     elif bonusAttacksForPrimaryMain = [||] 
+                     then arr
+                     else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."
+                else failwith "Unknown Problem related to not having the right WeaponTypes"
+            |> fun arr -> if bonusAttacksForPrimary <> [||]
+                          then (Array.collect (fun (w, wType, modifier) -> if wType = Primary 
+                                                                           then bonusAttacksForPrimary |> Array.map (fun x -> w,wType, modifier-x)
+                                                                           else [|w,wType,modifier|]
+                                              ) arr 
+                               )
+                          // if there are no bonus attacks for primary (e.g. two weapon fighting) and there are no natural weapons, then filter out all primary weapons in attack arr.
+                          elif bonusAttacksForPrimary = [||]  
+                               && (Array.contains Natural (Array.map (fun (x,y) -> x.ManufacturedOrNatural) weapons)) = false
+                          then arr |> Array.filter (fun (w,wType,modifier) -> wType <> Primary)
+                          // the other way around, if there are no bonus attacks for primary but there are natural weapons, then leave it be.
+                          elif bonusAttacksForPrimary = [||]
+                               && (Array.contains Natural (Array.map (fun (x,y) -> x.ManufacturedOrNatural) weapons)) = true
+                          then arr
+                          else failwith "Unknown Problem related to Primary Weapons (two-Weapon-Fighting); pls contact support.)"
+            |> Array.sortByDescending (fun (w,wType,modi) -> modi )
