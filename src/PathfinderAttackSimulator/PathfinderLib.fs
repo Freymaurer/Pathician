@@ -138,15 +138,15 @@ module Library =
         type Size(size: SizeType) =
 
             let sizeID = match size with
-                                     | Fine          -> 1
-                                     | Diminuitive   -> 2
-                                     | Tiny          -> 3
-                                     | Small         -> 4
-                                     | Medium        -> 5
-                                     | Large         -> 6
-                                     | Huge          -> 7
-                                     | Gargantuan    -> 8
-                                     | Colossal      -> 9
+                         | Fine          -> 1
+                         | Diminuitive   -> 2
+                         | Tiny          -> 3
+                         | Small         -> 4
+                         | Medium        -> 5
+                         | Large         -> 6
+                         | Huge          -> 7
+                         | Gargantuan    -> 8
+                         | Colossal      -> 9
 
             let mutable sizeID' = sizeID
 
@@ -169,7 +169,10 @@ module Library =
                 | tooBig   when this.SizeID > 9 -> -8
 
             member this.SizeIncrease(increase: int) =
-                sizeID' <- sizeID' + increase
+                sizeID' <- if sizeID' + increase > 9 then 9
+                           elif sizeID' + increase < 1 then 1
+                           else sizeID' + increase
+
 
 
         /// NoAS 0 Flat if no StatChange, or leave array empty

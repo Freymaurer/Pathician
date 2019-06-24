@@ -80,22 +80,23 @@ module FullRoundAttackAction =
                      then (arr |> Array.mapi (fun i (w, wType, modifier) -> if i = 0 && wType = Primary && modifier = 0 && w.ManufacturedOrNatural = Natural
                                                                             then bonusAttacksForPrimaryMain |> Array.map (fun x -> w,wType, modifier)
                                                                             else [|w,wType,modifier|])
-
                           )
                           |> Array.concat
                      elif bonusAttacksForPrimaryMain = [||] 
-                        then arr
+                     then arr
                      else failwith "Unknown Problem related to Bonus Attacks from Modifications for PrimaryMain; pls contact support."
                 else failwith "Unknown Problem related to not having the right WeaponTypes"
             |> fun arr -> if bonusAttacksForPrimary <> [||]
-                          then (Array.map (fun (w, wType, modifier) -> if wType = Primary 
-                                                                         then bonusAttacksForPrimary |> Array.map (fun x -> w,wType, modifier-x)
-                                                                         else [|w,wType,modifier|]
-                                            ) arr 
-                                 )|> Array.concat
+                          then (Array.collect (fun (w, wType, modifier) -> if wType = Primary 
+                                                                           then bonusAttacksForPrimary |> Array.map (fun x -> w,wType, modifier-x)
+                                                                           else [|w,wType,modifier|]
+                                              ) arr 
+                               )
+                          // if there are no bonus attacks for primary (e.g. two weapon fighting) and there are no natural weapons, then filter out all primary weapons in attack arr.
                           elif bonusAttacksForPrimary = [||]  
                                && (Array.contains Natural (Array.map (fun (x,y) -> x.ManufacturedOrNatural) weapons)) = false
                           then arr |> Array.filter (fun (w,wType,modifier) -> wType <> Primary)
+                          // the other way around, if there are no bonus attacks for primary but there are natural weapons, then leave it be.
                           elif bonusAttacksForPrimary = [||]
                                && (Array.contains Natural (Array.map (fun (x,y) -> x.ManufacturedOrNatural) weapons)) = true
                           then arr

@@ -29,32 +29,33 @@ module CoreFunctions =
         let getDamageRolls die =
             rollDice 100000 die
            
-        let findSizes = [1,createSizeAttributes 8 1 Fine;
-                         2,createSizeAttributes 4 2 Diminuitive;
-                         3,createSizeAttributes 2 3 Tiny;
-                         4,createSizeAttributes 1 4 Small;
-                         5,createSizeAttributes 0 5 Medium;
-                         6,createSizeAttributes -1 6 Large;
-                         7,createSizeAttributes -2 7 Huge;
-                         8,createSizeAttributes -4 8 Gargantuan;
-                         9,createSizeAttributes -8 9 Colossal
-                         ] |> Map.ofSeq
+        //let findSizes = [1,createSizeAttributes 8 1 Fine;
+        //                 2,createSizeAttributes 4 2 Diminuitive;
+        //                 3,createSizeAttributes 2 3 Tiny;
+        //                 4,createSizeAttributes 1 4 Small;
+        //                 5,createSizeAttributes 0 5 Medium;
+        //                 6,createSizeAttributes -1 6 Large;
+        //                 7,createSizeAttributes -2 7 Huge;
+        //                 8,createSizeAttributes -4 8 Gargantuan;
+        //                 9,createSizeAttributes -8 9 Colossal
+        //                 ] |> Map.ofSeq
 
         /// calculates real size changes due to modifications and applies them to the start size.
         /// This function returns an integer representing the new size (The map of size integer to size is "findSizes"
         let calculateSize (size: SizeType) (modifications: AttackModification []) =
 
             let startSize =
-                match size with
-                | Fine          -> 1
-                | Diminuitive   -> 2
-                | Tiny          -> 3
-                | Small         -> 4
-                | Medium        -> 5
-                | Large         -> 6
-                | Huge          -> 7
-                | Gargantuan    -> 8
-                | Colossal      -> 9
+                new Size(size)
+                //match size with
+                //| Fine          -> 1
+                //| Diminuitive   -> 2
+                //| Tiny          -> 3
+                //| Small         -> 4
+                //| Medium        -> 5
+                //| Large         -> 6
+                //| Huge          -> 7
+                //| Gargantuan    -> 8
+                //| Colossal      -> 9
 
             let changeSizeBy =
                 modifications
@@ -74,10 +75,8 @@ module CoreFunctions =
                              )
                 |> Array.sum
 
-            (startSize + changeSizeBy)
-            |> fun x -> if x > 9 then 9
-                        elif x < 1 then 1
-                        else x
+            let updateSize = startSize.SizeIncrease(changeSizeBy)
+            startSize
 
     module OneAttack =
 
