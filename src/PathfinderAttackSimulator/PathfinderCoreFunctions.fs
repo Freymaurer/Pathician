@@ -31,10 +31,19 @@ module CoreFunctions =
 
         /// calculates real size changes due to modifications and applies them to the start size.
         /// This function returns an integer representing the new size (The map of size integer to size is "findSizes"
-        let calculateSize (size: SizeType) (modifications: AttackModification []) =
+        let calculateSize (size: SizeType) (modifications: AttackModification [])=
 
             let startSize =
-                new Size(size)
+                match size with
+                | Fine          -> 1
+                | Diminuitive   -> 2
+                | Tiny          -> 3
+                | Small         -> 4
+                | Medium        -> 5
+                | Large         -> 6
+                | Huge          -> 7
+                | Gargantuan    -> 8
+                | Colossal      -> 9
 
             let changeSizeBy =
                 modifications
@@ -54,7 +63,10 @@ module CoreFunctions =
                              )
                 |> Array.sum
 
-            startSize.SizeIncrease(changeSizeBy)
+            (startSize + changeSizeBy)
+            |> fun x -> if x > 9 then 9
+                        elif x < 1 then 1
+                        else x
 
     module OneAttack =
 
@@ -63,8 +75,10 @@ module CoreFunctions =
             open AuxCoreFunctions
 
             /// calculates size bonus to attack rolls (eg. +1 for small)
-            let addSizeBonus (newSize:Size) = 
-                newSize.Modifier
+            let addSizeBonus newSizeInt =
+                newSizeInt
+                |> fun x -> Map.find x findSizes
+                |> fun x -> x.SizeModifier
             
             /// calculates bonus on attack rolls due to the ability score used by the weapon. 
             /// This function includes changes to these ability score modifiers due to modifications.

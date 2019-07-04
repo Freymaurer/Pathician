@@ -135,52 +135,53 @@ module Library =
             OnCrit  : Bonus
             }
 
-        type Size(size: SizeType) =
+        //type Size(size: SizeType) =
 
-            let sizeID = 
-                match size with
-                | Fine          -> 1
-                | Diminuitive   -> 2
-                | Tiny          -> 3
-                | Small         -> 4
-                | Medium        -> 5
-                | Large         -> 6
-                | Huge          -> 7
-                | Gargantuan    -> 8
-                | Colossal      -> 9
+        //    let sizeID = 
+        //        match size with
+        //        | Fine          -> 1
+        //        | Diminuitive   -> 2
+        //        | Tiny          -> 3
+        //        | Small         -> 4
+        //        | Medium        -> 5
+        //        | Large         -> 6
+        //        | Huge          -> 7
+        //        | Gargantuan    -> 8
+        //        | Colossal      -> 9
 
-            member this.SizeID = sizeID
+        //    member this.SizeID = sizeID
 
-            member this.Modifier =
-                match this.SizeID with
-                | 1 -> 8
-                | 2 -> 4
-                | 3 -> 2
-                | 4 -> 1
-                | 5 -> 0
-                | 6 -> -1
-                | 7 -> -2
-                | 8 -> -4
-                | 9 -> -8
-                | tooSmall when this.SizeID < 1 -> 8
-                | tooBig   when this.SizeID > 9 -> -8
+        //    member this.Modifier =
+        //        match this.SizeID with
+        //        | 1 -> 8
+        //        | 2 -> 4
+        //        | 3 -> 2
+        //        | 4 -> 1
+        //        | 5 -> 0
+        //        | 6 -> -1
+        //        | 7 -> -2
+        //        | 8 -> -4
+        //        | 9 -> -8
+        //        | tooSmall when this.SizeID < 1 -> 8
+        //        | tooBig   when this.SizeID > 9 -> -8
 
-            member this.SizeIncrease(increase: int) =
-                let newID = if sizeID + increase > 9 then 9
-                            elif sizeID + increase < 1 then 1
-                            else sizeID + increase
-                let newSize =
-                    match newID with
-                    | 1 -> Fine
-                    | 2 -> Diminuitive
-                    | 3 -> Tiny
-                    | 4 -> Small
-                    | 5 -> Medium
-                    | 6 -> Large
-                    | 7 -> Huge
-                    | 8 -> Gargantuan
-                    | 9 -> Colossal
-                new Size(newSize)
+        //    member this.SizeIncrease(increase: int) =
+        //        let newID = if sizeID + increase > 9 then 9
+        //                    elif sizeID + increase < 1 then 1
+        //                    else sizeID + increase
+        //        let newSize =
+        //            match newID with
+        //            | 1 -> Fine
+        //            | 2 -> Diminuitive
+        //            | 3 -> Tiny
+        //            | 4 -> Small
+        //            | 5 -> Medium
+        //            | 6 -> Large
+        //            | 7 -> Huge
+        //            | 8 -> Gargantuan
+        //            | 9 -> Colossal
+        //        new Size(newSize)
+        /// Represents ability score changes; e.g. the alchemist's mutagen (createStatChange Strength 4 Alchemical).
 
         /// NoAS 0 Flat if no StatChange, or leave array empty
         let createStatChange att attChange bType = {
@@ -243,6 +244,18 @@ module Library =
             SizeId = id
             Size = sizeType
             }
+
+        let findSizes = [1,createSizeAttributes 8 1 Fine;
+                        2,createSizeAttributes 4 2 Diminuitive;
+                        3,createSizeAttributes 2 3 Tiny;
+                        4,createSizeAttributes 1 4 Small;
+                        5,createSizeAttributes 0 5 Medium;
+                        6,createSizeAttributes -1 6 Large;
+                        7,createSizeAttributes -2 7 Huge;
+                        8,createSizeAttributes -4 8 Gargantuan;
+                        9,createSizeAttributes -8 9 Colossal
+                        ] |> Map.ofSeq
+
 
         // the OnHit bonus is applied to all attacks crit or not, whereas the OnCrit bonus is applied to crits IN ADDITION to the OnHit Bonus.
         let createAttackBoniHitAndCrit hitValue hitValueType critValue critValueType = {
