@@ -4,7 +4,7 @@
 open System.IO
 open PathfinderAttackSimulator
 open Library.AuxLibFunctions
-open Library.Modifications
+open LibraryModifications
 open StandardAttackAction
 open FullRoundAttackAction
 open BestiaryReader
