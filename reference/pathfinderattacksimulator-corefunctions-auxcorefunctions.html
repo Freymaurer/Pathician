@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>BonusAttacksType - PathfinderAttackSimulator</title>
+    <title>AuxCoreFunctions - PathfinderAttackSimulator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Kevin Frey"/>
@@ -37,32 +37,57 @@
 
 
 
-<h1>BonusAttacksType</h1>
+<h1>AuxCoreFunctions</h1>
 <p>
-
-    <span>Namespace: PathfinderAttackSimulator</span><br />
-        <span>Parent Module: <a href="pathfinderattacksimulator-library-auxlibfunctions.html">AuxLibFunctions</a></span><br />
-    </p>
+  <span>Namespace: PathfinderAttackSimulator</span><br />
+  <span>Parent Module: <a href="pathfinderattacksimulator-corefunctions.html">CoreFunctions</a></span>
+  </p>
 <div class="xmldoc">
+<p>Attack calculator helper functions</p>
+
 </div>
-  <h3>Union Cases</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Union Case</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '167', 167)" onmouseover="showTip(event, '167', 167)">
-            FlatBA
+          <code onmouseout="hideTip(event, '12', 12)" onmouseover="showTip(event, '12', 12)">
+            calculateSize size modifications
           </code>
-          <div class="tip" id="167">
-            <strong>Signature:</strong> <br />
+          <div class="tip" id="12">
+            <strong>Signature:</strong> size:SizeType -&gt; modifications:AttackModification [] -&gt; int<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L64-64" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L42-42" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>calculates real size changes due to modifications and applies them to the start size.
+This function returns an integer representing the new size (The map of size integer to size is "findSizes"</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '13', 13)" onmouseover="showTip(event, '13', 13)">
+            getAvgDmg numberOfDie die
+          </code>
+          <div class="tip" id="13">
+            <strong>Signature:</strong> numberOfDie:int -&gt; die:int -&gt; float<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L37-37" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -72,15 +97,35 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '168', 168)" onmouseover="showTip(event, '168', 168)">
-            FlurryOfBlowsLike
+          <code onmouseout="hideTip(event, '14', 14)" onmouseover="showTip(event, '14', 14)">
+            getDamageRolls(die)
           </code>
-          <div class="tip" id="168">
-            <strong>Signature:</strong> <br />
+          <div class="tip" id="14">
+            <strong>Signature:</strong> die:int -&gt; int []<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L63-63" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L28-28" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>rolls dice for weapon</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '15', 15)" onmouseover="showTip(event, '15', 15)">
+            getRandRolls numberOfDie die
+          </code>
+          <div class="tip" id="15">
+            <strong>Signature:</strong> numberOfDie:int -&gt; die:int -&gt; float<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L31-31" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -90,55 +135,41 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '169', 169)" onmouseover="showTip(event, '169', 169)">
-            HasteLike
+          <code onmouseout="hideTip(event, '16', 16)" onmouseover="showTip(event, '16', 16)">
+            getRndArrElement
           </code>
-          <div class="tip" id="169">
-            <strong>Signature:</strong> <br />
+          <div class="tip" id="16">
+            <strong>Signature:</strong> int [] -&gt; int<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L61-61" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L23-23" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>This function picks a random value from an array; used as an additional layer of "randomn" for the dice rolls.</p>
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '170', 170)" onmouseover="showTip(event, '170', 170)">
-            NoBA
+          <code onmouseout="hideTip(event, '17', 17)" onmouseover="showTip(event, '17', 17)">
+            rollDice count diceSides
           </code>
-          <div class="tip" id="170">
-            <strong>Signature:</strong> <br />
+          <div class="tip" id="17">
+            <strong>Signature:</strong> count:int -&gt; diceSides:int -&gt; int []<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L65-65" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L16-16" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
+          <p>This function returns "count" randomized values from 1 to "diceSides"</p>
 
-          <code onmouseout="hideTip(event, '171', 171)" onmouseover="showTip(event, '171', 171)">
-            TWFLike
-          </code>
-          <div class="tip" id="171">
-            <strong>Signature:</strong> <br />
-                                  </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L62-62" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
+
         </td>
       </tr>
     </tbody>

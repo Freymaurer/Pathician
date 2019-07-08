@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>AttackModification - PathfinderAttackSimulator</title>
+    <title>toDmg - PathfinderAttackSimulator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Kevin Frey"/>
@@ -37,32 +37,34 @@
 
 
 
-<h1>AttackModification</h1>
+<h1>toDmg</h1>
 <p>
-
-    <span>Namespace: PathfinderAttackSimulator</span><br />
-        <span>Parent Module: <a href="pathfinderattacksimulator-library-auxlibfunctions.html">AuxLibFunctions</a></span><br />
-    </p>
+  <span>Namespace: PathfinderAttackSimulator</span><br />
+  <span>Parent Module: <a href="pathfinderattacksimulator-corefunctions-oneattack.html">OneAttack</a></span>
+  </p>
 <div class="xmldoc">
 </div>
-  <h3>Record Fields</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Record Field</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '153', 153)" onmouseover="showTip(event, '153', 153)">
-            AppliedTo
+          <code onmouseout="hideTip(event, '23', 23)" onmouseover="showTip(event, '23', 23)">
+            addDamageMod(...)
           </code>
-          <div class="tip" id="153">
-            <strong>Signature:</strong> WeaponType [] * int<br />
+          <div class="tip" id="23">
+            <strong>Signature:</strong> char:CharacterStats -&gt; weapon:Weapon -&gt; statChangeToDamageAbilityScore:float -&gt; float<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L305-305" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L178-178" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -72,145 +74,143 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '154', 154)" onmouseover="showTip(event, '154', 154)">
-            BonusAttackRoll
+          <code onmouseout="hideTip(event, '24', 24)" onmouseover="showTip(event, '24', 24)">
+            addModDamageBoni(modifications)
           </code>
-          <div class="tip" id="154">
-            <strong>Signature:</strong> AttackBonusHitAndCrit<br />
+          <div class="tip" id="24">
+            <strong>Signature:</strong> modifications:AttackModification [] -&gt; int<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L302-302" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L304-304" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>calculates all boni to damage rolls from modifications and checks if they stack or not</p>
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '155', 155)" onmouseover="showTip(event, '155', 155)">
-            BonusAttacks
+          <code onmouseout="hideTip(event, '25', 25)" onmouseover="showTip(event, '25', 25)">
+            adjustWeaponDamage(...)
           </code>
-          <div class="tip" id="155">
-            <strong>Signature:</strong> BonusAttacks<br />
+          <div class="tip" id="25">
+            <strong>Signature:</strong> size:SizeType -&gt; weaponDmgDie:int -&gt; weaponDmgNOfDie:int -&gt; modifications:AttackModification [] -&gt; int * int<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L301-301" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L192-192" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>calculates size change and resizes weapon damage dice.</p>
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '156', 156)" onmouseover="showTip(event, '156', 156)">
-            BonusDamage
+          <code onmouseout="hideTip(event, '26', 26)" onmouseover="showTip(event, '26', 26)">
+            combineExtraDamage(...)
           </code>
-          <div class="tip" id="156">
-            <strong>Signature:</strong> Bonus<br />
+          <div class="tip" id="26">
+            <strong>Signature:</strong> extraDamage:(float * DamageTypes * string) [] -&gt; critExtraDamage:(float * DamageTypes * string) [] -&gt; (float * DamageTypes * string) []<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L303-303" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L372-372" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>combines the extra damage and the extra damage on crit</p>
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '157', 157)" onmouseover="showTip(event, '157', 157)">
-            Description
+          <code onmouseout="hideTip(event, '27', 27)" onmouseover="showTip(event, '27', 27)">
+            extraDamageToString(extraDmgArr)
           </code>
-          <div class="tip" id="157">
-            <strong>Signature:</strong> string<br />
+          <div class="tip" id="27">
+            <strong>Signature:</strong> extraDmgArr:(float * DamageTypes * string) [] -&gt; string<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L308-308" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L384-384" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>Folds the damage values to a string to print as result. This allows to separate different damage types should a creature be immune to something</p>
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '158', 158)" onmouseover="showTip(event, '158', 158)">
-            ExtraDamage
+          <code onmouseout="hideTip(event, '28', 28)" onmouseover="showTip(event, '28', 28)">
+            getExtraDamageOnCrit(...)
           </code>
-          <div class="tip" id="158">
-            <strong>Signature:</strong> DamageHitAndCrit<br />
+          <div class="tip" id="28">
+            <strong>Signature:</strong> attackRoll:int -&gt; weapon:Weapon -&gt; modifications:AttackModification [] -&gt; resizedWeaponDmg:Damage -&gt; rollFunction:(int -&gt; int -&gt; float) -&gt; (float * DamageTypes * string) []<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L304-304" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L347-347" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>Calculates extra damage which is multiplied or changed on crits (think Shocking Grasp or flaming burst)
+give attack roll -20 if you wanna do damage per round, where no actual dice is rolled</p>
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '159', 159)" onmouseover="showTip(event, '159', 159)">
-            Name
+          <code onmouseout="hideTip(event, '29', 29)" onmouseover="showTip(event, '29', 29)">
+            getExtraDamageOnHit(...)
           </code>
-          <div class="tip" id="159">
-            <strong>Signature:</strong> string<br />
+          <div class="tip" id="29">
+            <strong>Signature:</strong> weapon:Weapon -&gt; modifications:AttackModification [] -&gt; resizedWeaponDmg:Damage -&gt; rollFunction:(int -&gt; int -&gt; float) -&gt; (float * DamageTypes * string) []<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L300-300" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L320-320" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
+          <p>Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming</p>
+
+
         </td>
       </tr>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '160', 160)" onmouseover="showTip(event, '160', 160)">
-            SizeChanges
+          <code onmouseout="hideTip(event, '30', 30)" onmouseover="showTip(event, '30', 30)">
+            getStatChangesToDmg weapon modifications
           </code>
-          <div class="tip" id="160">
-            <strong>Signature:</strong> SizeChange<br />
+          <div class="tip" id="30">
+            <strong>Signature:</strong> weapon:Weapon -&gt; modifications:AttackModification [] -&gt; float<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L307-307" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L165-165" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
+          <p>calculates bonus on damage rolls due to the ability score used by the weapon and the related multiplied
+calculates stat changes due to modifications</p>
 
-          <code onmouseout="hideTip(event, '161', 161)" onmouseover="showTip(event, '161', 161)">
-            StatChanges
-          </code>
-          <div class="tip" id="161">
-            <strong>Signature:</strong> StatChange []<br />
-                                  </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L306-306" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
+
         </td>
       </tr>
     </tbody>

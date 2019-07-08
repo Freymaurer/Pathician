@@ -58,14 +58,14 @@
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '1', 1)" onmouseover="showTip(event, '1', 1)">
-            calculateFullAttack (...)
+            calculateFullAttack(...)
           </code>
           <div class="tip" id="1">
-            <strong>Signature:</strong> attackInfo:URLMonsterAttacks [] -&gt; attackVariant:AttackVariant -&gt; attackNumber:int -&gt; modifications:AttackModification [] -&gt; unit []<br />
+            <strong>Signature:</strong> attackInfo:URLMonsterAttacks [] -&gt; attackVariant:AttackVariant -&gt; attackNumber:int -&gt; modificationsAll:AttackModification [] -&gt; unit []<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/BestiaryCalculator.fs#L425-425" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/BestiaryCalculator.fs#L281-281" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -81,14 +81,14 @@ modifications = array of attackmodifications (StatChanges will not work for this
         <td class="member-name">
 
           <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
-            calculateStandardAttack (...)
+            calculateStandardAttack(...)
           </code>
           <div class="tip" id="2">
             <strong>Signature:</strong> attackInfo:URLMonsterAttacks [] -&gt; attackVariant:AttackVariant -&gt; attackNumber:int -&gt; modifications:AttackModification [] -&gt; unit<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/BestiaryCalculator.fs#L20-20" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/BestiaryCalculator.fs#L117-117" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -96,6 +96,26 @@ modifications = array of attackmodifications (StatChanges will not work for this
 attackinfo = the output of the "getMonsterInformation" function, attackVariant = Melee/Ranged,
 attackNumber = the exact attack variant that should be calculated, starting at 1
 modifications = array of attackmodifications (StatChanges will not work for this function)</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
+            getAdditionalInfoString(...)
+          </code>
+          <div class="tip" id="3">
+            <strong>Signature:</strong> attackAdditionalInfo:string -&gt; string<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/BestiaryCalculator.fs#L27-27" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>this adds information to the result: stuff like grab, poison, etc.</p>
 
 
         </td>

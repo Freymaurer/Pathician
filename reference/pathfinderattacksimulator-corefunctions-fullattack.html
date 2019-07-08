@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>BonusAttacksType - PathfinderAttackSimulator</title>
+    <title>FullAttack - PathfinderAttackSimulator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Kevin Frey"/>
@@ -37,32 +37,94 @@
 
 
 
-<h1>BonusAttacksType</h1>
+<h1>FullAttack</h1>
 <p>
-
-    <span>Namespace: PathfinderAttackSimulator</span><br />
-        <span>Parent Module: <a href="pathfinderattacksimulator-library-auxlibfunctions.html">AuxLibFunctions</a></span><br />
-    </p>
+  <span>Namespace: PathfinderAttackSimulator</span><br />
+  <span>Parent Module: <a href="pathfinderattacksimulator-corefunctions.html">CoreFunctions</a></span>
+  </p>
 <div class="xmldoc">
 </div>
-  <h3>Union Cases</h3>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Union Case</td><td>Description</td></tr>
+      <tr><td>Function or value</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '167', 167)" onmouseover="showTip(event, '167', 167)">
-            FlatBA
+          <code onmouseout="hideTip(event, '18', 18)" onmouseover="showTip(event, '18', 18)">
+            appendModificationsForLimited(...)
           </code>
-          <div class="tip" id="167">
-            <strong>Signature:</strong> <br />
+          <div class="tip" id="18">
+            <strong>Signature:</strong> modificationsLimited:AttackModification [] [] -&gt; modificationsUnlimited:AttackModification [] -&gt; AttackModification [] []<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L64-64" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L493-493" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>This function adds limited and unlimited modification for the same weapon type together</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '19', 19)" onmouseover="showTip(event, '19', 19)">
+            appendModificationsForSpecific(...)
+          </code>
+          <div class="tip" id="19">
+            <strong>Signature:</strong> unspecificModification:(&#39;a * WeaponType * &#39;b * &#39;c []) [] -&gt; primaryMainModification:&#39;c [] [] -&gt; primaryModifications:&#39;c [] [] -&gt; secondaryModifications:&#39;c [] [] -&gt; (&#39;a * WeaponType * &#39;b * &#39;c []) []<br />
+                          <strong>Type parameters:</strong> 'a, 'b, 'c                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L503-503" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>This function adds weapon type specific and weapon type unspecific modifications together</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '20', 20)" onmouseover="showTip(event, '20', 20)">
+            filterForLimited(...)
+          </code>
+          <div class="tip" id="20">
+            <strong>Signature:</strong> numberOfRelatedAttacks:int -&gt; filteredModisForWeaponType:AttackModification [] -&gt; AttackModification [] []<br />
+                                  </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L474-474" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>This function adds modifications with limited applications and fill the rest of the attack array with zero mod modifications to keep the same arr length</p>
+
+
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '21', 21)" onmouseover="showTip(event, '21', 21)">
+            getAttackArray(...)
+          </code>
+          <div class="tip" id="21">
+            <strong>Signature:</strong> weapons:(Weapon * WeaponType) [] -&gt; babExtraAttacks:int [] -&gt; bonusAttacksForPrimaryMain:&#39;a [] -&gt; bonusAttacksForPrimary:int [] -&gt; (Weapon * WeaponType * int) []<br />
+                          <strong>Type parameters:</strong> 'a                      </div>
+        </td>
+        <td class="xmldoc">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L409-409" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -72,69 +134,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '168', 168)" onmouseover="showTip(event, '168', 168)">
-            FlurryOfBlowsLike
+          <code onmouseout="hideTip(event, '22', 22)" onmouseover="showTip(event, '22', 22)">
+            getBonusAttacksFor(...)
           </code>
-          <div class="tip" id="168">
-            <strong>Signature:</strong> <br />
+          <div class="tip" id="22">
+            <strong>Signature:</strong> weaponType:WeaponType -&gt; modifications:AttackModification [] -&gt; int<br />
                                   </div>
         </td>
         <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L63-63" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '169', 169)" onmouseover="showTip(event, '169', 169)">
-            HasteLike
-          </code>
-          <div class="tip" id="169">
-            <strong>Signature:</strong> <br />
-                                  </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L61-61" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '170', 170)" onmouseover="showTip(event, '170', 170)">
-            NoBA
-          </code>
-          <div class="tip" id="170">
-            <strong>Signature:</strong> <br />
-                                  </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L65-65" class="github-link">
-              <img src="../content/img/github.png" class="normal" />
-              <img src="../content/img/github-blue.png" class="hover" />
-            </a>
-          
-        </td>
-      </tr>
-      <tr>
-        <td class="member-name">
-
-          <code onmouseout="hideTip(event, '171', 171)" onmouseover="showTip(event, '171', 171)">
-            TWFLike
-          </code>
-          <div class="tip" id="171">
-            <strong>Signature:</strong> <br />
-                                  </div>
-        </td>
-        <td class="xmldoc">
-                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderLib.fs#L62-62" class="github-link">
+                      <a href="https://github.com/Freymaurer/PathfinderAttackSimulator/tree/master/src/PathfinderAttackSimulator/PathfinderCoreFunctions.fs#L392-392" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
