@@ -30,7 +30,7 @@ As an example we will use a simple character from the library.
 open PathfinderAttackSimulator
 open Library.AuxLibFunctions
 open Library.Characters
-open Library.Modifications
+open LibraryModifications
 open Library.Weapons
 open DamagePerRound
 

@@ -84,7 +84,7 @@ and so on.
 ...But wait... isn't this a bit _weak_ for a CR 19 npc? Well, then let us add his lvl 20 sneak attack ability to the AttackModificationArray.
 *)
 
-calculateFullAttack bladeLord Melee 1 [|Modifications.SneakAttack 20|]
+calculateFullAttack bladeLord Melee 1 [|LibraryModifications.SneakAttack 20|]
 (**
 > You attack with a brilliant energy longsword and (hopefully) critically hit the enemy with a 39 (rolled 20) and confirm your crit with a 32 (rolled 13) for 6 damage +35 Precision damage (crit * 2) !
 > 
@@ -105,7 +105,7 @@ And the tool has problems with Power Attack, as this feat gives different boni d
 Try and circumvent the missing stat change modifications with the BonusAttackDamage modification:
 *)
 
-let testBoni1 = Modifications.BonusAttackDamage 2 5
+let testBoni1 = LibraryModifications.BonusAttackDamage 2 5
 
 (**
 This would create a modification with +2 to attack rolls and +5 to damage rolls. You can also write this, without any namebinding, directly into the ModificationArray.
@@ -119,7 +119,7 @@ Click [here](https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremi
 
 let krytonEremiteOverlord = getMonsterInformation "https://www.d20pfsrd.com/bestiary/unique-monsters/cr-22/kyton-eremite-overlord"
 
-calculateFullAttack krytonEremiteOverlord Melee 1 [|Modifications.EnlargePerson; Modifications.InspireCourage 15; Modifications.Shaken|]
+calculateFullAttack krytonEremiteOverlord Melee 1 [|LibraryModifications.EnlargePerson; LibraryModifications.InspireCourage 15; LibraryModifications.Shaken|]
 
 (**
 > You attack with a bite and hit with a 56 (rolled 19) for 19 damage plus pain!

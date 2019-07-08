@@ -46,8 +46,8 @@ to just list a few of the implemented options.
 open PathfinderAttackSimulator.FullRoundAttackAction
 open PathfinderAttackSimulator.Library.AuxLibFunctions
 open PathfinderAttackSimulator.Library.Characters
-open PathfinderAttackSimulator.Library.Modifications
 open PathfinderAttackSimulator.Library.Weapons
+open PathfinderAttackSimulator.LibraryModifications
 open PathfinderAttackSimulator
 
 myFullAttack myParrn Medium [|greatswordParrn,PrimaryMain; 

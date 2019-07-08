@@ -85,7 +85,7 @@ As we only use one weapon we can use Weapon Focus as a modification.
 *)
 
 open StandardAttackAction
-open Library.Modifications
+open LibraryModifications
 
 myStandardAttack myMagus Medium Scimitar [|ShockingGraspIntensifiedEmpowered myMagus.CasterLevel1 true; Haste; WeaponFocus|]
 
