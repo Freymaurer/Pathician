@@ -95,7 +95,6 @@ module BestiaryCalculator =
         extraDamageModifications
         |> Array.filter (fun (extraDmgValue,dType) -> extraDmgValue <> 0 )
 
-
     /// combines the extra damage and the extra damage on crit
     let private getURLExtraDamageCombined extraDamageOnHit extraDamageOnCrit urlAttack=
         let getDamageRolls numberOfDie die=
@@ -175,7 +174,7 @@ module BestiaryCalculator =
 
         /// calculates all boni to attack rolls from modifications and checks if they stack or not
         let modBoniToAttack = 
-            toHit.addBoniToAttack modifications
+            toHit.addModBoniToAttack modifications
 
         //Start adding up attack boni
         let attackBonus =
@@ -243,7 +242,7 @@ module BestiaryCalculator =
 
         /// calculates bonus on damage rolls due to the ability score used by the weapon and the related multiplied
         let modBoniToDmg =
-            toDmg.addDamageBoni modifications
+            toDmg.addModDamageBoni modifications
     
         /// Sums up all different boni to damage
         let totalDamage =
@@ -362,7 +361,7 @@ module BestiaryCalculator =
     
             //Start adding up attack boni
             let modBoniToAttack = 
-                toHit.addBoniToAttack modifications
+                toHit.addModBoniToAttack modifications
     
             /// Sums up all different boni to attack rolls
             let combinedAttackBoni =
@@ -394,7 +393,7 @@ module BestiaryCalculator =
     
             /// calculates all boni to damage rolls from modifications and checks if they stack or not
             let modBoniToDamage =
-                toDmg.addDamageBoni modifications
+                toDmg.addModDamageBoni modifications
     
             /// Sums up all different boni to damage
             let totalDamage =

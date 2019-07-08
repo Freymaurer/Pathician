@@ -28,7 +28,7 @@ module StandardAttackAction =
     
         /// calculates all boni to attack rolls from modifications and checks if they stack or not
         let modBoniToAttack = 
-            addBoniToAttack modifications
+            addModBoniToAttack modifications
         
         /// Sums up all different boni to attack rolls
         let combinedAttackBoni =
@@ -84,12 +84,13 @@ module StandardAttackAction =
     
         /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
         let extraDamageOnHit = 
-            getExtraDamageOnHit weapon modifications sizeAdjustedWeaponDamage
+            getExtraDamageOnHit weapon modifications sizeAdjustedWeaponDamage getRandRolls
+            |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0.,Untyped) && (bonus,dType) <> (0.,VitalStrikeDamage) )
 
         /// Calculates extra damage which is multiplied or changed on crits (think Shocking Grasp or flaming burst) 
         let extraDamageOnCrit = 
-            getExtraDamageOnCrit attackRoll weapon modifications sizeAdjustedWeaponDamage
-
+            getExtraDamageOnCrit attackRoll weapon modifications sizeAdjustedWeaponDamage getRandRolls
+            |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0.,Untyped) && (bonus,dType) <> (0.,VitalStrikeDamage) )
 
         /// combines the extra damage and the extra damage on crit
         let extraDamageCombined =
@@ -97,7 +98,7 @@ module StandardAttackAction =
 
         /// calculates all boni to damage rolls from modifications and checks if they stack or not
         let modBoniToDmg =
-            addDamageBoni modifications
+            addModDamageBoni modifications
             |> fun bonus -> if (Array.contains (PowerAttack char.BAB) modifications) = true 
                                 && weapon.Modifier.MultiplicatorOnDamage.Hand = TwoHanded
                             then float bonus + ((float (PowerAttack char.BAB).BonusDamage.Value) * 0.5) 

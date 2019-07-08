@@ -39,55 +39,35 @@ module FullRoundAttackAction =
             |> fun x -> if x = 0 then [||] else [|1 .. 1 .. x|]
             |> Array.map (fun x -> int ( (float x-1.) * 5.) )
     
-        //
-        let attackArray =
+        /// Base Attack Array of all attacks but without related modifications
+        let baseAttackArray =
             getAttackArray weapons babExtraAttacks bonusAttacksForPrimaryMain bonusAttacksForPrimary
     
-        ///Get all AttackModifications constant for All weapons
+        // Get AttackModifications, that are active on ALL attacks, for All weapons.
         let getAttackModificationsForAll = 
             allModifications
             |> Array.filter (fun x -> Array.contains All (fst x.AppliedTo) && snd x.AppliedTo = -20)
             |> fun x -> x
 
-        ///Get all AttackModifications with limited numbers for All weapons
+        // Get AttackModifications, that are active on a limited number of attacks, for All weapons.
         let getAttackModificationsForAllLimited =
             allModifications
             |> Array.filter (fun x -> Array.contains All (fst x.AppliedTo) && snd x.AppliedTo <> -20)
-            |> Array.map (fun x -> x, snd x.AppliedTo)
-            |> Array.map (fun (arr,int) -> if int > attackArray.Length
-                                           then (Array.create attackArray.Length arr),attackArray.Length
-                                           elif int <= attackArray.Length
-                                           then (Array.create int arr),int
-                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to All Attacks; pls contact support" 
-                         )
-            |> fun arr -> if arr <> [||]
-                          then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (attackArray.Length-int) ZeroMod 
-                                                                                         )
-                                          ) arr
-                               )
-                          elif arr = [||]
-                          then [|Array.create attackArray.Length ZeroMod|]
-                          else failwith "Unknown Problem related to limited attack modifiers for all weapons; pls contact support)"
+            |> filterForLimited baseAttackArray.Length
     
-        ///adds all modifications from "getAttackModificationsForAll" and "getAttackModificationsForAllLimited"
+        // adds modifications from "getAttackModificationsForAll" and "getAttackModificationsForAllLimited"
         let addAllAttackModificationsForAll =
-            getAttackModificationsForAllLimited
-            |> Array.map (fun x -> Array.mapi (fun i x -> i, x) x)
-            |> Array.concat
-            |> Array.groupBy (fun x -> fst x)
-            |> Array.map (fun (header,tuple) -> tuple)
-            |> Array.map (fun x -> Array.map (fun x -> snd x) x)
-            |> Array.map (fun arr -> Array.append getAttackModificationsForAll arr)
+            appendModificationsForLimited getAttackModificationsForAllLimited getAttackModificationsForAll
     
-        ///adds all modifications for All weapons to the several weapon attacks from "getAttackArray"
+        // adds all modifications for All weapons to the several weapon attacks from "getAttackArray"
         let addAllUnspecifcModificationsToAttackArray =
             addAllAttackModificationsForAll
-            |> Array.zip attackArray
+            |> Array.zip baseAttackArray
             |> Array.map (fun ((x,y,z),arr) -> x,y,z,arr)
     
-        ///begin calculating Secondary specific modifications
+        // begin calculating Secondary specific modifications
         let getNumberOfSecondaryAttacks =
-            attackArray
+            baseAttackArray
             |> Array.filter (fun (w,wType,modi) -> wType = Secondary)
             |> fun x -> x.Length
         let getSecondaryAttackModificationsForAll =
@@ -96,33 +76,14 @@ module FullRoundAttackAction =
         let getSecondaryAttackModificationsLimited =
             allModifications
             |> Array.filter (fun x -> Array.contains Secondary (fst x.AppliedTo) && snd x.AppliedTo <> -20)
-            |> Array.map ( fun x -> x, snd x.AppliedTo)
-            |> Array.map (fun (arr,int) -> if int > getNumberOfSecondaryAttacks 
-                                           then (Array.create getNumberOfSecondaryAttacks arr),getNumberOfSecondaryAttacks
-                                           elif int <= getNumberOfSecondaryAttacks
-                                           then (Array.create int arr),int
-                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to Secondary Attacks; pls contact support" 
-                         )
-            |> fun arr -> if arr <> [||]
-                          then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfSecondaryAttacks-int) ZeroMod 
-                                                                                         )
-                                          ) arr
-                               ) 
-                          elif arr = [||]
-                          then [|Array.create getNumberOfSecondaryAttacks ZeroMod|]
-                          else failwith "Unknown Problem related to limited attack modifiers for Secondary weapons; pls contact support"
-        let addAllSecondaryAttackModifications =
-            getSecondaryAttackModificationsLimited
-            |> Array.map (fun x -> Array.mapi (fun i x ->i, x )x )
-            |> Array.concat
-            |> Array.groupBy (fun x -> fst x)
-            |> Array.map (fun (header,tuple) -> tuple)
-            |> Array.map (fun x ->Array.map (fun x -> snd x) x)
-            |> Array.map (fun arr -> Array.append getSecondaryAttackModificationsForAll arr)
-        
+            |> filterForLimited getNumberOfSecondaryAttacks
+
+        let combinedSecondaryAttackModifications =
+            appendModificationsForLimited getSecondaryAttackModificationsLimited getSecondaryAttackModificationsForAll
+
         ///begin calculating Primary specific modifications
         let getNumberOfPrimaryAttacks =
-            attackArray
+            baseAttackArray
             |> Array.filter (fun (w,wType,modi) -> wType = Primary)
             |> fun x -> x.Length
         let getPrimaryAttackModificationsForAll =
@@ -131,34 +92,14 @@ module FullRoundAttackAction =
         let getPrimaryAttackModificationsLimited =
             allModifications
             |> Array.filter (fun x -> Array.contains Primary (fst x.AppliedTo) && snd x.AppliedTo <> -20)
-            |> Array.map (fun x -> x, snd x.AppliedTo)
-            |> Array.map (fun (arr,int) -> if int > getNumberOfPrimaryAttacks 
-                                           then (Array.create getNumberOfPrimaryAttacks arr),getNumberOfPrimaryAttacks
-                                           elif int <= getNumberOfPrimaryAttacks
-                                           then (Array.create int arr),int
-                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to Primary Attacks; pls contact support" 
-                         )
-            |> fun arr -> if arr <> [||]
-                          then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfPrimaryAttacks-int) ZeroMod 
-                                                                                         )
-                                          ) arr
-                               ) |> fun x -> x
-                          elif arr = [||]
-                          then [|Array.create getNumberOfPrimaryAttacks ZeroMod|]
-                          else failwith "Unknown Problem related to limited attack modifiers for Primary weapons; pls contact support"
+            |> filterForLimited getNumberOfPrimaryAttacks
 
-        let addAllPrimaryAttackModifications =
-            getPrimaryAttackModificationsLimited
-            |> Array.map (fun x -> Array.mapi (fun i x ->i, x )x )
-            |> Array.concat
-            |> Array.groupBy (fun x -> fst x)
-            |> Array.map (fun (header,tuple) -> tuple)
-            |> Array.map (fun x ->Array.map (fun x -> snd x) x)
-            |> Array.map (fun arr -> Array.append getPrimaryAttackModificationsForAll arr)
+        let combinedPrimaryAttackModifications =
+            appendModificationsForLimited getPrimaryAttackModificationsLimited getPrimaryAttackModificationsForAll
     
         ///begin calculating PrimaryMain specific modifications
         let getNumberOfPrimaryMainAttacks =
-            attackArray
+            baseAttackArray
             |> Array.filter (fun (w,wType,modi) -> wType = PrimaryMain)
             |> fun x -> x.Length
         let getPrimaryMainAttackModificationsForAll =
@@ -167,48 +108,18 @@ module FullRoundAttackAction =
         let getPrimaryMainAttackModificationsLimited =
             allModifications
             |> Array.filter (fun x -> Array.contains PrimaryMain (fst x.AppliedTo) && snd x.AppliedTo <> -20)
-            |> Array.map (fun x -> x, snd x.AppliedTo)
-            |> Array.map (fun (arr,int) -> if int > getNumberOfPrimaryMainAttacks 
-                                           then (Array.create getNumberOfPrimaryMainAttacks arr),getNumberOfPrimaryMainAttacks
-                                           elif int <= getNumberOfPrimaryMainAttacks
-                                           then (Array.create int arr),int
-                                           else failwith "Unknown Problem related to Limited Attack Modifiers added to PrimaryMain Attacks; pls contact support" 
-                         )
-            |> fun arr -> if arr <> [||]
-                          then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (getNumberOfPrimaryMainAttacks-int) ZeroMod 
-                                                                                         )
-                                          ) arr
-                               ) |> fun x -> x
-                          elif arr = [||]
-                          then [|Array.create getNumberOfPrimaryMainAttacks ZeroMod|]
-                          else failwith "Unknown Problem related to limited attack modifiers for PrimaryMain weapons; pls contact support"
-        let addAllPrimaryMainAttackModifications =
-            getPrimaryMainAttackModificationsLimited
-            |> Array.map (fun x -> Array.mapi (fun i x ->i, x )x )
-            |> Array.concat
-            |> Array.groupBy (fun x -> fst x)
-            |> Array.map (fun (header,tuple) -> tuple)
-            |> Array.map (fun x ->Array.map (fun x -> snd x) x)
-            |> Array.map (fun arr -> Array.append getPrimaryMainAttackModificationsForAll arr)
-    
-        let addAllWeaponTypeSpecificModifications =
-            addAllUnspecifcModificationsToAttackArray
-            |> Array.groupBy (fun (w,wType,modi,modArr) -> wType)
-            |> Array.map (fun (wType,arr) -> match wType with
-                                             | PrimaryMain  -> arr 
-                                                               |> Array.zip addAllPrimaryMainAttackModifications
-                                                               |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
-                                             | Primary      -> arr 
-                                                               |> Array.zip addAllPrimaryAttackModifications
-                                                               |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
-                                             | Secondary    -> arr 
-                                                               |> Array.zip addAllSecondaryAttackModifications
-                                                               |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
-                                             | _ -> failwith "Unknown Problem related to adding weaponType specific modifiers; pls contact support"
-                         )
-            |> Array.concat
+            |> filterForLimited getNumberOfPrimaryMainAttacks
+
+        let combinedPrimaryMainAttackModifications =
+            appendModificationsForLimited getPrimaryMainAttackModificationsLimited getPrimaryMainAttackModificationsForAll
     
 
+        /// This is the final attack array with all modifications sorted by their number of applications and their related WeaponType(s)
+        let finalAttackArr =
+            appendModificationsForSpecific addAllUnspecifcModificationsToAttackArray combinedPrimaryMainAttackModifications combinedPrimaryAttackModifications combinedSecondaryAttackModifications
+
+
+        //////////////////////////////////////// START ONE ATTACK ///////////////////////////////////////////////////////////////////////////
         ///get One Attack per Attack Array, this is really similiar to the standard attack action!
         let getOneAttack (weapon: Weapon) (wType: WeaponType) (iterativeModifier: int) (modifications: AttackModification []) =
     
@@ -226,7 +137,7 @@ module FullRoundAttackAction =
     
             /// calculates all boni to attack rolls from modifications and checks if they stack or not
             let modBoniToAttack = 
-                toHit.addBoniToAttack modifications 
+                toHit.addModBoniToAttack modifications 
                 
             /// Sums up all different boni to attack rolls
             let combinedAttackBoni =
@@ -289,11 +200,13 @@ module FullRoundAttackAction =
     
             /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
             let extraDamageOnHit = 
-                toDmg.getExtraDamageOnHit weapon modifications sizeAdjustedWeaponDamage
+                toDmg.getExtraDamageOnHit weapon modifications sizeAdjustedWeaponDamage getRandRolls
+                |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0.,Untyped) && (bonus,dType) <> (0.,VitalStrikeDamage) )
     
             /// Calculates extra damage which is multiplied or changed on crits (think Shocking Grasp or flaming burst) 
             let extraDamageOnCrit = 
-                toDmg.getExtraDamageOnCrit attackRoll weapon modifications sizeAdjustedWeaponDamage
+                toDmg.getExtraDamageOnCrit attackRoll weapon modifications sizeAdjustedWeaponDamage getRandRolls
+                |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0.,Untyped) && (bonus,dType) <> (0.,VitalStrikeDamage) )
             
             /// combines the extra damage and the extra damage on crit
             let extraDamageCombined =
@@ -308,7 +221,7 @@ module FullRoundAttackAction =
                 
             /// calculates all boni to damage rolls from modifications and checks if they stack or not
             let modBoniToDmg =
-                toDmg.addDamageBoni modifications
+                toDmg.addModDamageBoni modifications
                 |> fun bonus -> if (Array.contains (PowerAttack char.BAB) modifications) = true && 
                                         weapon.Modifier.MultiplicatorOnDamage.Hand = TwoHanded &&
                                         wType = PrimaryMain
@@ -320,20 +233,20 @@ module FullRoundAttackAction =
                                 else bonus
             
             /// Sums up all different boni to damage
-            let getDamage = 
+            let totalDamage = 
                 abilityModBoniToDmg + addWeaponDamage + modBoniToDmg
                 |> fun x -> if x <= 0 then 1 else x
     
             if (Array.contains attackRoll weapon.CriticalRange) = false && extraDamageCombined = [||]
-                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage!" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType
+                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage!" weapon.Name totalAttackBonus attackRoll totalDamage weapon.Damage.DamageType
             elif (Array.contains attackRoll weapon.CriticalRange) = true && extraDamageCombined = [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (x %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (x %i)!" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage weapon.Damage.DamageType weapon.CriticalModifier
             elif (Array.contains attackRoll weapon.CriticalRange) = false && extraDamageCombined <> [||]
-                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage %s !" weapon.Name totalAttackBonus attackRoll getDamage weapon.Damage.DamageType (extraDamageToString extraDamageCombined)
+                then printfn "You attack with a %s and hit the enemy with a %i (rolled %i) for %i %A damage %s !" weapon.Name totalAttackBonus attackRoll totalDamage weapon.Damage.DamageType (extraDamageToString extraDamageCombined)
             elif (Array.contains attackRoll weapon.CriticalRange) = true && extraDamageCombined <> [||] 
-                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (x %i)(%s on a crit) / (%s when not confirmed) !" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll getDamage weapon.Damage.DamageType weapon.CriticalModifier (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit) 
+                then printfn "You attack with a %s and (hopefully) critically hit the enemy with a %i (rolled %i) and confirm your crit with a %i (rolled %i) for %i %A damage (x %i)(%s on a crit) / (%s when not confirmed) !" weapon.Name totalAttackBonus attackRoll totalAttackCritBonus critConfirmationRoll totalDamage weapon.Damage.DamageType weapon.CriticalModifier (extraDamageToString extraDamageCombined) (extraDamageToString extraDamageOnHit) 
                 else printfn "You should not see this message, please open an issue with your input as a bug report"
      
         ///Maps through the created array of different attacks and produces one result each
-        addAllWeaponTypeSpecificModifications
+        finalAttackArr
         |> Array.map (fun (w,wType,modi,modArr) -> getOneAttack w wType modi modArr)

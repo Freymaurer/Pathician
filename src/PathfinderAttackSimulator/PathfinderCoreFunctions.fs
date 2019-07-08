@@ -24,10 +24,18 @@ module CoreFunctions =
             let rnd = Random()
             fun (arr : int[]) -> arr.[rnd.Next(arr.Length)]
     
-
         /// rolls dice for weapon
         let getDamageRolls die =
             rollDice 100000 die
+
+        let getRandRolls numberOfDie die =
+            let rolledDice = rollDice 1000 die
+            [|for i=1 to numberOfDie do
+                yield getRndArrElement rolledDice|]
+            |> Array.sum |> float
+
+        let getAvgDmg numberOfDie die =
+            float numberOfDie * ((float die+1.)/2.)
 
         /// calculates real size changes due to modifications and applies them to the start size.
         /// This function returns an integer representing the new size (The map of size integer to size is "findSizes"
@@ -111,7 +119,7 @@ module CoreFunctions =
                 |> floor |> int
             
             /// calculates all boni to attack rolls from modifications and checks if they stack or not
-            let addBoniToAttack (modifications: AttackModification []) = 
+            let addModBoniToAttack (modifications: AttackModification []) = 
                 modifications 
                 |> Array.map (fun x -> x.BonusAttackRoll.OnHit)
                 |> Array.groupBy (fun x -> x.BonusType)
@@ -293,7 +301,7 @@ module CoreFunctions =
                 getSizeChange weaponDmgDie weaponDmgNOfDie startSize effectiveSize
 
             /// calculates all boni to damage rolls from modifications and checks if they stack or not
-            let addDamageBoni (modifications:AttackModification []) =
+            let addModDamageBoni (modifications:AttackModification []) =
                 modifications
                 |> Array.map (fun x -> x.BonusDamage)
                 |> Array.groupBy (fun x -> x.BonusType)
@@ -309,15 +317,15 @@ module CoreFunctions =
                 |> Array.sum
 
             /// Calculates damage like Sneak Attack, Vital Strike or the weapon enhancement flaming
-            let getExtraDamageOnHit (weapon:Weapon) (modifications:AttackModification []) (resizedWeaponDmg:Damage) = 
-                let rec getRandRoll listOfRolls die number =
-                    (getRndArrElement (getDamageRolls die))::listOfRolls
-                    |> fun rollList -> if rollList.Length >= number
-                                       then rollList
-                                       else getRandRoll rollList die number
+            let getExtraDamageOnHit (weapon:Weapon) (modifications:AttackModification []) (resizedWeaponDmg:Damage) (rollFunction:(int -> int -> float)) = 
+                //let rec getRandRoll listOfRolls die number =
+                //    (getRndArrElement (getDamageRolls die))::listOfRolls
+                //    |> fun rollList -> if rollList.Length >= number
+                //                       then rollList
+                //                       else getRandRoll rollList die number
                 [|weapon.ExtraDamage.OnHit,weapon.Name|]
                 |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage.OnHit,x.Name) )
-                |> Array.map (fun (extraD,str) -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
+                |> Array.map (fun (extraD,str) -> rollFunction extraD.NumberOfDie extraD.Die
                                                   , extraD.DamageType, str
                              )
                 |> fun x -> x
@@ -329,27 +337,21 @@ module CoreFunctions =
                                         |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
                                         |> Array.head
                                         |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
-                                                            yield getRandRoll [] resizedWeaponDmg.Die resizedWeaponDmg.NumberOfDie|], vitalS.Name
-                                        |> fun (intList,str) -> Array.map List.sum intList, str
-                                        |> fun x -> x
-                                        |> fun (intList,str) -> Array.sum intList, str
+                                                            yield rollFunction resizedWeaponDmg.NumberOfDie resizedWeaponDmg.Die|], vitalS.Name
+                                        |> fun (intArr,str) -> Array.sum intArr, str
                                         |> fun (bonus,str) -> Array.append [|bonus,resizedWeaponDmg.DamageType,str|] extraDmg
                                    else extraDmg
-                |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0,Untyped) && (bonus,dType) <> (0,VitalStrikeDamage) )
 
             /// Calculates extra damage which is multiplied or changed on crits (think Shocking Grasp or flaming burst) 
-            let getExtraDamageOnCrit attackRoll (weapon:Weapon) (modifications:AttackModification[]) (resizedWeaponDmg:Damage) = 
-                let rec getRandRoll listOfRolls die number =
-                    (getRndArrElement (getDamageRolls die))::listOfRolls
-                    |> fun rollList -> if rollList.Length >= number
-                                       then rollList
-                                       else getRandRoll rollList die number
-                if (Array.contains attackRoll weapon.CriticalRange) = false
+            /// give attack roll -20 if you wanna do damage per round, where no actual dice is rolled
+            let getExtraDamageOnCrit attackRoll (weapon:Weapon) (modifications:AttackModification[]) (resizedWeaponDmg:Damage) (rollFunction:(int -> int -> float)) = 
+                // give attack roll -20 if you wanna do damage per round, where no actual dice is rolled
+                if (Array.contains attackRoll weapon.CriticalRange) = false && attackRoll <> -20
                 // stop function right here if there is no crit
                 then [||]
                 else [|weapon.ExtraDamage.OnCrit,weapon.Name|]
                      |> Array.append (modifications |> Array.map (fun x -> x.ExtraDamage.OnCrit,x.Name) )
-                     |> Array.map (fun (extraD,str) -> getRandRoll [] extraD.Die extraD.NumberOfDie |> List.toArray |> Array.sum
+                     |> Array.map (fun (extraD,str) -> rollFunction extraD.NumberOfDie extraD.Die
                                                        , extraD.DamageType, str
                                   )
                      |> fun x -> x
@@ -361,28 +363,25 @@ module CoreFunctions =
                                              |> Array.sortByDescending (fun x -> x.ExtraDamage.OnHit.NumberOfDie)
                                              |> Array.head
                                              |> fun vitalS -> [|for i in 1 .. vitalS.ExtraDamage.OnHit.NumberOfDie do
-                                                                 yield getRandRoll [] resizedWeaponDmg.Die resizedWeaponDmg.NumberOfDie|], vitalS.Name
-                                             |> fun (intList,str) -> Array.map List.sum intList, str
-                                             |> fun x -> x
-                                             |> fun (intList,str) -> Array.sum intList, str
+                                                                 yield rollFunction resizedWeaponDmg.NumberOfDie resizedWeaponDmg.Die|], vitalS.Name
+                                             |> fun (bonusArr,str) -> Array.sum bonusArr, str
                                              |> fun (bonus,str) -> Array.append [|bonus,resizedWeaponDmg.DamageType,str|] extraDmg
                                         else extraDmg
-                     |> Array.filter (fun (bonus,dType,str) -> (bonus,dType) <> (0,Untyped) && (bonus,dType) <> (0,VitalStrikeDamage) )
-            
+
             /// combines the extra damage and the extra damage on crit
-            let combineExtraDamage (extraDamage:(int*DamageTypes*string)[]) (critExtraDamage:(int*DamageTypes*string)[])=
-                let getValue (triple:(int*DamageTypes*string)) = 
+            let combineExtraDamage (extraDamage:(float*DamageTypes*string)[]) (critExtraDamage:(float*DamageTypes*string)[])=
+                let getValue (triple:(float*DamageTypes*string)) = 
                     triple |> fun (value,dType,string) -> value
-                let getDmgType (triple:(int*DamageTypes*string)) = 
+                let getDmgType (triple:(float*DamageTypes*string)) = 
                     triple |> fun (value,dType,string) -> dType
-                let getName (triple:(int*DamageTypes*string)) = 
+                let getName (triple:(float*DamageTypes*string)) = 
                     triple |> fun (value,dType,string) -> string
                 if critExtraDamage = [||]
                 then extraDamage
                 else Array.map2 (fun onHit onCrit -> (getValue onHit) + (getValue onCrit), getDmgType onHit, getName onHit) extraDamage critExtraDamage
 
             /// Folds the damage values to a string to print as result. This allows to separate different damage types should a creature be immune to something
-            let extraDamageToString (extraDmgArr:(int*DamageTypes*string)[]) = 
+            let extraDamageToString (extraDmgArr:(float*DamageTypes*string)[]) = 
                 extraDmgArr
                 |> Array.map (fun (value,dType,name) -> "+" + (string value) + " " + (string dType) + " " + "damage" + " (" + name + ")" + ", ")
                 |> Array.fold (fun strArr x -> strArr + x) "" 
@@ -469,3 +468,51 @@ module CoreFunctions =
                           then arr
                           else failwith "Unknown Problem related to Primary Weapons (two-Weapon-Fighting); pls contact support.)"
             |> Array.sortByDescending (fun (w,wType,modi) -> modi )
+
+
+        ///This function adds modifications with limited applications and fill the rest of the attack array with zero mod modifications to keep the same arr length
+        let filterForLimited (numberOfRelatedAttacks:int) filteredModisForWeaponType=
+            filteredModisForWeaponType
+            |> Array.map (fun x -> x, snd x.AppliedTo)
+            |> Array.map (fun (arr,int) -> if int > numberOfRelatedAttacks
+                                           then (Array.create numberOfRelatedAttacks arr),numberOfRelatedAttacks
+                                           elif int <= numberOfRelatedAttacks
+                                           then (Array.create int arr),int
+                                           else failwith "Unknown Problem related to Limited Attack Modifiers (Err1); pls contact support" 
+                         )
+            |> fun arr -> if arr <> [||]
+                          then (Array.map (fun (attackArr,int) -> Array.append attackArr (Array.create (numberOfRelatedAttacks-int) ZeroMod 
+                                                                                         )
+                                          ) arr
+                               )
+                          elif arr = [||]
+                          then [|Array.create numberOfRelatedAttacks ZeroMod|]
+                          else failwith "Unknown Problem related to limited attack modifiers (Err2); pls contact support)"
+
+        ///This function adds limited and unlimited modification for the same weapon type together
+        let appendModificationsForLimited (modificationsLimited:AttackModification [][]) (modificationsUnlimited:AttackModification[])=
+            modificationsLimited
+            |> Array.map (fun x -> Array.mapi (fun i x -> i,x) x)
+            |> Array.concat
+            |> Array.groupBy (fun x -> fst x)
+            |> Array.map (fun (header,tuple) -> tuple)
+            |> Array.map (fun x -> Array.map (fun x -> snd x) x)
+            |> Array.map (fun arr -> Array.append modificationsUnlimited arr)
+
+        ///This function adds weapon type specific and weapon type unspecific modifications together
+        let appendModificationsForSpecific unspecificModification primaryMainModification primaryModifications secondaryModifications =
+            unspecificModification
+            |> Array.groupBy (fun (w,wType,modi,modArr) -> wType)
+            |> Array.map (fun (wType,arr) -> match wType with
+                                             | PrimaryMain  -> arr 
+                                                               |> Array.zip primaryMainModification
+                                                               |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
+                                             | Primary      -> arr 
+                                                               |> Array.zip primaryModifications
+                                                               |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
+                                             | Secondary    -> arr 
+                                                               |> Array.zip secondaryModifications
+                                                               |> Array.map (fun (arr1,(w,wType,modi,modArr)) -> w,wType,modi, Array.append arr1 modArr)
+                                             | _ -> failwith "Unknown Problem related to adding weaponType specific modifiers; pls contact support"
+                         )
+            |> Array.concat
