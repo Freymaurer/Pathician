@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarnOn>3390;$(WarnOn)</WarnOn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Library.fs" />
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <Authors>Kevin Frey</Authors>
+    <Description>A short library with automated calculations for the ttrpg Pathfinder 1e.</Description>
+    <Summary>A short library with automated calculations for the ttrpg Pathfinder 1e.</Summary>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <!--<PackageProjectUrl>https://fslab.org/docs-template/</PackageProjectUrl>
+    <PackageIconUrl>https://fslab.org/docs-template/img/logo.png</PackageIconUrl>-->
+    <PackageTags>pathfinder1e pathfinder fsharp dotnet calculation attack dpr</PackageTags>
+    <!--<RepositoryUrl>https://github.com/fslaborg/docs-template</RepositoryUrl>-->
+    <RepositoryType>git</RepositoryType>
+    <!--<FsDocsLicenseLink>https://github.com/fslaborg/docs-template/blob/master/LICENSE</FsDocsLicenseLink>
+    <FsDocsReleaseNotesLink>https://github.com/fslaborg/docs-template/blob/master/RELEASE_NOTES.md</FsDocsReleaseNotesLink>-->
+  </PropertyGroup>
+</Project>

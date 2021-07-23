@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DE272335-B62E-400D-AA17-064E96734D44}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Pathician", "src\Pathician\Pathician.fsproj", "{FB138357-0D23-4C86-99BD-1484855044F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{0E97BAB7-D52D-4736-976F-1B7365891A58}"
+	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
+		build.fsx = build.fsx
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FDF5567F-4F56-4512-B886-162B5B3CDF0F}"
+	ProjectSection(SolutionItems) = preProject
+		AssemblyVersion.fs = AssemblyVersion.fs
+		RELEASE_NOTES.md = RELEASE_NOTES.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{180BC067-6BFC-4EA5-AE9A-17E65E334C3E}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Pathician.Tests", "tests\Pathician.Tests\Pathician.Tests.fsproj", "{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Debug|x64.Build.0 = Debug|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Debug|x86.Build.0 = Debug|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Release|x64.ActiveCfg = Release|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Release|x64.Build.0 = Release|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Release|x86.ActiveCfg = Release|Any CPU
+		{FB138357-0D23-4C86-99BD-1484855044F5}.Release|x86.Build.0 = Release|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Debug|x64.Build.0 = Debug|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Debug|x86.Build.0 = Debug|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Release|x64.ActiveCfg = Release|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Release|x64.Build.0 = Release|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Release|x86.ActiveCfg = Release|Any CPU
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FB138357-0D23-4C86-99BD-1484855044F5} = {DE272335-B62E-400D-AA17-064E96734D44}
+		{2FA20A0F-6858-4039-99F5-9C2D0E5EB84A} = {180BC067-6BFC-4EA5-AE9A-17E65E334C3E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {244A1259-5ABD-42D6-8953-8CB9A5D1B591}
+	EndGlobalSection
+EndGlobal
