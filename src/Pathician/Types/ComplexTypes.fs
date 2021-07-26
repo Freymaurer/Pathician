@@ -17,6 +17,13 @@ type Bonus = {
 
 module ComplexTypes =
     
+    /// Determines which ability score is used for attack rolls and/or damage rolls, also contains the dmg multiplier for the ability score.
+    type AbilityScoreModifier = {
+        ToHit:              AbilityScoreModifier
+        ToDmg:              AbilityScoreModifier
+        ToDmgMultiplier:    float
+    }
+
     type DamageDice = {
         /// How many which sided dice need to be rolled for damage
         Damage:             Dice option
@@ -40,4 +47,11 @@ module ComplexTypes =
         /// if damage crits, how often is it multiplied
         CritMultiplier:     int
         OnCritDamage:       DamageDice option
+    }
+
+    type BonusAttacks = {
+        Type:           UnionTypes.BonusAttacks.Types
+        /// This is an array of bonus attacks in relation to BAB. 
+        /// Example: Haste: [0], Greater-Two-Weapon Fighting [0; -5; -10]
+        AttackArray:    int []
     }

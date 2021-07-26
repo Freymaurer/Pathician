@@ -15,7 +15,5 @@ type Character = {
     Description:    string
     //TODO: PLACEHOLDER
     Feats:          unit
-    //TODO: PLACEHOLDER
-    Weapons:        unit
 }
 

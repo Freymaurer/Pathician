@@ -11,6 +11,7 @@
     <Compile Include="Types\UnionTypes.fs" />
     <Compile Include="Types\ComplexTypes.fs" />
     <Compile Include="Types\Weapon.fs" />
+    <Compile Include="Types\Feat.fs" />
     <Compile Include="Types\Character.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
