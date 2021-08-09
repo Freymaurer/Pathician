@@ -11,7 +11,7 @@ type Character = {
     Charisma:       int
     CasterLevel1:   int
     CasterLevel2:   int
-    Size:           UnionTypes.SizeType
+    Size:           UnionTypes.Size.SizeCategory
     Description:    string
     //TODO: PLACEHOLDER
     Feats:          unit

@@ -5,6 +5,8 @@ type Feat = {
     AttackBonus:    Bonus
     Damage:         ComplexTypes.Damage
     BonusAttacks:   ComplexTypes.BonusAttacks
+    SizeChange:     ComplexTypes.SizeChange
     Description:    string
 }
+
 

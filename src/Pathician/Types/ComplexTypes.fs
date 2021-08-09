@@ -30,7 +30,7 @@ module ComplexTypes =
         /// Flat Boni to damage, stacking and non-stacking
         DamageBonus:        int option
         /// damage type (e.g. fire, slashing, force)
-        DamageType:         UnionTypes.DamageTypes
+        DamageType:         UnionTypes.DamageTypes.DamageTypes
     } with
         member this.rollSum() =
             match this.Damage, this.DamageBonus with
@@ -54,4 +54,9 @@ module ComplexTypes =
         /// This is an array of bonus attacks in relation to BAB. 
         /// Example: Haste: [0], Greater-Two-Weapon Fighting [0; -5; -10]
         AttackArray:    int []
+    }
+
+    type SizeChange = {
+        ChangeBy:           int
+        SizeIncreaseType:   UnionTypes.Size.IncreaseType
     }

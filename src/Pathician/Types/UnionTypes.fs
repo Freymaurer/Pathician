@@ -17,18 +17,6 @@ module UnionTypes =
         | Huge
         | Gargantuan
         | Colossal 
-            static member ofString (str:string) =
-                match str with
-                | "Fine"        -> Fine
-                | "Diminuitive" -> Diminuitive
-                | "Tiny"        -> Tiny
-                | "Small"       -> Small
-                | "Medium"      -> Medium
-                | "Large"       -> Large
-                | "Huge"        -> Huge
-                | "Gargantuan"  -> Gargantuan
-                | "Colossal"    -> Colossal
-                | anythingElse  -> failwith (sprintf "Error. Could not parse SizeType of `%s`!" anythingElse)
 
             static member Order =
                 [|  Fine
@@ -71,14 +59,30 @@ module UnionTypes =
         | EffectiveSizeIncrease
         | SizeIncrease
 
-    type AbilityScore =
-    | Strength
-    | Dexterity
-    | Constitution
-    | Intelligence
-    | Wisdom
-    | Charisma
-        static member ofString (str:string) =
+        let ofString (str:string) =
+            match str with
+            | "Fine"        -> Fine
+            | "Diminuitive" -> Diminuitive
+            | "Tiny"        -> Tiny
+            | "Small"       -> Small
+            | "Medium"      -> Medium
+            | "Large"       -> Large
+            | "Huge"        -> Huge
+            | "Gargantuan"  -> Gargantuan
+            | "Colossal"    -> Colossal
+            | anythingElse  -> failwith (sprintf "Error. Could not parse SizeType of `%s`!" anythingElse)
+
+    module AbilityScore =
+
+        type AbilityScore =
+        | Strength
+        | Dexterity
+        | Constitution
+        | Intelligence
+        | Wisdom
+        | Charisma
+            
+        let ofString (str:string) =
             match str with
             | "Strength"        -> Strength
             | "Dexterity"       -> Dexterity
@@ -88,33 +92,37 @@ module UnionTypes =
             | "Charisma"        -> Charisma
             | anythingElse  -> failwith (sprintf "Error. Could not parse AbilityScore of `%s`!" anythingElse)
 
-    type DamageTypes =
-    | Fire
-    | Cold
-    | Acid
-    | Electricity
-    | Bludgeoning
-    | Slashing
-    | Piercing
-    | BludgeoningOrPiercing
-    | BludgeoningOrPiercingOrSlashing
-    | PiercingOrSlashing
-    | PositiveEnergy
-    | NegativeEnergy
-    | Force
-    | Precision
-    | Untyped
+    module DamageTypes =
 
-    type WeaponType =
-    | Natural
-    | Manufactured
+        type DamageTypes =
+        | Fire
+        | Cold
+        | Acid
+        | Electricity
+        | Bludgeoning
+        | Slashing
+        | Piercing
+        | BludgeoningOrPiercing
+        | BludgeoningOrPiercingOrSlashing
+        | PiercingOrSlashing
+        | PositiveEnergy
+        | NegativeEnergy
+        | Force
+        | Precision
+        | Untyped
 
-    type WeaponWielding =
-    | OneHanded
-    | TwoHanded
-    | OffHand
-    | PrimaryNaturalAttack
-    | SecondaryNaturalAttack
+    module Weapon =
+
+        type WeaponType =
+        | Natural
+        | Manufactured
+
+        type WeaponWielding =
+        | OneHanded
+        | TwoHanded
+        | OffHand
+        | PrimaryNaturalAttack
+        | SecondaryNaturalAttack
 
     module Bonus =
 
@@ -152,7 +160,3 @@ module UnionTypes =
         type Types =
         | StackingBonusAttacks
         | UniqueBonus of UniqueBonusAttacks
-
-
-
-

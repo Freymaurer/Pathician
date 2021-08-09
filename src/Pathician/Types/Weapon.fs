@@ -7,7 +7,7 @@ type Weapon = {
     Damage:         ComplexTypes.Damage
     AttackBonus:    Bonus
     CriticalRange:  int
-    WeaponType:     UnionTypes.WeaponType
+    WeaponType:     UnionTypes.Weapon.WeaponType
     // Bonus Damage from for example burning weapon enhancement
     BonusDamage:    ComplexTypes.Damage []
     Description:    string
